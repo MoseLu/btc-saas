@@ -1,0 +1,438 @@
+@use "sass:color";
+
+// BTC Saas 主题样式 - SASS版本
+
+// 颜色变量 - 统一使用Element Plus标准色
+$btc-primary: #409eff;
+$btc-success: #67c23a;
+$btc-warning: #e6a23c;
+$btc-error: #f56c6c;
+
+// 明亮主题变量
+$light-bg: #ffffff;
+$light-bg-page: #f0f2f5;
+$light-bg-overlay: #ffffff;
+$light-text-primary: #303133;
+$light-text-regular: #606266;
+$light-text-secondary: #909399;
+$light-border: #dcdfe6;
+$light-border-light: #e4e7ed;
+$light-fill-blank: #ffffff;
+$light-fill-light: #f5f7fa;
+$light-fill: #f0f2f5;
+$light-fill-dark: #ebedf0;
+$light-fill-darker: #e6e8eb;
+
+// 暗黑主题变量
+$dark-bg: #141414;
+$dark-bg-page: #0a0a0a;
+$dark-bg-overlay: #1d1e1f;
+$dark-text-primary: #e5eaf3;
+$dark-text-regular: #cfd3dc;
+$dark-text-secondary: #a3a6ad;
+$dark-border: #4c4d4f;
+$dark-border-light: #414243;
+$dark-fill-blank: #141414;
+$dark-fill-light: #262727;
+$dark-fill: #303030;
+$dark-fill-dark: #39393a;
+$dark-fill-darker: #424243;
+
+// 全局主题样式
+:root {
+  // Element Plus 变量
+  --el-bg-color: #{$light-bg};
+  --el-bg-color-page: #{$light-bg-page};
+  --el-bg-color-overlay: #{$light-bg-overlay};
+  --el-text-color-primary: #{$light-text-primary};
+  --el-text-color-regular: #{$light-text-regular};
+  --el-text-color-secondary: #{$light-text-secondary};
+  --el-border-color: #{$light-border};
+  --el-border-color-light: #{$light-border-light};
+  --el-border-color-lighter: #ebeef5;
+  --el-border-color-extra-light: #f2f6fc;
+  --el-fill-color-blank: #{$light-fill-blank};
+  --el-fill-color-light: #{$light-fill-light};
+  --el-fill-color: #{$light-fill};
+  --el-fill-color-dark: #{$light-fill-dark};
+  --el-fill-color-darker: #{$light-fill-darker};
+  --el-color-primary: #{$btc-primary};
+  --el-color-success: #{$btc-success};
+  --el-color-warning: #{$btc-warning};
+  --el-color-danger: #{$btc-error};
+  --el-color-info: #{$light-text-secondary};
+  
+  /* 增强对比度的主题色变量 */
+  --btc-primary-contrast: #ffffff;
+  --btc-primary-hover: #66b1ff;
+  --btc-primary-active: #337ecc;
+  
+  // 侧边栏主题
+  --sidebar-bg: #{$light-fill-light};
+  --sidebar-text: #{$light-text-primary};
+  --sidebar-text-hover: #{$btc-primary};
+  --sidebar-bg-hover: #{$light-fill-dark};
+  --sidebar-bg-active: #{$btc-primary};
+  --logo-bg: #{$btc-primary};
+  
+  // 头部主题
+  --header-bg: #{$light-bg};
+  --header-border: #{$light-border-light};
+  --header-text: #{$light-text-regular};
+  
+  // 卡片主题
+  --card-bg: #{$light-bg};
+  --card-border: #{$light-border-light};
+  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+// 暗黑主题
+html.dark {
+  // Element Plus 变量
+  --el-bg-color: #{$dark-bg};
+  --el-bg-color-page: #{$dark-bg-page};
+  --el-bg-color-overlay: #{$dark-bg-overlay};
+  --el-text-color-primary: #{$dark-text-primary};
+  --el-text-color-regular: #{$dark-text-regular};
+  --el-text-color-secondary: #{$dark-text-secondary};
+  --el-border-color: #{$dark-border};
+  --el-border-color-light: #{$dark-border-light};
+  --el-border-color-lighter: #363637;
+  --el-border-color-extra-light: #2b2b2c;
+  --el-fill-color-blank: #{$dark-fill-blank};
+  --el-fill-color-light: #{$dark-fill-light};
+  --el-fill-color: #{$dark-fill};
+  --el-fill-color-dark: #{$dark-fill-dark};
+  --el-fill-color-darker: #{$dark-fill-darker};
+  --el-color-primary: #{$btc-primary};
+  --el-color-success: #{$btc-success};
+  --el-color-warning: #{$btc-warning};
+  --el-color-danger: #{$btc-error};
+  --el-color-info: #{$dark-text-secondary};
+  
+  /* 暗色模式下增强对比度的主题色变量 */
+  --btc-primary-contrast: #ffffff;
+  --btc-primary-hover: #66b1ff;
+  --btc-primary-active: #337ecc;
+  
+  // 侧边栏暗黑主题
+  --sidebar-bg: #1a1a1a;
+  --sidebar-text: #bfcbd9;
+  --sidebar-text-hover: #409eff;
+  --sidebar-bg-hover: #2b2f3a;
+  --sidebar-bg-active: #{$btc-primary};
+  --logo-bg: #141414;
+  
+  // 头部暗黑主题
+  --header-bg: #{$dark-bg-overlay};
+  --header-border: #{$dark-border};
+  --header-text: #{$dark-text-regular};
+  
+  // 卡片暗黑主题
+  --card-bg: #{$dark-bg-overlay};
+  --card-border: #{$dark-border};
+  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+}
+
+// 应用全局样式
+body {
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+// 侧边栏样式
+.admin-layout {
+  .sidebar,
+  .el-aside {
+    background: var(--sidebar-bg) !important;
+    transition: width 0.3s, background-color 0.3s;
+    overflow: hidden;
+  }
+
+  .logo {
+    background: var(--logo-bg) !important;
+    transition: background-color 0.3s;
+    
+    // 亮色主题下使用 Element Plus 官方样式
+    html:not(.dark) & {
+      background: var(--el-bg-color) !important;
+      color: var(--el-text-color-primary) !important;
+      border-bottom: 1px solid var(--el-border-color-light) !important;
+    }
+  }
+
+  .sidebar-menu {
+    background: var(--sidebar-bg) !important;
+    border: none !important;
+    
+    :deep(.el-menu) {
+      background: var(--sidebar-bg) !important;
+      border: none !important;
+    }
+    
+    :deep(.el-menu-item) {
+      color: var(--sidebar-text) !important;
+      background: var(--sidebar-bg) !important;
+      transition: all 0.3s;
+      
+      &:hover {
+        color: var(--sidebar-text-hover) !important;
+        background: var(--sidebar-bg-hover) !important;
+      }
+      
+      &.is-active {
+        color: #ffffff !important;
+        background: var(--sidebar-bg-active) !important;
+        
+        .el-icon {
+          color: #ffffff !important;
+        }
+        
+        span {
+          color: #ffffff !important;
+        }
+        
+        * {
+          color: #ffffff !important;
+        }
+      }
+      
+      .el-icon {
+        color: inherit !important;
+      }
+    }
+  }
+}
+
+// 头部样式
+.admin-layout .header {
+  background: var(--header-bg) !important;
+  border-bottom: 1px solid var(--header-border) !important;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.admin-layout .collapse-btn {
+  color: var(--header-text) !important;
+  transition: color 0.3s;
+  
+  &:hover {
+    background: var(--el-fill-color-light) !important;
+    color: var(--btc-primary) !important;
+  }
+}
+
+// 主内容区域样式
+.admin-layout .main-content {
+  background: var(--el-bg-color-page) !important;
+  transition: background-color 0.3s;
+}
+
+// 卡片样式
+.el-card {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+// 表格样式
+.el-table {
+  background: var(--card-bg) !important;
+  color: var(--el-text-color-primary) !important;
+  
+  :deep(.el-table__header-wrapper) {
+    background: var(--el-fill-color-light) !important;
+  }
+  
+  :deep(.el-table__body-wrapper) {
+    background: var(--card-bg) !important;
+  }
+  
+  :deep(.el-table__row) {
+    background: var(--card-bg) !important;
+    
+    &:hover {
+      background: var(--el-fill-color-light) !important;
+    }
+  }
+}
+
+// 按钮样式
+.el-button {
+  transition: all 0.3s;
+}
+
+// 输入框样式
+.el-input {
+  :deep(.el-input__wrapper) {
+    background: var(--el-bg-color) !important;
+    border-color: var(--el-border-color) !important;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  :deep(.el-input__inner) {
+    color: var(--el-text-color-primary) !important;
+    transition: color 0.3s;
+  }
+}
+
+// 下拉菜单样式
+.el-dropdown-menu {
+  background: var(--el-bg-color-overlay) !important;
+  border-color: var(--el-border-color) !important;
+  transition: background-color 0.3s, border-color 0.3s;
+  
+  :deep(.el-dropdown-menu__item) {
+    color: var(--el-text-color-primary) !important;
+    transition: color 0.3s, background-color 0.3s;
+    
+    &:hover {
+      background: var(--el-fill-color-light) !important;
+    }
+  }
+}
+
+// 面包屑样式
+.el-breadcrumb {
+  :deep(.el-breadcrumb__item) {
+    color: var(--el-text-color-regular) !important;
+  }
+  
+  :deep(.el-breadcrumb__inner) {
+    color: var(--el-text-color-regular) !important;
+    transition: color 0.3s;
+    
+    &:hover {
+      color: var(--el-color-primary) !important;
+    }
+  }
+}
+
+// 标签页样式
+.el-tabs {
+  :deep(.el-tabs__header) {
+    background: var(--card-bg) !important;
+    border-bottom-color: var(--el-border-color) !important;
+  }
+  
+  :deep(.el-tabs__item) {
+    color: var(--el-text-color-regular) !important;
+    transition: color 0.3s;
+    
+    &.is-active {
+      color: var(--el-color-primary) !important;
+    }
+  }
+}
+
+// 分页样式
+.el-pagination {
+  background: var(--card-bg) !important;
+  color: var(--el-text-color-primary) !important;
+  
+  :deep(.el-pager li) {
+    background: var(--el-bg-color) !important;
+    color: var(--el-text-color-primary) !important;
+    border-color: var(--el-border-color) !important;
+    transition: all 0.3s;
+    
+    &:hover {
+      color: var(--el-color-primary) !important;
+    }
+    
+    &.is-active {
+      background: var(--el-color-primary) !important;
+      color: #ffffff !important;
+    }
+  }
+}
+
+// 描述列表样式
+.el-descriptions {
+  background: var(--card-bg) !important;
+  
+  :deep(.el-descriptions__header) {
+    color: var(--el-text-color-primary) !important;
+  }
+  
+  :deep(.el-descriptions__body) {
+    background: var(--card-bg) !important;
+  }
+  
+  :deep(.el-descriptions__label) {
+    background: var(--el-fill-color-light) !important;
+    color: var(--el-text-color-primary) !important;
+  }
+  
+  :deep(.el-descriptions__content) {
+    background: var(--card-bg) !important;
+    color: var(--el-text-color-primary) !important;
+  }
+}
+
+// 空状态样式
+.el-empty {
+  background: var(--card-bg) !important;
+  
+  :deep(.el-empty__description) {
+    color: var(--el-text-color-secondary) !important;
+  }
+}
+
+// 统计卡片样式
+.stat-card {
+  background: var(--card-bg) !important;
+  transition: background-color 0.3s;
+}
+
+.stat-number {
+  color: var(--el-text-color-primary) !important;
+  transition: color 0.3s;
+}
+
+.stat-label {
+  color: var(--el-text-color-secondary) !important;
+  transition: color 0.3s;
+}
+
+// 插件卡片样式
+.plugin-name {
+  color: var(--el-text-color-primary) !important;
+  transition: color 0.3s;
+}
+
+.plugin-description {
+  color: var(--el-text-color-secondary) !important;
+  transition: color 0.3s;
+}
+
+// 页面标题样式
+.page-header {
+  h2 {
+    color: var(--el-text-color-primary) !important;
+    transition: color 0.3s;
+  }
+  
+  p {
+    color: var(--el-text-color-secondary) !important;
+    transition: color 0.3s;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .admin-layout {
+    .header {
+      padding: 0 15px;
+    }
+    
+    .main-content {
+      padding: 15px;
+    }
+    
+    .logo-text {
+      font-size: 16px;
+    }
+  }
+}

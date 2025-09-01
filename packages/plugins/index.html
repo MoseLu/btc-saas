@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTC Plugins 系统演示</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-size: 2.5em;
+      margin: 0 0 10px 0;
+    }
+    .header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+    .demo-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .demo-section h2 {
+      margin-top: 0;
+      color: #fff;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #5a6fd8;
+    }
+    .output {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      padding: 15px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .plugin-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .plugin-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .plugin-card h3 {
+      margin: 0 0 10px 0;
+      color: #fff;
+    }
+    .plugin-status {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .status.active {
+      background: #10b981;
+      color: white;
+    }
+    .status.inactive {
+      background: #6b7280;
+      color: white;
+    }
+    .status.error {
+      background: #ef4444;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>BTC Plugins 系统演示</h1>
+      <p>测试插件发现、加载和管理功能</p>
+    </div>
+
+    <div class="demo-section">
+      <h2>插件管理器</h2>
+      <button onclick="discoverPlugins()">发现插件</button>
+      <button onclick="loadAllPlugins()">加载所有插件</button>
+      <button onclick="unloadAllPlugins()">卸载所有插件</button>
+      <button onclick="getPluginStatus()">获取插件状态</button>
+      <div class="output" id="manager-output">插件管理器状态将显示在这里</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>插件列表</h2>
+      <div class="plugin-list" id="plugin-list">
+        <!-- 插件卡片将在这里动态生成 -->
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>插件生命周期</h2>
+      <button onclick="testPluginLifecycle()">测试插件生命周期</button>
+      <button onclick="simulatePluginError()">模拟插件错误</button>
+      <div class="output" id="lifecycle-output">插件生命周期事件将显示在这里</div>
+    </div>
+
+    <div class="demo-section">
+      <h2>插件配置</h2>
+      <button onclick="loadPluginConfig()">加载插件配置</button>
+      <button onclick="savePluginConfig()">保存插件配置</button>
+      <button onclick="resetPluginConfig()">重置插件配置</button>
+      <div class="output" id="config-output">插件配置将显示在这里</div>
+    </div>
+  </div>
+
+  <script type="module">
+    // 插件管理器
+    class PluginManager {
+      constructor() {
+        this.plugins = new Map();
+        this.config = {};
+        this.eventLog = [];
+      }
+
+      // 发现插件
+      async discoverPlugins() {
+        const mockPlugins = [
+          {
+            id: 'chart-plugin',
+            name: '图表插件',
+            version: '1.0.0',
+            description: '提供各种图表组件',
+            author: 'BTC Team',
+            dependencies: ['vue', 'element-plus']
+          },
+          {
+            id: 'icon-manager',
+            name: '图标管理器',
+            version: '1.0.0',
+            description: '管理应用图标',
+            author: 'BTC Team',
+            dependencies: ['vue']
+          },
+          {
+            id: 'data-table',
+            name: '数据表格',
+            version: '1.0.0',
+            description: '高级数据表格组件',
+            author: 'BTC Team',
+            dependencies: ['vue', 'element-plus']
+          },
+          {
+            id: 'form-builder',
+            name: '表单构建器',
+            version: '1.0.0',
+            description: '动态表单生成器',
+            author: 'BTC Team',
+            dependencies: ['vue', 'element-plus']
+          }
+        ];
+
+        mockPlugins.forEach(plugin => {
+          this.plugins.set(plugin.id, {
+            ...plugin,
+            status: 'discovered',
+            loaded: false,
+            error: null
+          });
+        });
+
+        this.logEvent('插件发现完成', { count: mockPlugins.length });
+        this.updatePluginList();
+        return mockPlugins;
+      }
+
+      // 加载插件
+      async loadPlugin(pluginId) {
+        const plugin = this.plugins.get(pluginId);
+        if (!plugin) {
+          throw new Error(`插件 ${pluginId} 不存在`);
+        }
+
+        try {
+          // 模拟加载过程
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          plugin.status = 'active';
+          plugin.loaded = true;
+          plugin.error = null;
+          
+          this.logEvent('插件加载成功', { pluginId, plugin });
+          this.updatePluginList();
+          return plugin;
+        } catch (error) {
+          plugin.status = 'error';
+          plugin.error = error.message;
+          this.logEvent('插件加载失败', { pluginId, error: error.message });
+          this.updatePluginList();
+          throw error;
+        }
+      }
+
+      // 卸载插件
+      async unloadPlugin(pluginId) {
+        const plugin = this.plugins.get(pluginId);
+        if (!plugin) {
+          throw new Error(`插件 ${pluginId} 不存在`);
+        }
+
+        plugin.status = 'inactive';
+        plugin.loaded = false;
+        
+        this.logEvent('插件卸载成功', { pluginId });
+        this.updatePluginList();
+        return plugin;
+      }
+
+      // 加载所有插件
+      async loadAllPlugins() {
+        const results = [];
+        for (const [pluginId] of this.plugins) {
+          try {
+            const result = await this.loadPlugin(pluginId);
+            results.push(result);
+          } catch (error) {
+            results.push({ pluginId, error: error.message });
+          }
+        }
+        this.logEvent('批量加载插件完成', { results });
+        return results;
+      }
+
+      // 卸载所有插件
+      async unloadAllPlugins() {
+        const results = [];
+        for (const [pluginId] of this.plugins) {
+          try {
+            const result = await this.unloadPlugin(pluginId);
+            results.push(result);
+          } catch (error) {
+            results.push({ pluginId, error: error.message });
+          }
+        }
+        this.logEvent('批量卸载插件完成', { results });
+        return results;
+      }
+
+      // 获取插件状态
+      getPluginStatus() {
+        const status = {};
+        for (const [pluginId, plugin] of this.plugins) {
+          status[pluginId] = {
+            status: plugin.status,
+            loaded: plugin.loaded,
+            error: plugin.error
+          };
+        }
+        this.logEvent('获取插件状态', status);
+        return status;
+      }
+
+      // 记录事件
+      logEvent(message, data = null) {
+        this.eventLog.push({
+          timestamp: new Date().toISOString(),
+          message,
+          data
+        });
+        this.updateLifecycleOutput();
+      }
+
+      // 更新插件列表显示
+      updatePluginList() {
+        const container = document.getElementById('plugin-list');
+        container.innerHTML = '';
+
+        for (const [pluginId, plugin] of this.plugins) {
+          const card = document.createElement('div');
+          card.className = 'plugin-card';
+          card.innerHTML = `
+            <h3>
+              ${plugin.name}
+              <span class="plugin-status status ${plugin.status}">${plugin.status}</span>
+            </h3>
+            <p><strong>ID:</strong> ${plugin.id}</p>
+            <p><strong>版本:</strong> ${plugin.version}</p>
+            <p><strong>描述:</strong> ${plugin.description}</p>
+            <p><strong>作者:</strong> ${plugin.author}</p>
+            <p><strong>依赖:</strong> ${plugin.dependencies.join(', ')}</p>
+            ${plugin.error ? `<p><strong>错误:</strong> ${plugin.error}</p>` : ''}
+            <button onclick="pluginManager.loadPlugin('${pluginId}')" ${plugin.loaded ? 'disabled' : ''}>
+              ${plugin.loaded ? '已加载' : '加载'}
+            </button>
+            <button onclick="pluginManager.unloadPlugin('${pluginId}')" ${!plugin.loaded ? 'disabled' : ''}>
+              ${!plugin.loaded ? '已卸载' : '卸载'}
+            </button>
+          `;
+          container.appendChild(card);
+        }
+      }
+
+      // 更新生命周期输出
+      updateLifecycleOutput() {
+        const output = document.getElementById('lifecycle-output');
+        output.textContent = this.eventLog.map(e => 
+          `${e.timestamp}: ${e.message}${e.data ? ` - ${JSON.stringify(e.data)}` : ''}`
+        ).join('\n');
+      }
+
+      // 加载插件配置
+      loadPluginConfig() {
+        this.config = {
+          autoLoad: true,
+          enableHotReload: true,
+          pluginTimeout: 5000,
+          maxConcurrentLoads: 3
+        };
+        this.logEvent('插件配置已加载', this.config);
+        this.updateConfigOutput();
+      }
+
+      // 保存插件配置
+      savePluginConfig() {
+        this.logEvent('插件配置已保存', this.config);
+        this.updateConfigOutput();
+      }
+
+      // 重置插件配置
+      resetPluginConfig() {
+        this.config = {};
+        this.logEvent('插件配置已重置');
+        this.updateConfigOutput();
+      }
+
+      // 更新配置输出
+      updateConfigOutput() {
+        const output = document.getElementById('config-output');
+        output.textContent = JSON.stringify(this.config, null, 2);
+      }
+    }
+
+    // 创建插件管理器实例
+    const pluginManager = new PluginManager();
+    window.pluginManager = pluginManager;
+
+    // 全局函数
+    window.discoverPlugins = () => {
+      pluginManager.discoverPlugins();
+      updateManagerOutput();
+    };
+
+    window.loadAllPlugins = async () => {
+      await pluginManager.loadAllPlugins();
+      updateManagerOutput();
+    };
+
+    window.unloadAllPlugins = async () => {
+      await pluginManager.unloadAllPlugins();
+      updateManagerOutput();
+    };
+
+    window.getPluginStatus = () => {
+      const status = pluginManager.getPluginStatus();
+      updateManagerOutput();
+    };
+
+    window.testPluginLifecycle = () => {
+      pluginManager.logEvent('测试插件生命周期');
+    };
+
+    window.simulatePluginError = () => {
+      pluginManager.logEvent('模拟插件错误', { error: '插件加载超时' });
+    };
+
+    window.loadPluginConfig = () => {
+      pluginManager.loadPluginConfig();
+    };
+
+    window.savePluginConfig = () => {
+      pluginManager.savePluginConfig();
+    };
+
+    window.resetPluginConfig = () => {
+      pluginManager.resetPluginConfig();
+    };
+
+    function updateManagerOutput() {
+      const output = document.getElementById('manager-output');
+      const status = pluginManager.getPluginStatus();
+      output.textContent = JSON.stringify(status, null, 2);
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      pluginManager.discoverPlugins();
+    });
+  </script>
+</body>
+</html>

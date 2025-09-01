@@ -1,0 +1,13 @@
+{
+  "name": "@btc/quality",
+  "version": "1.0.0",
+  "description": "BTC MES 品质系统",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Quality system dev server'",
+    "build": "echo 'Quality system build'",
+    "lint": "echo 'Quality system lint'",
+    "typecheck": "echo 'Quality system typecheck'",
+    "clean": "echo 'Quality system clean'"
+  }
+}

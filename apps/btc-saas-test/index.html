@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- 入口早期脚本：支持 __forceTheme，避免 iframe FOUC -->
+    <script>
+      (function () {
+        try {
+          const url = new URL(location.href);
+          const t = url.searchParams.get('__forceTheme');
+          if (!t) return;
+          const html = document.documentElement;
+          html.classList.toggle('dark', t === 'dark');
+          // 立刻设置 Element Plus 变量的基础色，进一步减少首帧抖动
+          if (t === 'dark') {
+            html.style.setProperty('--el-bg-color-page', '#0a0a0a');
+            html.style.setProperty('--el-text-color-primary', '#e5eaf3');
+          } else {
+            html.style.setProperty('--el-bg-color-page', '#f2f3f5');
+            html.style.setProperty('--el-text-color-primary', '#303133');
+          }
+        } catch (_) {}
+      })();
+    </script>
+    
+    <!-- 1) 主题变量（两套都先声明；JS 只切换 .dark 类） -->
+    <style>
+      /* 亮色变量（默认） */
+      :root {
+        /* 平台级变量 */
+        --btc-bg-page: #f0f2f5;
+        --btc-text-primary: #303133;
+
+        /* 基础 Element Plus 变量（theme.scss 会覆盖这些） */
+        --el-bg-color: #ffffff;
+        --el-bg-color-page: var(--btc-bg-page);
+        --el-text-color-primary: var(--btc-text-primary);
+        --el-text-color-regular: #606266;
+        --el-border-color: #dcdfe6;
+        --el-border-color-light: #e4e7ed;
+      }
+      
+      /* 暗色变量（仅在 html.dark 时生效） */
+      html.dark {
+        --btc-bg-page: #0a0a0a;    /* 比 EP 略深一档，贴近 cool-admin 观感 */
+        --btc-text-primary: #e5eaf3;
+
+        --el-bg-color: #141414;
+        --el-bg-color-page: var(--btc-bg-page);
+        --el-text-color-primary: var(--btc-text-primary);
+        --el-text-color-regular: #cfd3dc;
+        --el-border-color: #4c4d4f;
+        --el-border-color-light: #414243;
+      }
+
+      /* 首帧基础外观（避免白屏/闪烁） */
+      [v-cloak]{ visibility:hidden!important; }
+      html[data-first-paint="1"] .el-menu--collapse,
+      html[data-first-paint="1"] .el-sub-menu__title { transition:none!important; }
+
+      /* 在主题未决定时，允许 UA 自己选（避免瞬间白闪） */
+      html:not([data-theme-ready="1"]) { color-scheme: light dark; }
+
+      /* 默认隐藏侧栏，等 main.ts 打上 data-menu-hydrated=1 再显示 */
+      html:not([data-menu-hydrated="1"]) .sidebar { 
+        visibility: hidden; 
+      }
+
+      body{
+        margin:0; 
+        height:100vh;
+        background: var(--el-bg-color-page, #f0f2f5);
+        color: var(--el-text-color-primary, #303133);
+      }
+    </style>
+
+    <!-- 2) EP 暗色变量（官方）→ 允许 EP 组件跟随 .dark  -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/theme-chalk/dark/css-vars.css">
+
+    <!-- 3) 主题判定脚本（必须在任何样式后、应用前；尽量短小） -->
+    <script>
+      (function(){
+        try {
+          const saved = localStorage.getItem('theme') || 'system'; // 'light'|'dark'|'system'
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const isDark = saved === 'dark' || (saved === 'system' && prefersDark);
+
+          const html = document.documentElement;
+          html.classList.toggle('dark', isDark);
+          html.style.colorScheme = isDark ? 'dark' : 'light'; // 让 UA 控制滚动条/表单外观
+          html.setAttribute('data-theme-ready', '1');          // 首帧标记（CSS 用到）
+
+          // 可选：应用启动后监听系统主题变化（仅当跟随系统时）
+          if (saved === 'system' && window.matchMedia) {
+            const mq = window.matchMedia('(prefers-color-scheme: dark)');
+            mq.addEventListener?.('change', e => {
+              const dark = e.matches;
+              html.classList.toggle('dark', dark);
+              html.style.colorScheme = dark ? 'dark' : 'light';
+            });
+          }
+        } catch(e) { /* 忽略 */ }
+      })();
+    </script>
+    
+    <!-- Favicon 配置 -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    
+    <!-- 主题色 -->
+    <meta name="theme-color" content="#1890ff" />
+    <meta name="msapplication-TileColor" content="#1890ff" />
+
+    <title>BTC Saas系统</title>
+  </head>
+  <body>
+    <div id="app" v-cloak></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

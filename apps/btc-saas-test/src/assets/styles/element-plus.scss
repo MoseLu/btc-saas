@@ -1,0 +1,491 @@
+// ========================================
+// Element Plus 组件样式优化
+// ========================================
+
+@use './variables.scss' as *;
+@use './mixins.scss' as *;
+
+// ========================================
+// Element Plus菜单组件优化
+// ========================================
+
+// 保留必要的菜单交互动画，只禁用可能影响性能的动画
+.el-menu {
+  // 保留菜单收起展开的基本动画
+  transition: width 0.3s ease;
+  
+  .el-menu-item,
+  .el-sub-menu__title {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    
+    .el-icon {
+      transition: transform 0.3s ease;
+    }
+    
+    span {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  }
+  
+  .el-sub-menu__icon-arrow {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+}
+
+// ========================================
+// 菜单收起状态优化
+// ========================================
+
+// Element Plus收起状态的样式优化
+.el-menu--collapse {
+  .el-menu-item,
+  .el-sub-menu__title {
+    justify-content: center;
+    
+    .el-icon {
+      margin-right: 0;
+    }
+    
+    span {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-20px);
+    }
+  }
+  
+  .el-sub-menu__icon-arrow {
+    opacity: 0;
+  }
+}
+
+// 菜单项基础样式
+.el-menu-item {
+  position: relative;
+  overflow: hidden;
+  
+  .el-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    position: relative;
+    z-index: 2;
+  }
+  
+  span {
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// 子菜单展开箭头样式修复
+.el-sub-menu__icon-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg); // 默认向右
+  margin-top: 0;
+  margin-right: 0;
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+}
+
+// 子菜单展开状态下的箭头样式
+.el-sub-menu.is-opened > .el-sub-menu__title .el-sub-menu__icon-arrow {
+  transform: translateY(-50%) rotate(0deg); // 展开时向下
+}
+
+// ========================================
+// 按钮组件优化
+// ========================================
+
+.el-button {
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-sm;
+  }
+}
+
+// ========================================
+// 卡片组件优化
+// ========================================
+
+.el-card {
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+// ========================================
+// 表格组件优化
+// ========================================
+
+.el-table {
+  .el-table__row {
+    &:hover {
+      background-color: rgba($primary-color, 0.05);
+    }
+  }
+}
+
+// ========================================
+// 表单组件优化
+// ========================================
+
+.el-input {
+  .el-input__wrapper {
+    &:focus {
+      box-shadow: 0 0 0 1px $primary-color;
+    }
+  }
+}
+
+// ========================================
+// 开关组件优化
+// ========================================
+
+.el-switch {
+  .el-switch__core {
+    // 移除过渡动画
+  }
+  
+  .el-switch__action {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 标签页组件优化
+// ========================================
+
+.el-tabs {
+  .el-tabs__item {
+    &:hover {
+      color: $primary-color;
+    }
+    
+    &.is-active {
+      color: $primary-color;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+// ========================================
+// 分页组件优化
+// ========================================
+
+.el-pagination {
+  .el-pager li {
+    &:hover {
+      color: $primary-color;
+    }
+    
+    &.is-active {
+      background-color: $primary-color;
+      color: $white;
+    }
+  }
+  
+  .btn-prev,
+  .btn-next {
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+// ========================================
+// 对话框组件优化
+// ========================================
+
+.el-dialog {
+  // 移除过渡动画
+}
+
+// ========================================
+// 抽屉组件优化
+// ========================================
+
+.el-drawer {
+  // 移除过渡动画
+}
+
+// ========================================
+// 消息提示组件优化
+// ========================================
+
+.el-message {
+  // 移除过渡动画
+}
+
+// ========================================
+// 通知组件优化
+// ========================================
+
+.el-notification {
+  // 移除过渡动画
+}
+
+// ========================================
+// 加载组件优化
+// ========================================
+
+.el-loading-mask {
+  // 移除过渡动画
+}
+
+// ========================================
+// 工具提示组件优化
+// ========================================
+
+.el-tooltip__popper {
+  // 移除过渡动画
+}
+
+// ========================================
+// 弹出框组件优化
+// ========================================
+
+.el-popover {
+  // 移除过渡动画
+}
+
+// ========================================
+// 下拉菜单组件优化
+// ========================================
+
+.el-dropdown-menu {
+  .el-dropdown-menu__item {
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+      color: $primary-color;
+    }
+  }
+}
+
+// ========================================
+// 面包屑组件优化
+// ========================================
+
+.el-breadcrumb {
+  .el-breadcrumb__item {
+    .el-breadcrumb__inner {
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+// ========================================
+// 标签组件优化
+// ========================================
+
+.el-tag {
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+}
+
+// ========================================
+// 进度条组件优化
+// ========================================
+
+.el-progress {
+  .el-progress-bar__outer {
+    // 移除过渡动画
+  }
+  
+  .el-progress-bar__inner {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 滑块组件优化
+// ========================================
+
+.el-slider {
+  .el-slider__runway {
+    // 移除过渡动画
+  }
+  
+  .el-slider__bar {
+    // 移除过渡动画
+  }
+  
+  .el-slider__button {
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
+
+// ========================================
+// 时间选择器组件优化
+// ========================================
+
+.el-time-picker {
+  .el-input__wrapper {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 日期选择器组件优化
+// ========================================
+
+.el-date-picker {
+  .el-input__wrapper {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 级联选择器组件优化
+// ========================================
+
+.el-cascader {
+  .el-input__wrapper {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 树形组件优化
+// ========================================
+
+.el-tree {
+  .el-tree-node__content {
+    &:hover {
+      background-color: rgba($primary-color, 0.05);
+    }
+  }
+  
+  .el-tree-node__expand-icon {
+    // 移除过渡动画
+  }
+}
+
+// ========================================
+// 上传组件优化
+// ========================================
+
+.el-upload {
+  .el-upload-dragger {
+    &:hover {
+      border-color: $primary-color;
+      background-color: rgba($primary-color, 0.05);
+    }
+  }
+}
+
+// ========================================
+// 评分组件优化
+// ========================================
+
+.el-rate {
+  .el-rate__item {
+    .el-rate__icon {
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// ========================================
+// 颜色选择器组件优化
+// ========================================
+
+.el-color-picker {
+  .el-color-picker__trigger {
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// ========================================
+// Element Plus菜单暗色主题修复
+// ========================================
+
+// 修复暗色模式下菜单背景色不一致的问题
+html.dark {
+  .el-menu {
+    background-color: var(--el-bg-color) !important;
+    
+    .el-menu-item,
+    .el-sub-menu .el-menu-item {
+      background-color: transparent !important;
+    }
+    
+    .el-sub-menu__title {
+      background-color: transparent !important;
+    }
+  }
+}
+
+// Element Plus菜单激活状态文字颜色修复
+.el-menu-item.is-active {
+  color: #ffffff !important;
+  
+  span {
+    color: #ffffff !important;
+  }
+  
+  .el-icon {
+    color: #ffffff !important;
+  }
+  
+  * {
+    color: #ffffff !important;
+  }
+}
+
+// 确保菜单项激活状态的所有子元素都是白色
+.el-menu .el-menu-item.is-active {
+  color: #ffffff !important;
+  
+  .el-icon,
+  span,
+  .menu-icon,
+  .menu-title {
+    color: #ffffff !important;
+  }
+}
+
+// 强制覆盖所有可能的菜单激活状态样式
+.el-menu-item.is-active,
+.el-menu .el-menu-item.is-active,
+.sidebar-menu .el-menu-item.is-active,
+.layout__aside .el-menu-item.is-active {
+  color: #ffffff !important;
+  background: var(--el-color-primary) !important;
+  
+  .el-icon,
+  span,
+  .menu-icon,
+  .menu-title,
+  * {
+    color: #ffffff !important;
+  }
+}
+
+// ========================================
+// Element Plus组件样式优化完成
+// ========================================

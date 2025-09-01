@@ -1,0 +1,22 @@
+{
+  "name": "@btc/styles",
+  "version": "1.0.0",
+  "description": "BTC SaaS 统一样式系统",
+  "main": "src/index.scss",
+  "files": [
+    "src/**/*"
+  ],
+  "scripts": {
+    "build": "sass src/index.scss dist/index.css --style compressed",
+    "dev": "sass src/index.scss dist/index.css --watch",
+    "lint": "stylelint src/**/*.scss"
+  },
+  "devDependencies": {
+    "sass": "^1.69.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard-scss": "^13.0.0"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.11.0"
+  }
+}

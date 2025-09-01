@@ -1,0 +1,389 @@
+// ========================================
+// BTC SaaS 样式重置
+// ========================================
+
+@use './variables.scss' as *;
+
+// ========================================
+// 基础重置
+// ========================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $text-primary;
+  background-color: $bg-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ========================================
+// 标题重置
+// ========================================
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-small;
+  color: $text-primary;
+}
+
+h1 { font-size: $font-size-extra-large; }
+h2 { font-size: $font-size-large; }
+h3 { font-size: $font-size-medium; }
+h4 { font-size: $font-size-base; }
+h5 { font-size: $font-size-small; }
+h6 { font-size: $font-size-extra-small; }
+
+// ========================================
+// 段落和文本重置
+// ========================================
+
+p {
+  margin: 0;
+  line-height: $line-height-base;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  background-color: transparent;
+  transition: color $transition-duration-fast $transition-timing-function;
+  
+  &:hover {
+    color: $primary-light;
+  }
+  
+  &:active {
+    color: $primary-dark;
+  }
+}
+
+// ========================================
+// 列表重置
+// ========================================
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+}
+
+// ========================================
+// 表单元素重置
+// ========================================
+
+input,
+button,
+textarea,
+select {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+input,
+textarea {
+  border: 1px solid $border-color-base;
+  border-radius: $border-radius-base;
+  padding: $padding-sm $padding-md;
+  background-color: $white;
+  transition: border-color $transition-duration-fast $transition-timing-function;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+  
+  &::placeholder {
+    color: $text-placeholder;
+  }
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  
+  &:focus {
+    outline: none;
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+select {
+  border: 1px solid $border-color-base;
+  border-radius: $border-radius-base;
+  padding: $padding-sm $padding-md;
+  background-color: $white;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+// ========================================
+// 表格重置
+// ========================================
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+th,
+td {
+  padding: $padding-sm;
+  text-align: left;
+  border-bottom: 1px solid $border-color-light;
+}
+
+th {
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  background-color: $gray-50;
+}
+
+// ========================================
+// 图片重置
+// ========================================
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+  vertical-align: middle;
+}
+
+svg {
+  vertical-align: middle;
+}
+
+// ========================================
+// 其他元素重置
+// ========================================
+
+hr {
+  margin: $margin-lg 0;
+  border: none;
+  border-top: 1px solid $border-color-light;
+  height: 1px;
+}
+
+blockquote {
+  margin: $margin-lg 0;
+  padding: $padding-md $padding-lg;
+  border-left: 4px solid $primary-color;
+  background-color: $gray-50;
+  font-style: italic;
+}
+
+code {
+  font-family: $font-family-monospace;
+  font-size: 0.9em;
+  padding: $padding-xs $padding-sm;
+  background-color: $gray-100;
+  border-radius: $border-radius-sm;
+  color: $danger-color;
+}
+
+pre {
+  font-family: $font-family-monospace;
+  font-size: $font-size-small;
+  line-height: $line-height-base;
+  padding: $padding-md;
+  background-color: $gray-50;
+  border-radius: $border-radius-base;
+  overflow-x: auto;
+  
+  code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+// ========================================
+// 交互元素重置
+// ========================================
+
+details {
+  display: block;
+}
+
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+template {
+  display: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+// ========================================
+// 可访问性重置
+// ========================================
+
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: 0 !important;
+}
+
+// ========================================
+// 滚动条重置
+// ========================================
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: $gray-100;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-500;
+  border-radius: 5px;
+  border: 1px solid $gray-300;
+  
+  &:hover {
+    background: $gray-600;
+  }
+  
+  &:active {
+    background: $gray-700;
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: $gray-100;
+}
+
+// Firefox 滚动条样式
+* {
+  scrollbar-width: auto;
+  scrollbar-color: $gray-500 $gray-100;
+}
+
+// ========================================
+// 选择文本重置
+// ========================================
+
+::selection {
+  background-color: rgba($primary-color, 0.2);
+  color: $text-primary;
+}
+
+::-moz-selection {
+  background-color: rgba($primary-color, 0.2);
+  color: $text-primary;
+}
+
+// ========================================
+// 焦点重置
+// ========================================
+
+:focus-visible {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// ========================================
+// 打印样式重置
+// ========================================
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: $black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+  
+  pre,
+  blockquote {
+    border: 1px solid $gray-300;
+    page-break-inside: avoid;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+  
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}

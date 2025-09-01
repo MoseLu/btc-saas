@@ -1,0 +1,162 @@
+// View Transitions API 样式
+// 实现主题切换的圆形揭幕效果
+
+// CSS变量定义
+:root{
+  --vt-duration: 720ms;
+  --vt-easing: cubic-bezier(.22,.61,.36,1);
+  --vt-cx: 100%; /* 默认右上角，JS 会覆盖 */
+  --vt-cy: 0%;
+}
+
+/* 禁用默认的淡入淡出 */
+::view-transition-old(root),
+::view-transition-new(root){
+  animation: none;
+}
+
+/* 亮 -> 暗：新主题"展开" */
+html[data-vt-mode="reveal"] ::view-transition-new(root){
+  z-index: 1;
+  clip-path: circle(0 at var(--vt-cx) var(--vt-cy));
+  animation: vt-reveal var(--vt-duration) var(--vt-easing) forwards;
+  will-change: clip-path;
+}
+@keyframes vt-reveal{
+  to { clip-path: circle(141.5% at var(--vt-cx) var(--vt-cy)); }
+}
+
+/* 暗 -> 亮：旧主题"收起" */
+html[data-vt-mode="conceal"] ::view-transition-old(root){
+  z-index: 1;               /* 旧帧在上，逐步收起露出新帧 */
+  clip-path: circle(141.5% at var(--vt-cx) var(--vt-cy));
+  animation: vt-conceal var(--vt-duration) var(--vt-easing) forwards;
+  will-change: clip-path;
+}
+@keyframes vt-conceal{
+  to { clip-path: circle(0 at var(--vt-cx) var(--vt-cy)); }
+}
+
+/* 可选：在被动画的帧上叠一点"波纹前沿"质感（浏览器不支持也无所谓） */
+@supports (mask-image: radial-gradient(circle, #000 0, #000 0)) {
+  html[data-vt-mode="reveal"] ::view-transition-new(root)::after,
+  html[data-vt-mode="conceal"] ::view-transition-old(root)::after{
+    content:"";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    opacity:.22; filter: blur(.5px);
+    mask-image: radial-gradient(
+      circle at var(--vt-cx) var(--vt-cy),
+      rgba(0,0,0,1) 0,
+      rgba(0,0,0,1) 8px,
+      rgba(0,0,0,0) 22px
+    );
+    animation: vt-rings var(--vt-duration) var(--vt-easing) forwards;
+  }
+  @keyframes vt-rings{ to { mask-size: 200vmax 200vmax; } }
+}
+
+/* 无动画偏好 */
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-old(root),
+  ::view-transition-new(root){ animation: none !important; }
+}
+
+// 主题切换按钮的样式增强
+.theme-toggle-btn {
+  position: relative;
+  overflow: hidden;
+  
+  // 添加点击涟漪效果
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
+  &:active::before {
+    width: 100px;
+    height: 100px;
+  }
+  
+  // 深色主题下的涟漪效果
+  [data-theme="dark"] &::before {
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+// 主题切换指示器
+.theme-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--el-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  
+  &.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// 主题切换时的页面遮罩
+.theme-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    circle at var(--origin-x, 50%) var(--origin-y, 50%),
+    var(--el-color-primary) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: opacity 0.3s ease;
+  
+  &.active {
+    opacity: 0.1;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .theme-indicator {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+}
+
+// 无障碍支持
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-btn,
+  .theme-indicator,
+  .theme-overlay {
+    transition: none !important;
+    animation: none !important;
+  }
+}

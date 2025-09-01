@@ -1,0 +1,90 @@
+@use "../tokens/index.scss" as *;
+
+// 焦点环 mixin
+@mixin focus-ring($color: $color-focus, $offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: $offset;
+  }
+}
+
+// 焦点环（无轮廓）
+@mixin focus-ring-no-outline($color: $color-focus, $offset: 2px) {
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px $color;
+    outline-offset: $offset;
+  }
+}
+
+// 可访问性焦点
+@mixin accessible-focus {
+  &:focus-visible {
+    outline: 2px solid $color-focus;
+    outline-offset: 2px;
+  }
+}
+
+// 键盘导航焦点
+@mixin keyboard-focus {
+  &:focus-visible {
+    outline: 2px solid $color-focus;
+    outline-offset: 2px;
+  }
+}
+
+// 鼠标焦点（仅鼠标用户）
+@mixin mouse-focus {
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+// 交互状态
+@mixin interactive {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// 禁用状态
+@mixin disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// 屏幕阅读器专用文本
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// 屏幕阅读器专用文本（可聚焦）
+@mixin sr-only-focusable {
+  @include sr-only;
+  
+  &:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}

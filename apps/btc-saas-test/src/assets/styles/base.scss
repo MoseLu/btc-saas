@@ -1,0 +1,305 @@
+// ========================================
+// BTC SaaS 基础样式 - 主入口文件
+// ========================================
+
+// 导入变量和工具函数
+@use './variables.scss' as *;
+@use './mixins.scss' as *;
+
+// 导入重置样式
+@use './reset.scss' as *;
+
+// 导入Element Plus覆盖样式
+@use './element-plus.scss' as *;
+
+// 导入布局样式
+@use './layout.scss' as *;
+
+// 导入主题样式
+@use './theme.scss' as *;
+
+// ========================================
+// 全局性能优化 - 选择性禁用动画
+// ========================================
+
+// 只禁用可能影响性能的大型动画，保留必要的交互动画
+.router-view {
+  // 禁用路由切换动画以提升性能
+  * {
+    transition: none !important;
+  }
+  
+  // 禁用常规动画，但不影响 View Transitions 伪元素
+  *:not(::view-transition-old):not(::view-transition-new) {
+    animation: none !important;
+  }
+}
+
+// 保留菜单必要的交互动画，只禁用可能导致性能问题的动画
+.el-menu--collapse .el-menu-item span,
+.el-menu--collapse .el-sub-menu__title span {
+  transition: opacity 0.2s ease !important;
+}
+
+// 保留菜单收起展开的基本动画
+.el-menu {
+  .el-sub-menu__icon-arrow {
+    transition: transform 0.3s ease !important;
+  }
+}
+
+// ========================================
+// 全局基础样式
+// ========================================
+
+// 根元素样式
+html {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $text-primary;
+  background-color: $bg-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+// ========================================
+// 全局工具类
+// ========================================
+
+// 文本对齐
+.btc-text-center { text-align: center; }
+.btc-text-left { text-align: left; }
+.btc-text-right { text-align: right; }
+.btc-text-justify { text-align: justify; }
+
+// 文本颜色
+.btc-text-primary { color: $text-primary; }
+.btc-text-regular { color: $text-regular; }
+.btc-text-secondary { color: $text-secondary; }
+.btc-text-placeholder { color: $text-placeholder; }
+
+// 功能色
+.btc-text-success { color: $success-color; }
+.btc-text-warning { color: $warning-color; }
+.btc-text-danger { color: $danger-color; }
+.btc-text-info { color: $info-color; }
+
+// 背景色
+.btc-bg-primary { background-color: $primary-color; }
+.btc-bg-success { background-color: $success-color; }
+.btc-bg-warning { background-color: $warning-color; }
+.btc-bg-danger { background-color: $danger-color; }
+.btc-bg-info { background-color: $info-color; }
+
+// 间距类
+.btc-m-0 { margin: 0; }
+.btc-m-xs { margin: $margin-xs; }
+.btc-m-sm { margin: $margin-sm; }
+.btc-m-md { margin: $margin-md; }
+.btc-m-lg { margin: $margin-lg; }
+.btc-m-xl { margin: $margin-xl; }
+
+.btc-mt-0 { margin-top: 0; }
+.btc-mt-xs { margin-top: $margin-xs; }
+.btc-mt-sm { margin-top: $margin-sm; }
+.btc-mt-md { margin-top: $margin-md; }
+.btc-mt-lg { margin-top: $margin-lg; }
+.btc-mt-xl { margin-top: $margin-xl; }
+
+.btc-mb-0 { margin-bottom: 0; }
+.btc-mb-xs { margin-bottom: $margin-xs; }
+.btc-mb-sm { margin-bottom: $margin-sm; }
+.btc-mb-md { margin-bottom: $margin-md; }
+.btc-mb-lg { margin-bottom: $margin-lg; }
+.btc-mb-xl { margin-bottom: $margin-xl; }
+
+.btc-ml-0 { margin-left: 0; }
+.btc-ml-xs { margin-left: $margin-xs; }
+.btc-ml-sm { margin-left: $margin-sm; }
+.btc-ml-md { margin-left: $margin-md; }
+.btc-ml-lg { margin-left: $margin-lg; }
+.btc-ml-xl { margin-left: $margin-xl; }
+
+.btc-mr-0 { margin-right: 0; }
+.btc-mr-xs { margin-right: $margin-xs; }
+.btc-mr-sm { margin-right: $margin-sm; }
+.btc-mr-md { margin-right: $margin-md; }
+.btc-mr-lg { margin-right: $margin-lg; }
+.btc-mr-xl { margin-right: $margin-xl; }
+
+.btc-p-0 { padding: 0; }
+.btc-p-xs { padding: $padding-xs; }
+.btc-p-sm { padding: $padding-sm; }
+.btc-p-md { padding: $padding-md; }
+.btc-p-lg { padding: $padding-lg; }
+.btc-p-xl { padding: $padding-xl; }
+
+.btc-pt-0 { padding-top: 0; }
+.btc-pt-xs { padding-top: $padding-xs; }
+.btc-pt-sm { padding-top: $padding-sm; }
+.btc-pt-md { padding-top: $padding-md; }
+.btc-pt-lg { padding-top: $padding-lg; }
+.btc-pt-xl { padding-top: $padding-xl; }
+
+.btc-pb-0 { padding-bottom: 0; }
+.btc-pb-xs { padding-bottom: $padding-xs; }
+.btc-pb-sm { padding-bottom: $padding-sm; }
+.btc-pb-md { padding-bottom: $padding-md; }
+.btc-pb-lg { padding-bottom: $padding-lg; }
+.btc-pb-xl { padding-bottom: $padding-xl; }
+
+.btc-pl-0 { padding-left: 0; }
+.btc-pl-xs { padding-left: $padding-xs; }
+.btc-pl-sm { padding-left: $padding-sm; }
+.btc-pl-md { padding-left: $padding-md; }
+.btc-pl-lg { padding-left: $padding-lg; }
+.btc-pl-xl { padding-left: $padding-xl; }
+
+.btc-pr-0 { padding-right: 0; }
+.btc-pr-xs { padding-right: $padding-xs; }
+.btc-pr-sm { padding-right: $padding-sm; }
+.btc-pr-md { padding-right: $padding-md; }
+.btc-pr-lg { padding-right: $padding-lg; }
+.btc-pr-xl { padding-right: $padding-xl; }
+
+// 显示类
+.btc-block { display: block; }
+.btc-inline { display: inline; }
+.btc-inline-block { display: inline-block; }
+.btc-flex { display: flex; }
+.btc-inline-flex { display: inline-flex; }
+.btc-hidden { display: none; }
+
+// Flex 布局类
+.btc-flex-row { flex-direction: row; }
+.btc-flex-column { flex-direction: column; }
+.btc-flex-wrap { flex-wrap: wrap; }
+.btc-flex-nowrap { flex-wrap: nowrap; }
+
+.btc-justify-start { justify-content: flex-start; }
+.btc-justify-end { justify-content: flex-end; }
+.btc-justify-center { justify-content: center; }
+.btc-justify-between { justify-content: space-between; }
+.btc-justify-around { justify-content: space-around; }
+
+.btc-items-start { align-items: flex-start; }
+.btc-items-end { align-items: flex-end; }
+.btc-items-center { align-items: center; }
+.btc-items-baseline { align-items: baseline; }
+.btc-items-stretch { align-items: stretch; }
+
+// 字体大小
+.btc-text-xs { font-size: $font-size-extra-small; }
+.btc-text-sm { font-size: $font-size-small; }
+.btc-text-base { font-size: $font-size-base; }
+.btc-text-md { font-size: $font-size-medium; }
+.btc-text-lg { font-size: $font-size-large; }
+.btc-text-xl { font-size: $font-size-extra-large; }
+
+// 字重
+.btc-font-light { font-weight: $font-weight-light; }
+.btc-font-normal { font-weight: $font-weight-normal; }
+.btc-font-medium { font-weight: $font-weight-medium; }
+.btc-font-semibold { font-weight: $font-weight-semibold; }
+.btc-font-bold { font-weight: $font-weight-bold; }
+
+// 圆角
+.btc-rounded-none { border-radius: $border-radius-none; }
+.btc-rounded-sm { border-radius: $border-radius-sm; }
+.btc-rounded { border-radius: $border-radius-base; }
+.btc-rounded-md { border-radius: $border-radius-md; }
+.btc-rounded-lg { border-radius: $border-radius-lg; }
+.btc-rounded-xl { border-radius: $border-radius-xl; }
+.btc-rounded-full { border-radius: $border-radius-full; }
+
+// 阴影
+.btc-shadow-none { box-shadow: none; }
+.btc-shadow-sm { box-shadow: $shadow-sm; }
+.btc-shadow { box-shadow: $shadow-base; }
+.btc-shadow-md { box-shadow: $shadow-md; }
+.btc-shadow-lg { box-shadow: $shadow-lg; }
+.btc-shadow-xl { box-shadow: $shadow-xl; }
+
+// 过渡
+.btc-transition { @include transition; }
+.btc-transition-fast { @include transition(all, $transition-duration-fast); }
+.btc-transition-slow { @include transition(all, $transition-duration-slow); }
+
+// 光标
+.btc-cursor-pointer { cursor: pointer; }
+.btc-cursor-not-allowed { cursor: not-allowed; }
+.btc-cursor-default { cursor: default; }
+
+// 溢出
+.btc-overflow-hidden { overflow: hidden; }
+.btc-overflow-auto { overflow: auto; }
+.btc-overflow-scroll { overflow: scroll; }
+
+// 定位
+.btc-relative { position: relative; }
+.btc-absolute { position: absolute; }
+.btc-fixed { position: fixed; }
+.btc-sticky { position: sticky; }
+
+// 宽度和高度
+.btc-w-full { width: 100%; }
+.btc-h-full { height: 100%; }
+.btc-w-screen { width: 100vw; }
+.btc-h-screen { height: 100vh; }
+
+// ========================================
+// 响应式工具类
+// ========================================
+
+@include mobile {
+  .btc-mobile-hidden { display: none; }
+  .btc-mobile-block { display: block; }
+  .btc-mobile-flex { display: flex; }
+}
+
+@include tablet {
+  .btc-tablet-hidden { display: none; }
+  .btc-tablet-block { display: block; }
+  .btc-tablet-flex { display: flex; }
+}
+
+@include desktop {
+  .btc-desktop-hidden { display: none; }
+  .btc-desktop-block { display: block; }
+  .btc-desktop-flex { display: flex; }
+}
+
+// ========================================
+// 深色主题工具类
+// ========================================
+
+html.dark {
+  .btc-dark-hidden { display: none; }
+  .btc-dark-block { display: block; }
+  .btc-dark-flex { display: flex; }
+}
+
+// ========================================
+// 打印样式
+// ========================================
+
+@media print {
+  .btc-print-hidden { display: none !important; }
+  .btc-print-block { display: block !important; }
+  
+  * {
+    background: transparent !important;
+    color: $black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "BTC SaaS API",
+    "version": "1.0.0",
+    "description": "BTC SaaS系统API文档"
+  },
+  "basePath": "/api",
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["用户管理"],
+        "summary": "获取用户列表",
+        "description": "分页获取用户列表",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "description": "页码",
+            "default": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "integer",
+            "description": "每页数量",
+            "default": 20
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string",
+            "description": "搜索关键词"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/UserListResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["用户管理"],
+        "summary": "创建用户",
+        "description": "创建新用户",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["用户管理"],
+        "summary": "获取用户详情",
+        "description": "根据ID获取用户详情",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "用户ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["用户管理"],
+        "summary": "更新用户",
+        "description": "更新用户信息",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "用户ID"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["用户管理"],
+        "summary": "删除用户",
+        "description": "删除用户",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "用户ID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "删除成功"
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["产品管理"],
+        "summary": "获取产品列表",
+        "description": "分页获取产品列表",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "description": "页码",
+            "default": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "integer",
+            "description": "每页数量",
+            "default": 20
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "string",
+            "description": "产品分类"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/ProductListResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["产品管理"],
+        "summary": "创建产品",
+        "description": "创建新产品",
+        "parameters": [
+          {
+            "name": "product",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProductRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "用户ID"
+        },
+        "username": {
+          "type": "string",
+          "description": "用户名"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "邮箱"
+        },
+        "name": {
+          "type": "string",
+          "description": "姓名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "头像URL"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "pending"],
+          "description": "用户状态"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "创建时间"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "更新时间"
+        }
+      },
+      "required": ["id", "username", "email"]
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "用户名"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "邮箱"
+        },
+        "name": {
+          "type": "string",
+          "description": "姓名"
+        },
+        "password": {
+          "type": "string",
+          "description": "密码"
+        }
+      },
+      "required": ["username", "email", "password"]
+    },
+    "UpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "姓名"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "邮箱"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "头像URL"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "pending"],
+          "description": "用户状态"
+        }
+      }
+    },
+    "UserListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "description": "总数量"
+        },
+        "page": {
+          "type": "integer",
+          "description": "当前页码"
+        },
+        "pageSize": {
+          "type": "integer",
+          "description": "每页数量"
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "产品ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "产品名称"
+        },
+        "description": {
+          "type": "string",
+          "description": "产品描述"
+        },
+        "price": {
+          "type": "number",
+          "description": "产品价格"
+        },
+        "category": {
+          "type": "string",
+          "description": "产品分类"
+        },
+        "stock": {
+          "type": "integer",
+          "description": "库存数量"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["available", "out_of_stock", "discontinued"],
+          "description": "产品状态"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "创建时间"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "更新时间"
+        }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "CreateProductRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "产品名称"
+        },
+        "description": {
+          "type": "string",
+          "description": "产品描述"
+        },
+        "price": {
+          "type": "number",
+          "description": "产品价格"
+        },
+        "category": {
+          "type": "string",
+          "description": "产品分类"
+        },
+        "stock": {
+          "type": "integer",
+          "description": "库存数量"
+        }
+      },
+      "required": ["name", "price"]
+    },
+    "ProductListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "description": "总数量"
+        },
+        "page": {
+          "type": "integer",
+          "description": "当前页码"
+        },
+        "pageSize": {
+          "type": "integer",
+          "description": "每页数量"
+        }
+      }
+    }
+  }
+}

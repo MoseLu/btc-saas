@@ -1,0 +1,69 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@btc/*": ["packages/*/src"],
+      "@apps/*": ["apps/*/src"],
+      "@/*": ["./src"]
+    },
+    "types": [],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "incremental": true,
+    "strictNullChecks": true
+  },
+  "include": ["apps/*/src/**/*", "packages/*/src/**/*", "src/**/*", "*.ts", "*.tsx"],
+  "exclude": ["node_modules", "dist", "build", ".turbo", "coverage"],
+  "references": [
+    {
+      "path": "./apps/quality"
+    },
+    {
+      "path": "./apps/purchase"
+    },
+    {
+      "path": "./apps/engineering"
+    },
+    {
+      "path": "./apps/production"
+    },
+    {
+      "path": "./apps/bi"
+    },
+    {
+      "path": "./packages/bridge"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/plugins"
+    },
+    {
+      "path": "./packages/tools"
+    },
+    {
+      "path": "./packages/logs"
+    },
+    {
+      "path": "./packages/eps-plugin"
+    },
+    {
+      "path": "./packages/docs-model"
+    }
+  ]
+}

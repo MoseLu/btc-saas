@@ -1,0 +1,237 @@
+@use '../../assets/styles/variables.scss' as *;
+@use '../../assets/styles/mixins.scss' as *;
+
+.page-header {
+  margin-bottom: $spacing-lg;
+  
+  h2 {
+    margin: 0 0 $spacing-sm 0;
+    color: var(--el-text-color-primary);
+    font-size: $font-size-extra-large;
+    font-weight: $font-weight-semibold;
+  }
+  
+  p {
+    margin: 0;
+    color: var(--el-text-color-secondary);
+    font-size: $font-size-base;
+  }
+}
+
+.stats-row {
+  margin-bottom: $spacing-lg;
+}
+
+.stat-card {
+  height: 120px;
+}
+
+.stat-content {
+  @include flex-center-vertical;
+  height: 100%;
+}
+
+.stat-icon {
+  @include circle(60px);
+  @include flex-center;
+  margin-right: $spacing-md;
+  font-size: $font-size-extra-large;
+  color: $white;
+  
+  &.services {
+    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  }
+  
+  &.active {
+    background: linear-gradient(135deg, $success-color 0%, $primary-color 100%);
+  }
+  
+  &.inactive {
+    background: linear-gradient(135deg, $warning-color 0%, $danger-color 100%);
+  }
+  
+  &.error {
+    background: linear-gradient(135deg, $danger-color 0%, $warning-color 100%);
+  }
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: $font-weight-bold;
+  color: var(--el-text-color-primary);
+  line-height: 1;
+  margin-bottom: $spacing-sm;
+}
+
+.stat-label {
+  font-size: $font-size-base;
+  color: var(--el-text-color-secondary);
+}
+
+.control-section,
+.filter-section,
+.service-section,
+.info-section {
+  margin-bottom: $spacing-lg;
+}
+
+.card-header {
+  @include flex-between;
+}
+
+.header-actions {
+  @include flex-center;
+  gap: $spacing-sm;
+}
+
+.service-info {
+  margin-top: $spacing-md;
+}
+
+.filter-controls {
+  @include flex-center-vertical;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+  
+  .search-input {
+    width: 300px;
+  }
+  
+  .status-select {
+    width: 200px;
+  }
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: $spacing-lg;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  @include transition(all, $transition-duration-base);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  width: 100%;
+}
+
+.service-header {
+  @include flex-center-vertical;
+  gap: $spacing-md;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .service-actions {
+      justify-content: flex-start;
+      margin-top: $spacing-sm;
+    }
+  }
+}
+
+.service-icon {
+  @include circle(60px);
+  @include flex-center;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  color: $white;
+  font-size: $font-size-extra-large;
+  flex-shrink: 0;
+}
+
+.service-info {
+  flex: 1;
+  min-width: 0;
+  
+  .service-name {
+    margin: 0 0 $spacing-sm 0;
+    color: var(--el-text-color-primary);
+    font-size: $font-size-large;
+    font-weight: $font-weight-semibold;
+    word-break: break-word;
+  }
+  
+  .service-meta {
+    @include flex-center-vertical;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-xs;
+    flex-wrap: wrap;
+    
+    .service-version {
+      color: var(--el-text-color-secondary);
+      font-size: $font-size-small;
+    }
+    
+    .service-status {
+      font-size: $font-size-small;
+    }
+  }
+  
+  .service-path {
+    color: var(--el-text-color-secondary);
+    font-size: $font-size-small;
+    word-break: break-all;
+  }
+}
+
+.service-description {
+  p {
+    margin: 0;
+    color: var(--el-text-color-secondary);
+    font-size: $font-size-base;
+    line-height: 1.6;
+  }
+}
+
+.service-footer {
+  @include flex-between;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 1px solid var(--el-border-color-lighter);
+  
+  .service-port,
+  .service-uptime {
+    color: var(--el-text-color-secondary);
+    font-size: $font-size-small;
+  }
+}
+
+.service-actions {
+  @include flex-center;
+  flex-shrink: 0;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+  
+  .el-button {
+    min-width: 60px;
+    padding: 6px 12px;
+  }
+}
+
+.service-count {
+  color: var(--el-text-color-secondary);
+  font-size: $font-size-small;
+}

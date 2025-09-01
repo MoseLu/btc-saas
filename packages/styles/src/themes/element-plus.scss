@@ -1,0 +1,160 @@
+@use "../tokens/index.scss" as *;
+
+/* Element Plus 变量映射到 CSS 变量 */
+:root {
+  // 主色调
+  --el-color-primary: #{$color-primary};
+  --el-color-primary-light-3: #{$color-primary-light};
+  --el-color-primary-light-5: #{$color-primary-light};
+  --el-color-primary-light-7: #{$color-primary-light};
+  --el-color-primary-light-8: #{$color-primary-light};
+  --el-color-primary-light-9: #{$color-primary-light};
+  --el-color-primary-dark-2: #{$color-primary-dark};
+
+  // 背景色
+  --el-bg-color: #{$color-bg};
+  --el-bg-color-page: #{$color-bg-secondary};
+  --el-bg-color-overlay: #{$color-bg-overlay};
+
+  // 文字色
+  --el-text-color-primary: #{$color-text};
+  --el-text-color-regular: #{$color-text-secondary};
+  --el-text-color-secondary: #{$color-text-tertiary};
+  --el-text-color-placeholder: #{$color-text-tertiary};
+
+  // 边框色
+  --el-border-color: #{$color-border};
+  --el-border-color-light: #{$color-border-light};
+  --el-border-color-lighter: #{$color-border-lighter};
+
+  // 状态色
+  --el-color-success: #{$color-success};
+  --el-color-warning: #{$color-warning};
+  --el-color-error: #{$color-error};
+  --el-color-info: #{$color-info};
+
+  // 圆角
+  --el-border-radius-base: #{$radius-md};
+  --el-border-radius-small: #{$radius-sm};
+  --el-border-radius-round: #{$radius-full};
+
+  // 阴影
+  --el-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --el-box-shadow-light: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --el-box-shadow-dark: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Element Plus 组件样式覆盖 */
+.el-button {
+  border-radius: $radius-button;
+  font-weight: 500;
+  
+  &--primary {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    
+    &:hover {
+      background-color: $color-primary-light;
+      border-color: $color-primary-light;
+    }
+    
+    &:active {
+      background-color: $color-primary-dark;
+      border-color: $color-primary-dark;
+    }
+  }
+}
+
+.el-input {
+  .el-input__wrapper {
+    border-radius: $radius-input;
+    border-color: $color-border;
+    
+    &:hover {
+      border-color: $color-primary;
+    }
+    
+    &.is-focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 1px $color-primary;
+    }
+  }
+}
+
+.el-card {
+  border-radius: $radius-card;
+  border-color: $color-border;
+  background-color: $color-bg;
+  
+  .el-card__header {
+    border-bottom-color: $color-border-light;
+    background-color: $color-bg-secondary;
+  }
+}
+
+.el-menu {
+  border: none;
+  background-color: $color-bg;
+  
+  .el-menu-item {
+    color: $color-text;
+    
+    &:hover {
+      background-color: $color-bg-secondary;
+      color: $color-primary;
+    }
+    
+    &.is-active {
+      background-color: $color-primary;
+      color: white;
+    }
+  }
+  
+  .el-sub-menu__title {
+    color: $color-text;
+    
+    &:hover {
+      background-color: $color-bg-secondary;
+      color: $color-primary;
+    }
+  }
+}
+
+.el-dialog {
+  border-radius: $radius-modal;
+  
+  .el-dialog__header {
+    border-bottom-color: $color-border-light;
+  }
+  
+  .el-dialog__body {
+    color: $color-text;
+  }
+}
+
+.el-table {
+  .el-table__header {
+    background-color: $color-bg-secondary;
+  }
+  
+  .el-table__row {
+    &:hover {
+      background-color: $color-bg-secondary;
+    }
+  }
+}
+
+.el-pagination {
+  .el-pager li {
+    border-radius: $radius-sm;
+    
+    &.is-active {
+      background-color: $color-primary;
+      color: white;
+    }
+    
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}

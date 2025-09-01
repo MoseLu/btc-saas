@@ -1,0 +1,298 @@
+@use "../tokens/index.scss" as *;
+@use "../mixins/index.scss" as *;
+
+/* 自定义组件主题样式 */
+
+// 卡片组件
+.btc-card {
+  background-color: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-card;
+  padding: $component-padding;
+  box-shadow: $shadow-sm;
+  
+  &__header {
+    border-bottom: 1px solid $color-border-light;
+    padding-bottom: $spacing-3;
+    margin-bottom: $spacing-4;
+  }
+  
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+  }
+  
+  &__content {
+    color: $color-text;
+  }
+  
+  &__footer {
+    border-top: 1px solid $color-border-light;
+    padding-top: $spacing-3;
+    margin-top: $spacing-4;
+  }
+}
+
+// 按钮组件
+.btc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $radius-button;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  @include accessible-focus;
+  
+  &--primary {
+    background-color: $color-primary;
+    color: white;
+    border-color: $color-primary;
+    
+    &:hover {
+      background-color: $color-primary-light;
+      border-color: $color-primary-light;
+    }
+    
+    &:active {
+      background-color: $color-primary-dark;
+      border-color: $color-primary-dark;
+    }
+  }
+  
+  &--secondary {
+    background-color: $color-bg-secondary;
+    color: $color-text;
+    border-color: $color-border;
+    
+    &:hover {
+      background-color: $color-bg-tertiary;
+      border-color: $color-primary;
+    }
+  }
+  
+  &--outline {
+    background-color: transparent;
+    color: $color-primary;
+    border-color: $color-primary;
+    
+    &:hover {
+      background-color: $color-primary;
+      color: white;
+    }
+  }
+  
+  &--ghost {
+    background-color: transparent;
+    color: $color-text;
+    border-color: transparent;
+    
+    &:hover {
+      background-color: $color-bg-secondary;
+    }
+  }
+  
+  &--small {
+    padding: $spacing-1 $spacing-3;
+    font-size: 12px;
+  }
+  
+  &--large {
+    padding: $spacing-3 $spacing-6;
+    font-size: 16px;
+  }
+  
+  &:disabled {
+    @include disabled;
+  }
+}
+
+// 输入框组件
+.btc-input {
+  position: relative;
+  
+  &__field {
+    width: 100%;
+    padding: $spacing-2 $spacing-3;
+    border: 1px solid $color-border;
+    border-radius: $radius-input;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $color-text;
+    background-color: $color-bg;
+    transition: all 0.2s ease;
+    @include accessible-focus;
+    
+    &:hover {
+      border-color: $color-primary;
+    }
+    
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 1px $color-primary;
+    }
+    
+    &::placeholder {
+      color: $color-text-tertiary;
+    }
+    
+    &:disabled {
+      background-color: $color-bg-secondary;
+      color: $color-text-tertiary;
+      cursor: not-allowed;
+    }
+  }
+  
+  &--error {
+    .btc-input__field {
+      border-color: $color-error;
+      
+      &:focus {
+        box-shadow: 0 0 0 1px $color-error;
+      }
+    }
+  }
+  
+  &__message {
+    font-size: 12px;
+    margin-top: $spacing-1;
+    
+    &--error {
+      color: $color-error;
+    }
+    
+    &--success {
+      color: $color-success;
+    }
+  }
+}
+
+// 徽章组件
+.btc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-full;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  
+  &--primary {
+    background-color: $color-primary;
+    color: white;
+  }
+  
+  &--success {
+    background-color: $color-success;
+    color: white;
+  }
+  
+  &--warning {
+    background-color: $color-warning;
+    color: white;
+  }
+  
+  &--error {
+    background-color: $color-error;
+    color: white;
+  }
+  
+  &--info {
+    background-color: $color-info;
+    color: white;
+  }
+  
+  &--outline {
+    background-color: transparent;
+    border: 1px solid currentColor;
+    
+    &.btc-badge--primary {
+      color: $color-primary;
+    }
+    
+    &.btc-badge--success {
+      color: $color-success;
+    }
+    
+    &.btc-badge--warning {
+      color: $color-warning;
+    }
+    
+    &.btc-badge--error {
+      color: $color-error;
+    }
+    
+    &.btc-badge--info {
+      color: $color-info;
+    }
+  }
+}
+
+// 标签组件
+.btc-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-sm;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  background-color: $color-bg-secondary;
+  color: $color-text;
+  border: 1px solid $color-border-light;
+  
+  &--primary {
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+    border-color: rgba($color-primary, 0.2);
+  }
+  
+  &--success {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+    border-color: rgba($color-success, 0.2);
+  }
+  
+  &--warning {
+    background-color: rgba($color-warning, 0.1);
+    color: $color-warning;
+    border-color: rgba($color-warning, 0.2);
+  }
+  
+  &--error {
+    background-color: rgba($color-error, 0.1);
+    color: $color-error;
+    border-color: rgba($color-error, 0.2);
+  }
+  
+  &--info {
+    background-color: rgba($color-info, 0.1);
+    color: $color-info;
+    border-color: rgba($color-info, 0.2);
+  }
+}
+
+// 响应式工具类
+@include respond-to('sm') {
+  .btc-card {
+    padding: $component-padding-lg;
+  }
+  
+  .btc-button {
+    &--small {
+      padding: $spacing-2 $spacing-4;
+      font-size: 14px;
+    }
+    
+    &--large {
+      padding: $spacing-4 $spacing-8;
+      font-size: 18px;
+    }
+  }
+}

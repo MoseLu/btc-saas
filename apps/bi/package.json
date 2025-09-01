@@ -1,0 +1,13 @@
+{
+  "name": "@btc/bi",
+  "version": "1.0.0",
+  "description": "BTC MES BI系统",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'BI system dev server'",
+    "build": "echo 'BI system build'",
+    "lint": "echo 'BI system lint'",
+    "typecheck": "echo 'BI system typecheck'",
+    "clean": "echo 'BI system clean'"
+  }
+}

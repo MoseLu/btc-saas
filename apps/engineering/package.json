@@ -1,0 +1,13 @@
+{
+  "name": "@btc/engineering",
+  "version": "1.0.0",
+  "description": "BTC MES 工程系统",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Engineering system dev server'",
+    "build": "echo 'Engineering system build'",
+    "lint": "echo 'Engineering system lint'",
+    "typecheck": "echo 'Engineering system typecheck'",
+    "clean": "echo 'Engineering system clean'"
+  }
+}

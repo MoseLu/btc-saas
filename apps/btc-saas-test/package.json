@@ -1,0 +1,37 @@
+{
+  "name": "@btc/btc-saas-test",
+  "version": "1.0.0",
+  "description": "BTC Saas 测试应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3001 --host",
+    "dev:quiet": "cross-env SASS_SILENCE_DEPRECATIONS=legacy-js-api,import,global-builtin,color-functions SASS_QUIET_DEPS=true SASS_API=modern-compiler NODE_ENV=production vite --logLevel=error --clearScreen=false",
+    "dev:silent": "node start-dev.js",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@btc/logs": "workspace:*",
+    "@btc/auto-discover": "workspace:*",
+    "@btc/styles": "workspace:*",
+    "@element-plus/icons-vue": "^2.3.0",
+    "@vue/devtools-api": "^8.0.1",
+    "axios": "^1.6.0",
+    "element-plus": "^2.11.1",
+    "fast-glob": "^3.3.2",
+    "pinia": "^2.1.0",
+    "vue": "^3.4.0",
+    "vue-demi": "^0.14.10",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "sass": "^1.69.0",
+    "sass-loader": "^16.0.5",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.3",
+    "vue-tsc": "^2.0.0"
+  }
+}

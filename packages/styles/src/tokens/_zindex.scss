@@ -1,0 +1,14 @@
+// 基础层级
+$z-index-dropdown: var(--btc-z-index-dropdown);
+$z-index-sticky: var(--btc-z-index-sticky);
+$z-index-fixed: var(--btc-z-index-fixed);
+$z-index-modal-backdrop: var(--btc-z-index-modal-backdrop);
+$z-index-modal: var(--btc-z-index-modal);
+$z-index-popover: var(--btc-z-index-popover);
+$z-index-tooltip: var(--btc-z-index-tooltip);
+$z-index-toast: var(--btc-z-index-toast);
+
+// 组件层级
+$z-index-sidebar: var(--btc-z-index-sidebar);
+$z-index-header: var(--btc-z-index-header);
+$z-index-overlay: var(--btc-z-index-overlay);

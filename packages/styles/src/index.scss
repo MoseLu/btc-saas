@@ -1,0 +1,21 @@
+// BTC Styles 总入口
+// 导入设计变量
+@use "./tokens/index.scss" as *;
+
+// 导入 mixins
+@use "./mixins/index.scss";
+
+// 导入基础样式
+@use "./base/typography.scss";
+@use "./base/layout.scss";
+
+// 导入主题样式
+@use "./themes/element-plus.scss";
+@use "./themes/components.scss";
+@use "./themes/view-transitions.scss";
+
+// 导入 CSS 变量定义
+@import "./tokens/css-vars.css";
+
+// 导入基础样式
+@import "./base/reset.css";

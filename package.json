@@ -1,0 +1,41 @@
+{
+  "name": "btc-saas",
+  "version": "1.0.0",
+  "description": "BTC MES Console - Monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "format": "biome format --write .",
+    "check": "turbo run lint && turbo run typecheck",
+    "lint:biome": "biome lint .",
+    "lint:biome:fix": "biome lint --write .",
+    "lint:ultracite": "ultracite lint",
+    "lint:ultracite:fix": "ultracite format",
+    "lint:all": "pnpm lint:biome:fix && pnpm lint:ultracite:fix",
+    "lint:workflow": "node scripts/lint-workflow.js",
+    "format:all": "pnpm format && pnpm lint:workflow",
+    "release": "changeset publish",
+    "docs:sidebar": "docs-model generate"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@changesets/cli": "^2.29.6",
+    "husky": "^9.1.7",
+    "lefthook": "^1.12.3",
+    "turbo": "^2.5.6",
+    "typescript": "^5.7.2",
+    "ultracite": "5.2.4"
+  },
+  "engines": {
+    "node": ">=20.11.1",
+    "pnpm": ">=9.0.0"
+  },
+  "overrides": {
+    "typescript": "^5.7.2"
+  },
+  "packageManager": "pnpm@9.6.0"
+}

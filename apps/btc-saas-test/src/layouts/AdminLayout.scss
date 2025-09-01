@@ -1,0 +1,638 @@
+// AdminLayout 样式文件
+@use "@btc/styles/tokens/index.scss" as *;
+@use "@btc/styles/mixins/index.scss" as *;
+
+.layout {
+  /* 列宽变量，侧栏默认 220px */
+  --aside-w: 220px;
+  
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr; /* 恢复auto高度，避免多余空白 */
+  grid-template-columns: var(--aside-w) 1fr;
+  grid-template-areas:
+    "header header"
+    "tabbar tabbar"
+    "aside  main";
+  margin: 0;
+  padding: 0;
+  
+  /* 收起状态：侧栏宽度变为64px */
+  &.is-collapse {
+    --aside-w: 64px;
+  }
+  
+  &__header {
+    grid-area: header;
+    background: var(--el-bg-color);
+    border-bottom: 1px solid var(--el-border-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px; /* 与TabBar左侧内边距对齐 */
+    transition: all 0.2s ease;
+    margin: 0;
+    height: 48px; /* 减小高度 */
+    min-height: 48px;
+  }
+  
+  &__aside {
+    grid-area: aside;
+    min-width: 0;
+    overflow: hidden;
+    border-right: 1px solid var(--el-border-color-light);
+    background: var(--el-bg-color);
+    margin: 0;
+  }
+  
+  &__main {
+    grid-area: main;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--el-bg-color-page);
+    margin: 0;
+  }
+  
+  &__content {
+    flex: 1;
+    overflow: auto;
+    padding: 0; /* 移除外层内边距，让面包屑直接贴边 */
+    margin: 0;
+    background: var(--el-bg-color-page); /* 保持外侧背景色 */
+  }
+  
+  // TabBar 样式
+  .tabbar {
+    grid-area: tabbar;
+    background: var(--el-bg-color);
+    border-bottom: 1px solid var(--el-border-color-light);
+    margin: 0;
+    height: 36px; /* 减小高度，更加紧凑 */
+    min-height: 36px;
+    padding: 0; /* 确保无额外内边距 */
+  }
+}
+
+/* 全屏态：重新布局，TabBar作为顶栏 */
+.layout.is-content-full {
+  --aside-w: 0px;
+  grid-template-rows: 1fr;                      /* 只有一行：主内容区 */
+  grid-template-columns: 1fr;                   /* 只有一列 */
+  grid-template-areas: "main";                  /* 只有主内容区 */
+  
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.layout.is-content-full .layout__header,
+.layout.is-content-full .layout__aside {
+  display: none !important;                     /* 5) 彻底不占位 */
+}
+
+.layout.is-content-full .layout__main {
+  grid-area: main;
+  height: 100vh;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 全屏模式下TabBar直接贴顶 */
+.layout.is-content-full .tabbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 36px; /* 与正常模式保持一致 */
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  background: var(--el-bg-color);
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.layout.is-content-full .layout__content {
+  padding: 0;
+  margin: 0;
+  height: calc(100vh - 36px); /* 减去TabBar的36px高度 */
+  margin-top: 36px; /* 为固定的TabBar留出36px空间 */
+  overflow: auto;
+}
+
+// 侧边栏样式优化 - 防止闪烁
+.layout__aside {
+  background: var(--el-bg-color);
+  border-right: 1px solid var(--el-border-color-light);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  width: var(--aside-w);
+  min-width: var(--aside-w);
+  max-width: var(--aside-w);
+  
+  .logo {
+    height: 48px; /* 与header高度保持一致 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--el-border-color-light);
+    background: var(--el-bg-color);
+    padding: 0 16px;
+    
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      margin-right: $spacing-2;
+    }
+    
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  }
+  
+  /* 收起状态下的logo样式调整 */
+  .layout.is-collapse & .logo {
+    justify-content: center; /* 收起时logo居中 */
+    padding: 0 16px;
+    
+    .logo-img {
+      margin-right: 0; /* 收起时移除右边距 */
+    }
+    
+    .logo-text {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+  
+  .sidebar-menu {
+    border: none;
+    transition: width 0.3s ease;
+    
+    .menu-item {
+      transition: background-color 0.2s ease, color 0.2s ease;
+      color: var(--el-text-color-regular) !important;
+      
+      &:hover {
+        background: var(--el-fill-color-light) !important;
+        color: var(--el-color-primary) !important;
+      }
+      
+      &.is-active {
+        background: var(--el-color-primary) !important;
+        color: #ffffff !important;
+        
+        .menu-icon {
+          color: #ffffff !important;
+        }
+        
+        .menu-title {
+          color: #ffffff !important;
+        }
+        
+        span {
+          color: #ffffff !important;
+        }
+        
+        * {
+          color: #ffffff !important;
+        }
+      }
+    }
+    
+    .el-sub-menu__title {
+      color: var(--el-text-color-regular) !important;
+      font-weight: 500;
+      
+      &:hover {
+        background: var(--el-fill-color-light) !important;
+        color: var(--el-color-primary) !important;
+      }
+      
+      .menu-icon {
+        color: var(--el-text-color-regular) !important;
+      }
+      
+      .menu-title {
+        color: var(--el-text-color-regular) !important;
+      }
+    }
+    
+    .menu-icon {
+      margin-right: $spacing-2;
+      width: 16px;
+      height: 16px;
+      color: var(--el-text-color-regular);
+    }
+    
+    .menu-title {
+      font-size: 14px;
+      color: var(--el-text-color-regular);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  }
+}
+
+/* 收起状态下的菜单样式 */
+.layout.is-collapse .layout__aside {
+  .sidebar-menu {
+    .menu-item,
+    .el-sub-menu__title {
+      justify-content: center;
+      padding: 0 16px; /* 保持与logo区域一致的内边距 */
+      
+      .menu-icon {
+        margin-right: 0;
+      }
+      
+      .menu-title {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+    }
+    
+    .el-sub-menu__icon-arrow {
+      opacity: 0;
+    }
+  }
+}
+
+// 顶部导航样式
+.layout__header {
+  background: var(--el-bg-color);
+  border-bottom: 1px solid var(--el-border-color-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px; /* 与TabBar内边距对齐 */
+  transition: all 0.2s ease;
+  margin: 0;
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0; /* 移除间距，让折叠按钮直接对齐 */
+    margin: 0;
+    
+    .collapse-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: 1px solid var(--el-border-color-light);
+      background: var(--el-bg-color);
+      cursor: pointer;
+      color: var(--el-text-color-regular);
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: var(--el-color-primary-light-9);
+        border-color: var(--el-color-primary-light-7);
+        color: var(--el-color-primary);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    .breadcrumb {
+      font-size: 14px;
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* 与TabBar操作区域间距一致 */
+    margin: 0;
+    
+    .theme-toggle-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: 1px solid var(--el-border-color-light);
+      background: var(--el-bg-color);
+      cursor: pointer;
+      color: var(--el-text-color-regular);
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: var(--el-color-primary-light-9);
+        border-color: var(--el-color-primary-light-7);
+        color: var(--el-color-primary);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    .user-avatar {
+      cursor: pointer;
+      border: 2px solid var(--el-border-color-light);
+      
+      &:hover {
+        border-color: var(--el-color-primary);
+      }
+    }
+  }
+}
+
+// 主内容区样式
+.main {
+  background: var(--el-bg-color-page);
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+// 面包屑容器样式 - 保持与TabBar一致的设计
+.breadcrumb-container {
+  background: var(--el-bg-color);
+  border-bottom: 1px solid var(--el-border-color-light);
+  padding: 12px; /* 与Header内边距保持一致 */
+  flex-shrink: 0;
+  height: 48px; /* 固定高度，与TabBar保持一致 */
+  display: flex;
+  align-items: center;
+  margin: 0;
+  
+  .breadcrumb {
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+    margin: 0;
+  }
+}
+
+// 页面内容区域样式 - 带边框的内容卡片
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  margin: 16px; /* 外边距：与面包屑、左右侧边框保持距离 */
+  background: var(--el-bg-color); /* 内侧背景色，与外侧形成对比 */
+  border: 1px solid var(--el-border-color-light); /* 明显的边框 */
+  border-radius: 8px; /* 圆角边框 */
+  padding: 20px; /* 内容区域内边距 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 轻微阴影增强层次感 */
+  
+  /* 页面内容区域内的通用样式 */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+    
+    .section-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+    }
+  }
+  
+  .filter-section,
+  .user-section,
+  .module-section,
+  .config-section,
+  .route-detail {
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  /* 移除内部卡片的冗余样式 */
+  .el-card {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    
+    .el-card__header {
+      padding: 0 !important;
+      border-bottom: 1px solid var(--el-border-color-lighter);
+      margin-bottom: 16px;
+    }
+    
+    .el-card__body {
+      padding: 0 !important;
+    }
+  }
+}
+
+// 响应式设计
+@include respond-to-max('md') {
+  .sidebar {
+    position: fixed;
+    z-index: $z-index-sidebar;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+  
+  .layout__header {
+    padding: 0 $spacing-3;
+    
+    .header-left {
+      gap: $spacing-2;
+    }
+  }
+  
+  .breadcrumb-container {
+    padding: $spacing-3 $spacing-4;
+  }
+  
+  .page-content {
+    padding: $spacing-3;
+  }
+  
+  .layout__main {
+    padding: $spacing-3;
+  }
+}
+
+// ========================================
+// 精确对齐优化
+// ========================================
+
+/* 确保所有边线严丝合缝对齐 */
+.layout {
+  /* 边框线精确对齐 */
+  .layout__header,
+  .tabbar,
+  .breadcrumb-container {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--el-border-color-light);
+  }
+  
+  .layout__aside {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: var(--el-border-color-light);
+  }
+  
+  /* 确保所有区域无额外边距 */
+  .layout__header,
+  .tabbar,
+  .layout__aside,
+  .layout__main,
+  .layout__content {
+    margin: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* 收起状态下的边线对齐 */
+.layout.is-collapse {
+  .layout__aside {
+    .logo,
+    .sidebar-menu .menu-item,
+    .sidebar-menu .el-sub-menu__title {
+      text-align: center;
+    }
+  }
+}
+
+// ========================================
+// 暗色主题按钮样式适配
+// ========================================
+
+html.dark {
+  /* 暗色主题下的侧边栏样式 */
+  .layout__aside {
+    background: var(--el-bg-color);
+    border-right-color: var(--el-border-color);
+    
+    .logo {
+      background: var(--el-bg-color);
+      border-bottom-color: var(--el-border-color);
+      
+      .logo-text {
+        color: var(--el-text-color-primary);
+      }
+    }
+    
+    .sidebar-menu {
+      .menu-item {
+        color: var(--el-text-color-regular) !important;
+        
+        &:hover {
+          background: var(--el-fill-color-dark) !important;
+          color: var(--el-color-primary) !important;
+        }
+        
+        &.is-active {
+          background: var(--el-color-primary) !important;
+          color: #ffffff !important;
+          
+          .menu-icon {
+            color: #ffffff !important;
+          }
+          
+          .menu-title {
+            color: #ffffff !important;
+          }
+          
+          span {
+            color: #ffffff !important;
+          }
+          
+          * {
+            color: #ffffff !important;
+          }
+        }
+      }
+      
+      .el-sub-menu__title {
+        color: var(--el-text-color-regular) !important;
+        
+        &:hover {
+          background: var(--el-fill-color-dark) !important;
+          color: var(--el-color-primary) !important;
+        }
+        
+        .menu-icon {
+          color: var(--el-text-color-regular) !important;
+        }
+        
+        .menu-title {
+          color: var(--el-text-color-regular) !important;
+        }
+      }
+      
+      .menu-icon {
+        color: var(--el-text-color-regular);
+      }
+      
+      .menu-title {
+        color: var(--el-text-color-regular);
+      }
+    }
+  }
+  
+  /* 暗色主题下的头部样式 */
+  .layout__header {
+    background: var(--el-bg-color);
+    border-bottom-color: var(--el-border-color);
+  }
+  
+  /* 暗色主题下的TabBar样式 */
+  .tabbar {
+    background: var(--el-bg-color);
+    border-bottom-color: var(--el-border-color);
+  }
+  
+  .theme-toggle-btn,
+  .collapse-btn {
+    border-color: var(--el-border-color);
+    background: var(--el-bg-color);
+    
+    &:hover {
+      background: var(--el-color-primary-dark-2);
+      border-color: var(--el-color-primary);
+      color: var(--el-color-primary-light-3);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  /* 暗色主题下的内容区域样式 */
+  .page-content {
+    background: var(--el-bg-color);
+    border-color: var(--el-border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .breadcrumb-container {
+    background: var(--el-bg-color);
+    border-bottom-color: var(--el-border-color);
+  }
+}

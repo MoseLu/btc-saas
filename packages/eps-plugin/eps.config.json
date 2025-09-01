@@ -1,0 +1,15 @@
+{
+  "baseURL": "/api",
+  "timeout": 30000,
+  "outputDir": "./src/services/auto",
+  "generateTypes": true,
+  "generateServices": true,
+  "generateCrud": false,
+  "crudConfigs": [
+    {
+      "entityName": "user",
+      "basePath": "/users",
+      "idField": "id"
+    }
+  ]
+}

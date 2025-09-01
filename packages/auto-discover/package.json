@@ -1,0 +1,43 @@
+{
+  "name": "@btc/auto-discover",
+  "version": "1.0.0",
+  "description": "BTC Auto Discover Plugin for Vite - 自动发现模块、路由、API",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "peerDependencies": {
+    "vite": "^4.0.0 || ^5.0.0"
+  },
+  "keywords": [
+    "vite",
+    "plugin",
+    "auto-discover",
+    "modules",
+    "routing",
+    "api"
+  ],
+  "author": "BTC Team",
+  "license": "MIT"
+}

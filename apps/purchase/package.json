@@ -1,0 +1,13 @@
+{
+  "name": "@btc/purchase",
+  "version": "1.0.0",
+  "description": "BTC MES 采购系统",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Purchase system dev server'",
+    "build": "echo 'Purchase system build'",
+    "lint": "echo 'Purchase system lint'",
+    "typecheck": "echo 'Purchase system typecheck'",
+    "clean": "echo 'Purchase system clean'"
+  }
+}

@@ -1,0 +1,185 @@
+@use '../../assets/styles/variables.scss' as *;
+@use '../../assets/styles/mixins.scss' as *;
+
+.log-viewer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-header {
+  @include flex-between;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  
+  h3 {
+    margin: 0;
+    color: var(--el-text-color-primary);
+    font-size: $font-size-large;
+    font-weight: $font-weight-semibold;
+  }
+  
+  .log-controls {
+    @include flex-center;
+    gap: $spacing-sm;
+  }
+}
+
+.log-filters {
+  @include flex-center-vertical;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+  padding: $spacing-sm;
+  background: var(--el-bg-color-page);
+  border-radius: $border-radius-base;
+  flex-wrap: wrap;
+}
+
+.log-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.log-stats {
+  margin-bottom: $spacing-sm;
+  color: var(--el-text-color-secondary);
+  font-size: $font-size-small;
+}
+
+.log-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--el-border-color);
+  border-radius: $border-radius-base;
+  background: var(--el-bg-color);
+}
+
+.log-item {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr auto;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  align-items: start;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: var(--el-fill-color-light);
+  }
+  
+  &.log-error {
+    background: var(--el-color-error-light-9);
+    
+    &:hover {
+      background: var(--el-color-error-light-8);
+    }
+  }
+  
+  &.log-warn {
+    background: var(--el-color-warning-light-9);
+    
+    &:hover {
+      background: var(--el-color-warning-light-8);
+    }
+  }
+}
+
+.log-timestamp {
+  color: var(--el-text-color-secondary);
+  font-size: $font-size-small;
+  white-space: nowrap;
+}
+
+.log-level {
+  font-weight: $font-weight-medium;
+  font-size: $font-size-small;
+  padding: 2px 6px;
+  border-radius: $border-radius-small;
+  text-align: center;
+  min-width: 50px;
+  
+  &.level-info {
+    background: var(--el-color-info-light-9);
+    color: var(--el-color-info);
+  }
+  
+  &.level-warn {
+    background: var(--el-color-warning-light-9);
+    color: var(--el-color-warning);
+  }
+  
+  &.level-error {
+    background: var(--el-color-error-light-9);
+    color: var(--el-color-error);
+  }
+  
+  &.level-debug {
+    background: var(--el-color-info-light-9);
+    color: var(--el-color-info);
+  }
+}
+
+.log-scope {
+  color: var(--el-text-color-regular);
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.log-message {
+  color: var(--el-text-color-primary);
+  font-size: $font-size-base;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.log-context {
+  grid-column: 1 / -1;
+  margin-top: $spacing-sm;
+  
+  .context-details {
+    margin-top: $spacing-sm;
+    padding: $spacing-sm;
+    background: var(--el-bg-color-page);
+    border-radius: $border-radius-base;
+    border: 1px solid var(--el-border-color-lighter);
+    
+    pre {
+      margin: 0;
+      font-size: $font-size-small;
+      color: var(--el-text-color-regular);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .log-item {
+    grid-template-columns: 1fr;
+    gap: $spacing-xs;
+    
+    .log-timestamp,
+    .log-level,
+    .log-scope {
+      font-size: $font-size-small;
+    }
+  }
+  
+  .log-filters {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .el-input,
+    .el-select {
+      width: 100%;
+    }
+  }
+}

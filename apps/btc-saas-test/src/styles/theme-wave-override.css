@@ -1,0 +1,15 @@
+/* 主题切换动画样式 - iframe镜像层方案 */
+
+/* 降噪：切换期禁用全局 transition/filter，避免额外合成开销 */
+html.theme-switching * { 
+  transition: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 尊重用户的动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .tm-root {
+    display: none !important;
+  }
+}

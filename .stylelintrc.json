@@ -1,0 +1,29 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "selector-max-id": 0,
+    "no-descending-specificity": null,
+    "selector-class-pattern": "^[a-z]([a-z0-9-]+)?(__([a-z0-9]+-?)+)?(--([a-z0-9]+-?)+){0,2}$",
+    "scss/at-import-partial-extension": "always",
+    "scss/at-import-partial-extension-blacklist": ["scss"],
+    "scss/dollar-variable-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/selector-no-redundant-nesting-selector": true,
+    "scss/no-global-function-names": null
+  },
+  "overrides": [
+    {
+      "files": ["packages/styles/**/*.scss"],
+      "rules": {
+        "selector-max-id": null,
+        "selector-class-pattern": null
+      }
+    },
+    {
+      "files": ["apps/**/src/**/*.scss", "apps/**/src/**/*.vue"],
+      "rules": {
+        "selector-no-qualifying-type": null,
+        "selector-max-id": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+:root {
+  /* 主色调 */
+  --btc-color-primary: #409eff;
+  --btc-color-primary-light: #66b1ff;
+  --btc-color-primary-dark: #337ecc;
+
+  /* 背景色 */
+  --btc-color-bg: #ffffff;
+  --btc-color-bg-secondary: #f8f9fa;
+  --btc-color-bg-tertiary: #f1f3f4;
+  --btc-color-bg-overlay: #ffffff;
+  --btc-color-bg-page: #f6f8fa;
+
+  /* 文字色 */
+  --btc-color-text: #1f2328;
+  --btc-color-text-secondary: #656d76;
+  --btc-color-text-tertiary: #8c959f;
+
+  /* 边框色 */
+  --btc-color-border: #d0d7de;
+  --btc-color-border-light: #e4e7ed;
+  --btc-color-border-lighter: #f6f8fa;
+
+  /* 状态色 */
+  --btc-color-success: #2da44e;
+  --btc-color-warning: #d97706;
+  --btc-color-error: #cf222e;
+  --btc-color-info: #0969da;
+
+  /* 功能色 */
+  --btc-color-link: #0969da;
+  --btc-color-link-hover: #1a7f37;
+  --btc-color-focus: #0969da;
+
+  /* 间距 */
+  --btc-spacing-1: 4px;
+  --btc-spacing-2: 8px;
+  --btc-spacing-3: 12px;
+  --btc-spacing-4: 16px;
+  --btc-spacing-5: 20px;
+  --btc-spacing-6: 24px;
+  --btc-spacing-8: 32px;
+  --btc-spacing-10: 40px;
+  --btc-spacing-12: 48px;
+  --btc-spacing-16: 64px;
+  --btc-spacing-20: 80px;
+  --btc-spacing-24: 96px;
+  --btc-spacing-32: 128px;
+  --btc-spacing-40: 160px;
+  --btc-spacing-48: 192px;
+  --btc-spacing-56: 224px;
+  --btc-spacing-64: 256px;
+
+  /* 容器间距 */
+  --btc-container-padding: 20px;
+  --btc-container-padding-sm: 16px;
+  --btc-container-padding-lg: 24px;
+
+  /* 组件间距 */
+  --btc-component-padding: 16px;
+  --btc-component-padding-sm: 12px;
+  --btc-component-padding-lg: 20px;
+
+  /* 圆角 */
+  --btc-radius-none: 0px;
+  --btc-radius-sm: 4px;
+  --btc-radius-md: 8px;
+  --btc-radius-lg: 12px;
+  --btc-radius-xl: 16px;
+  --btc-radius-2xl: 24px;
+  --btc-radius-full: 9999px;
+
+  /* 组件圆角 */
+  --btc-radius-button: 8px;
+  --btc-radius-card: 12px;
+  --btc-radius-input: 8px;
+  --btc-radius-modal: 16px;
+
+  /* 层级 */
+  --btc-z-index-dropdown: 1000;
+  --btc-z-index-sticky: 1020;
+  --btc-z-index-fixed: 1030;
+  --btc-z-index-modal-backdrop: 1040;
+  --btc-z-index-modal: 1050;
+  --btc-z-index-popover: 1060;
+  --btc-z-index-tooltip: 1070;
+  --btc-z-index-toast: 1080;
+
+  /* 组件层级 */
+  --btc-z-index-sidebar: 1000;
+  --btc-z-index-header: 1010;
+  --btc-z-index-overlay: 1020;
+}
+
+[data-theme="dark"] {
+  /* 主色调 */
+  --btc-color-primary: #409eff;
+  --btc-color-primary-light: #66b1ff;
+  --btc-color-primary-dark: #337ecc;
+
+  /* 背景色 */
+  --btc-color-bg: #0f1115;
+  --btc-color-bg-secondary: #161b22;
+  --btc-color-bg-tertiary: #21262d;
+  --btc-color-bg-overlay: #161b22;
+  --btc-color-bg-page: #0d1117;
+
+  /* 文字色 */
+  --btc-color-text: #e6e8eb;
+  --btc-color-text-secondary: #8b949e;
+  --btc-color-text-tertiary: #6e7681;
+
+  /* 边框色 */
+  --btc-color-border: #30363d;
+  --btc-color-border-light: #21262d;
+  --btc-color-border-lighter: #161b22;
+
+  /* 状态色 */
+  --btc-color-success: #3fb950;
+  --btc-color-warning: #d29922;
+  --btc-color-error: #f85149;
+  --btc-color-info: #58a6ff;
+
+  /* 功能色 */
+  --btc-color-link: #58a6ff;
+  --btc-color-link-hover: #79c0ff;
+  --btc-color-focus: #58a6ff;
+}

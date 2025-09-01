@@ -1,0 +1,16 @@
+{
+  "name": "@btc/docs-model",
+  "version": "1.0.0",
+  "description": "BTC MES Console Documentation Model",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "echo 'Docs Model dev build'",
+    "build": "echo 'Docs Model build'",
+    "lint": "echo 'Docs Model lint'",
+    "typecheck": "echo 'Docs Model typecheck'",
+    "clean": "echo 'Docs Model clean'",
+    "generate": "echo 'Docs Model generate sidebar'"
+  }
+}

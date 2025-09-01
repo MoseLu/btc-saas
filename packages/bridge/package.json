@@ -1,0 +1,13 @@
+{
+  "name": "@btc/bridge",
+  "version": "1.0.0",
+  "description": "BTC Bridge Package",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "build": "echo 'Bridge package placeholder'"
+  }
+}
