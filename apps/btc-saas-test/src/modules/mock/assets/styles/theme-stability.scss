@@ -1,0 +1,235 @@
+/* ========================================
+   Mock管理页面主题切换稳定性优化
+   专门解决数据抖动和滚动条问题
+   ======================================== */
+
+/* 1. Mock管理页面整体稳定性 */
+.mock-manager-page {
+  /* 防止主题切换时的布局抖动 */
+  contain: layout style;
+  
+  /* 保持滚动条可见，不使用overflow: hidden */
+  overflow: auto;
+  
+  /* 确保内容区域稳定 */
+  * {
+    transform: translateZ(0);
+  }
+}
+
+/* 2. Mock容器稳定性 */
+.mock-container {
+  /* 使用稳定的布局容器 */
+  contain: layout style;
+  
+  /* 防止主题切换时的重新布局 */
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  
+  /* 确保子元素稳定 */
+  * {
+    flex-shrink: 0;
+  }
+}
+
+/* 3. 树形面板稳定性 */
+.tree-panel {
+  /* 固定宽度，防止主题切换时的尺寸变化 */
+  width: 320px;
+  min-width: 320px;
+  max-width: 320px;
+  
+  /* 保持滚动条可见，防止内容被裁剪 */
+  overflow: auto;
+  
+  /* 确保内容稳定 */
+  .mock-tree {
+    contain: layout style;
+    
+    /* 防止主题切换时的重新渲染 */
+    * {
+      transform: translateZ(0);
+    }
+  }
+}
+
+/* 4. 表格面板稳定性 */
+.table-panel {
+  /* 占据剩余空间 */
+  flex: 1;
+  min-width: 0;
+  
+  /* 防止主题切换时的布局变化 */
+  contain: layout style;
+  
+  /* 确保表格内容稳定 */
+  .el-table {
+    /* 防止表格重新渲染 */
+    contain: layout style;
+    
+    /* 确保滚动条稳定 */
+    .el-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+    
+    /* 防止行高变化 */
+    .el-table__row {
+      height: 40px;
+      min-height: 40px;
+      max-height: 40px;
+    }
+  }
+}
+
+/* 5. 主题切换期间的特殊处理 */
+html[data-theme-from] .mock-manager-page,
+html[data-theme-to] .mock-manager-page,
+html[data-vt-active] .mock-manager-page,
+html[data-vt-cooldown] .mock-manager-page {
+  /* 禁用所有过渡动画 */
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* 确保滚动条稳定，但不隐藏 */
+  .tree-panel,
+  .table-panel {
+    /* 保持滚动条可见，只禁用动画 */
+    overflow: auto;
+    
+    /* 防止滚动条消失 */
+    &::-webkit-scrollbar {
+      display: block !important;
+      visibility: visible !important;
+    }
+  }
+  
+  /* 防止数据重新渲染，但保持滚动功能 */
+  .el-table__body-wrapper {
+    overflow: auto;
+  }
+  
+  /* 防止树形组件重新渲染 */
+  .el-tree-node {
+    contain: layout style;
+  }
+}
+
+/* 6. 服务列表和Mock列表的稳定性 */
+.service-section,
+.mock-section {
+  /* 防止主题切换时的布局变化 */
+  contain: layout style;
+  
+  /* 确保网格布局稳定 */
+  .service-grid,
+  .mock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    
+    /* 防止网格重新计算 */
+    grid-auto-rows: 1fr;
+  }
+  
+  /* 确保卡片尺寸稳定 */
+  .service-card,
+  .mock-card {
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    
+    /* 防止内容溢出，但保持滚动条 */
+    overflow: auto;
+  }
+}
+
+/* 7. 过滤器和搜索框稳定性 */
+.filter-section {
+  /* 防止主题切换时的尺寸变化 */
+  contain: layout style;
+  
+  /* 确保输入框稳定 */
+  .el-input,
+  .el-select {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+}
+
+/* 8. 统计卡片稳定性 */
+.stats-cards {
+  /* 防止主题切换时的布局变化 */
+  contain: layout style;
+  
+  /* 确保卡片尺寸稳定 */
+  .stat-card {
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
+  }
+}
+
+/* 9. 系统信息区域稳定性 */
+.info-section {
+  /* 防止主题切换时的布局变化 */
+  contain: layout style;
+  
+  /* 确保描述列表稳定 */
+  .el-descriptions {
+    width: 100%;
+    
+    /* 防止列宽变化 */
+    .el-descriptions__cell {
+      min-width: 120px;
+    }
+  }
+}
+
+/* 10. 主题切换完成后的恢复 */
+html:not([data-theme-from]):not([data-theme-to]):not([data-vt-active]):not([data-vt-cooldown]) {
+  .mock-manager-page {
+    /* 恢复正常的过渡动画 */
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    /* 滚动条始终保持可见 */
+    .tree-panel,
+    .table-panel {
+      overflow: auto;
+    }
+    
+    /* 表格滚动条保持正常 */
+    .el-table__body-wrapper {
+      overflow: auto;
+    }
+  }
+}
+
+/* 11. 针对Element Plus组件的特殊优化 */
+.el-table,
+.el-tree,
+.el-card,
+.el-input,
+.el-select,
+.el-button {
+  /* 防止主题切换时的重新渲染 */
+  contain: layout style;
+  
+  /* 确保组件尺寸稳定 */
+  box-sizing: border-box;
+  
+  /* 防止意外的样式变化 */
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* 12. 滚动条稳定性增强 - 已移除，使用统一的滚动条样式 */
+
+/* 13. 滚动条样式已统一到全局样式系统 */

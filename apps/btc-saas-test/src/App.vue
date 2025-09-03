@@ -32,7 +32,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--el-bg-color-page);
   color: var(--el-text-color-primary);
 }
@@ -42,8 +42,8 @@ html.dark {
   color-scheme: dark;
 }
 
-/* 首屏渲染时禁用过渡动画，但不影响 View Transitions */
-html[data-first-paint] * {
+/* 首屏渲染时禁用过渡动画，但不影响 View Transitions 和 Element Plus 浮层 */
+html[data-first-paint] *:not(.el-message):not(.el-notification):not(.el-overlay):not(.el-popper):not(.el-loading-mask) {
   transition: none !important;
   animation: none !important;
 }

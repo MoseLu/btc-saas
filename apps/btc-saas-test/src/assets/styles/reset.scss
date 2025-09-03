@@ -5,23 +5,86 @@
 @use './variables.scss' as *;
 
 // ========================================
-// 基础重置
+// 根层永不预留滚动槽 + 禁止根滚动
+// ========================================
+
+/* —— 根层永不预留滚动槽 —— */
+:root, html, body { 
+  scrollbar-gutter: auto !important; /* 覆盖所有 stable/both-edges */
+}
+
+/* 根滚动控制 - 按照cool-admin的滚动权绑定原则 */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  min-height: 100%;
+  overflow: clip;                 /* 根不滚，无预留 */
+  scrollbar-gutter: auto !important;
+}
+
+/* 别把滚动条样式挂在通配符 * 上；如需自定义，挂到 html 即可 */
+html {
+  /* Firefox 定制 - 与无感滚动条系统兼容 */
+  scrollbar-width: thin; /* 使用细滚动条 */
+  scrollbar-color: rgba($gray-500, 0.3) transparent; /* 透明轨道，符合无感设计 */
+}
+
+/* 防"谁又偷偷设了 both-edges"——最后的保险丝 */
+*, *::before, *::after {
+  scrollbar-gutter: auto !important;
+}
+
+// ========================================
+// 应用容器占满可视区域
+// ========================================
+
+/* 应用容器占满可视区域 */
+#app {
+  position: fixed;   /* 直接贴在视口上，根不参与滚动 */
+  inset: 0;          /* = top/right/bottom/left: 0 */
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+/* 外壳固定贴可视区域（不受页面缩放影响而"跑偏"） */
+#app {
+  position: fixed;
+  inset: 0;                       /* 顶/右/底/左全贴边 */
+  display: grid;
+  grid-template-rows: auto 1fr;   /* 顶栏 + 主区域 */
+  overflow: hidden;               /* 防止外壳滚动 */
+}
+
+/* 关键：网格/弹性子项默认 min-width:auto 会撬宽父容器，务必归零 */
+.layout, .main, .sidebar, .content {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* 指定谁来滚：只让内容区滚，不让根滚 */
+.main {
+  overflow: auto;    /* 你想放滚动条的地方 */
+}
+.sidebar {
+  overflow: auto;    /* 左侧菜单区如需独立滚动 */
+}
+
+// ========================================
+// 基础样式重置
 // ========================================
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-html {
-  line-height: 1.15;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
   margin: 0;
+  padding: 0;
+}
+
+/* body基础样式 */
+body {
   font-family: $font-family-base;
   font-size: $font-size-base;
   line-height: $line-height-base;
@@ -29,6 +92,18 @@ body {
   background-color: $bg-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 移除所有可能的默认边距和内边距 */
+div, section, article, aside, header, footer, nav, main {
+  margin: 0;
+  padding: 0;
+}
+
+/* 确保所有容器都不会产生意外的边距 */
+.container, .wrapper, .content, .main, .sidebar, .header, .footer {
+  margin: 0;
+  padding: 0;
 }
 
 // ========================================
@@ -271,38 +346,117 @@ template {
 // 滚动条重置
 // ========================================
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+// ========================================
+// 滚动条样式优化 - 与无感滚动条系统兼容
+// ========================================
+
+/* 全局滚动条样式 - 仅作为后备，主要使用 .scrollarea 类 */
+/* 注意：这些样式会被 .scrollarea 类覆盖 */
+
+/* Webkit浏览器滚动条样式 - 仅作为后备，不干扰 .scrollarea 类 */
+/* 使用 :not(.scrollarea) 选择器，避免与无感滚动条系统冲突 */
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar {
+  width: 8px;        /* 垂直滚动条宽度 */
+  height: 8px;       /* 水平滚动条高度 */
 }
 
-::-webkit-scrollbar-track {
-  background: $gray-100;
-  border-radius: 5px;
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar-track {
+  background: transparent;  /* 轨道透明，不占用额外空间 */
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: $gray-500;
-  border-radius: 5px;
-  border: 1px solid $gray-300;
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar-thumb {
+  background: rgba($gray-500, 0.3);  /* 更透明，符合无感设计 */
+  border-radius: 4px;
+  border: 1px solid transparent;     /* 透明边框，避免锯齿 */
   
   &:hover {
-    background: $gray-600;
+    background: rgba($gray-600, 0.6);  /* 悬停时稍微明显 */
   }
   
   &:active {
-    background: $gray-700;
+    background: rgba($gray-700, 0.8);  /* 激活时明显 */
   }
 }
 
-::-webkit-scrollbar-corner {
-  background: $gray-100;
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar-corner {
+  background: transparent;  /* 角落透明 */
 }
 
-// Firefox 滚动条样式
-* {
-  scrollbar-width: auto;
-  scrollbar-color: $gray-500 $gray-100;
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar-thumb:vertical {
+  min-height: 40px;  /* 垂直滚动条最小高度 */
+}
+
+*:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side)::-webkit-scrollbar-thumb:horizontal {
+  min-width: 40px;   /* 水平滚动条最小宽度 */
+}
+
+/* Firefox滚动条样式优化 - 仅作为后备，不干扰 .scrollarea 类 */
+html:not([class*="scrollarea"]) {
+  scrollbar-width: thin;        /* 细滚动条 */
+  scrollbar-color: rgba($gray-500, 0.3) transparent;  /* 更透明滚动条，透明轨道 */
+}
+
+/* 确保滚动条在内容区域右侧显示 - 仅作为后备，不干扰 .scrollarea 类 */
+.main:not(.scrollarea), .sidebar:not(.scrollarea), .content:not(.scrollarea) {
+  /* 滚动条样式继承 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba($gray-500, 0.6) transparent;
+  
+  /* 确保滚动条在最右侧显示 */
+  overflow-anchor: auto;
+  
+  /* 优化滚动体验 */
+  scroll-behavior: smooth;
+  
+  /* 防止水平滚动条占用垂直空间 */
+  overflow-x: hidden;
+}
+
+/* 主内容区域滚动条 */
+.main {
+  overflow-y: auto;    /* 垂直滚动 */
+  overflow-x: hidden;  /* 隐藏水平滚动 */
+}
+
+/* 侧边栏滚动条 */
+.sidebar {
+  overflow-y: auto;    /* 垂直滚动 */
+  overflow-x: hidden;  /* 隐藏水平滚动 */
+}
+
+/* 内容容器滚动条 */
+.content {
+  overflow-y: auto;    /* 垂直滚动 */
+  overflow-x: hidden;  /* 隐藏水平滚动 */
+}
+
+/* 特殊容器滚动条样式 */
+.scrollable-content, .scrollable-panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba($gray-500, 0.6) transparent;
+}
+
+/* 表格容器滚动条 */
+.table-container, .data-table {
+  overflow-x: auto;
+  overflow-y: hidden;
+  
+  /* 水平滚动条样式 */
+  &::-webkit-scrollbar:horizontal {
+    height: 6px;  /* 水平滚动条更细 */
+  }
+  
+  &::-webkit-scrollbar-thumb:horizontal {
+    background: rgba($gray-500, 0.6);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba($gray-600, 0.8);
+    }
+  }
 }
 
 // ========================================
@@ -387,3 +541,5 @@ template {
     page-break-after: avoid;
   }
 }
+
+

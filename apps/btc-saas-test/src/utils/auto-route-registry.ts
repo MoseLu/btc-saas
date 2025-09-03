@@ -94,7 +94,7 @@ export class AutoRouteRegistry {
       path: '/logs',
       title: '日志查看器',
       icon: 'Document',
-      category: 'devtools',
+      category: 'system',
       order: 1,
       description: '多通道日志系统查看和管理',
       component: () => import('../views/LogViewer.vue')
@@ -105,7 +105,7 @@ export class AutoRouteRegistry {
       path: '/mocks',
       title: 'Mock配置',
       icon: 'DataAnalysis',
-      category: 'devtools',
+      category: 'system',
       order: 2,
       description: 'Mock接口开关和配置管理',
       component: () => import('../views/MockManager.vue')
@@ -136,14 +136,26 @@ export class AutoRouteRegistry {
 
     // 功能测试类
     this.registerRoute({
-      name: 'FeatureTester',
+      name: 'FeatureTest',
       path: '/features',
       title: '功能测试器',
-      icon: 'Monitor',
+      icon: 'Tools',
       category: 'demo',
       order: 2,
       description: '测试和演示各种新功能',
-      component: () => import('../views/FeatureTester.vue')
+      component: () => import('../views/FeatureTest.vue')
+    })
+
+    // 添加滚动条测试页面
+    this.registerRoute({
+      name: 'ScrollbarTest',
+      path: '/scrollbar-test',
+      title: '滚动条测试',
+      icon: 'Operation',
+      category: 'demo',
+      order: 3,
+      description: '测试自定义滚动条功能和样式',
+      component: () => import('../views/ScrollbarTest.vue')
     })
 
     // 主题切换测试
@@ -243,7 +255,7 @@ export class AutoRouteRegistry {
       'EpsDemo': {
         title: 'EPS演示',
         icon: 'Connection',
-        category: 'demo',
+        category: 'app',
         order: 1,
         description: 'EPS插件服务生成演示'
       },
@@ -264,7 +276,7 @@ export class AutoRouteRegistry {
       'MockManager': {
         title: 'Mock管理',
         icon: 'DataAnalysis',
-        category: 'devtools',
+        category: 'system',
         order: 2,
         description: 'Mock接口配置和状态管理'
       },

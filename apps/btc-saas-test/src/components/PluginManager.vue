@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-manager">
+  <div class="plugin-manager scrollarea scrollarea--main">
     <div class="header">
       <h2>插件管理系统</h2>
       <p>动态插件扫描和状态管理</p>

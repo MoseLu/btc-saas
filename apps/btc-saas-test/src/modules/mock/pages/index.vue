@@ -1,8 +1,17 @@
 <template>
-  <div class="mock-manager">
-
-
-
+  <BasePage>
+    <!-- 页面标题现在由AdminLayout统一管理 -->
+    <!-- 页面操作区域 -->
+    <div class="page-actions">
+      <el-button type="primary" @click="addMock">
+        <el-icon><Plus /></el-icon>
+        添加Mock接口
+      </el-button>
+      <el-button @click="refreshMocks">
+        <el-icon><Refresh /></el-icon>
+        刷新状态
+      </el-button>
+    </div>
 
     <!-- 搜索和过滤 -->
     <MockFilters 
@@ -111,12 +120,16 @@
       v-model:selected-mock="selectedMock"
       v-model:selected-endpoint="selectedEndpoint"
     />
-  </div>
+  </BasePage>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
+import { Plus, Refresh } from '@element-plus/icons-vue'
+
+// 导入BasePage组件
+import BasePage from '../../../components/BasePage.vue'
 
 // 导入子组件
 import MockStats from '../components/MockStats.vue'
@@ -278,40 +291,58 @@ const btc = {
 }
 
 // 初始化
-initStatus()
+onMounted(() => {
+  initStatus()
+})
 </script>
 
 <style lang="scss" scoped>
 @use '../../../assets/styles/variables.scss' as *;
+@use '../assets/styles/theme-stability.scss' as *;
 
-.page-header {
+
+
+/* 页面操作区域 */
+.page-actions {
+  display: flex;
+  gap: 0.5rem;
   margin-bottom: $spacing-lg;
-  
-  h2 {
-    margin: 0 0 $spacing-sm 0;
-    color: var(--el-text-color-primary);
-    font-size: $font-size-extra-large;
-    font-weight: $font-weight-semibold;
-  }
-  
-  p {
-    margin: 0;
-    color: var(--el-text-color-secondary);
-    font-size: $font-size-base;
-  }
+  justify-content: flex-end;
+  align-items: center;
+  /* 确保按钮不会超出容器 */
+  flex-wrap: wrap;
 }
 
 /* 树形菜单+表格组合UI */
 .mock-container {
   display: flex;
   gap: $spacing-lg;
-  min-height: 500px;
+  /* 移除固定最小高度，让内容自然撑开 */
   margin-bottom: $spacing-lg;
+  /* 确保在小屏幕上能够换行 */
+  flex-wrap: wrap;
+  /* 确保内容不会超出容器 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .config-section,
 .info-section {
   margin-bottom: $spacing-lg;
+  /* 移除固定最小高度 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section-header {
+  margin-bottom: $spacing-md;
+  
+  .section-title {
+    margin: 0;
+    color: var(--el-text-color-primary);
+    font-size: $font-size-large;
+    font-weight: $font-weight-medium;
+  }
 }
 
 .card-header {
@@ -319,4 +350,21 @@ initStatus()
   justify-content: space-between;
   align-items: center;
 }
+
+/* 确保所有子组件都不会超出容器 */
+:deep(.tree-panel) {
+  /* 移除固定宽度，使用flex-basis */
+  width: auto;
+  min-width: 280px;
+  max-width: 100%;
+  flex: 1 1 320px;
+}
+
+:deep(.table-panel) {
+  /* 确保表格面板能够正确适应容器 */
+  flex: 1 1 0;
+  min-width: 0; /* 允许flex项目收缩到内容宽度以下 */
+}
+
+
 </style>

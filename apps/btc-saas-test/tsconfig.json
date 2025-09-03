@@ -32,7 +32,8 @@
     "../../packages/ui/src/**/*",
     "../../packages/logs/src/**/*",
     "../../packages/btc-admin/src/**/*",
-    "../../packages/eps-plugin/src/**/*"
+    "../../packages/eps-plugin/src/**/*",
+    "../../packages/styles/src/**/*"
   ],
   "references": [
     { "path": "./tsconfig.node.json" }

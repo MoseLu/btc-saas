@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "echo 'Production system dev server'",
-    "build": "echo 'Production system build'",
+    "build": "if not exist dist mkdir dist && echo Production system build > dist/build.txt",
     "lint": "echo 'Production system lint'",
     "typecheck": "echo 'Production system typecheck'",
-    "clean": "echo 'Production system clean'"
+    "clean": "if exist dist rmdir /s /q dist"
   }
 }

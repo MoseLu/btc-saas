@@ -1,19 +1,28 @@
 <template>
-  <div class="layout" :class="{ 'is-content-full': contentFullscreen, 'is-collapse': isCollapse }">
+  <div ref="shell" class="layout-shell" :class="{ 'is-content-full': contentFullscreen }">
     <!-- 侧边栏 -->
-    <aside class="layout__aside" v-if="!contentFullscreen">
+    <aside 
+      class="layout__aside"
+      :class="{
+        'is-collapsed': mode === 'desktop' && sidebarCollapsed,
+        'is-open': mode !== 'desktop' && sidebarOpen
+      }"
+      role="navigation"
+      :aria-hidden="mode !== 'desktop' && !sidebarOpen"
+      v-if="!contentFullscreen"
+    >
       <div class="logo">
         <img src="/favicon.ico" alt="Logo" class="logo-img" />
-        <span v-show="!isCollapse" class="logo-text">BTC Saas</span>
+        <span v-show="mode === 'desktop' && !sidebarCollapsed" class="logo-text">BTC Saas</span>
       </div>
       
       <el-menu
         :default-active="activeMenu"
-        :collapse="isCollapse"
+        :collapse="mode === 'desktop' && sidebarCollapsed"
         :unique-opened="false"
         :default-openeds="openeds"
         router
-        class="sidebar-menu"
+        class="sidebar-menu cool-scrollbar cool-scrollbar--side"
         :collapse-transition="false"
         @select="handleMenuSelect"
         @open="handleMenuOpen"
@@ -32,7 +41,7 @@
             class="menu-item"
           >
             <el-icon class="menu-icon">
-              <component :is="route.meta?.icon" />
+              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
             </el-icon>
             <template #title>
               <span class="menu-title">{{ route.meta?.title }}</span>
@@ -57,7 +66,7 @@
             class="menu-item"
           >
             <el-icon class="menu-icon">
-              <component :is="route.meta?.icon" />
+              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
             </el-icon>
             <template #title>
               <span class="menu-title">{{ route.meta?.title }}</span>
@@ -78,7 +87,7 @@
             class="menu-item"
           >
             <el-icon class="menu-icon">
-              <component :is="route.meta?.icon" />
+              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
             </el-icon>
             <template #title>
               <span class="menu-title">{{ route.meta?.title }}</span>
@@ -99,7 +108,7 @@
             class="menu-item"
           >
             <el-icon class="menu-icon">
-              <component :is="route.meta?.icon" />
+              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
             </el-icon>
             <template #title>
               <span class="menu-title">{{ route.meta?.title }}</span>
@@ -109,19 +118,28 @@
       </el-menu>
     </aside>
 
+    <!-- 抽屉遮罩，仅在平板/手机模式出现 -->
+    <div
+      v-if="mode !== 'desktop' && !contentFullscreen"
+      class="backdrop"
+      :class="{ 'is-open': sidebarOpen }"
+      @click="sidebarOpen = false"
+      role="presentation"
+    />
+
     <!-- 主内容区 -->
     <section class="layout__main">
       <!-- 顶部导航 -->
       <header class="layout__header" v-if="!contentFullscreen">
         <div class="header-left">
-          <el-tooltip content="折叠侧边栏">
+          <el-tooltip :content="toggleButtonLabel">
             <button 
-              @click="toggleCollapse"
+              @click="onToggle"
               class="collapse-btn"
+              :aria-label="toggleButtonLabel"
             >
               <el-icon :size="16">
-                <Fold v-if="!isCollapse" />
-                <Expand v-else />
+                <component :is="toggleButtonIcon" />
               </el-icon>
             </button>
           </el-tooltip>
@@ -173,13 +191,19 @@
           </el-breadcrumb>
         </div>
         
-        <!-- 页面内容 -->
-        <div class="page-content">
-          <keep-alive :include="tabsStore.includeKeepAlive">
-            <router-view v-slot="{ Component, route }">
-              <component :is="Component" :key="route.fullPath" />
-            </router-view>
-          </keep-alive>
+        <!-- 页面内容 - 固定布局容器 -->
+        <div class="page-content cool-scrollbar">
+          <!-- 页面内容区域 - 固定布局 -->
+          <div class="page-body-container">
+            <keep-alive :include="tabsStore.includeKeepAlive">
+              <router-view v-slot="{ Component, route }">
+                <!-- 自动为所有页面内容添加统一的布局包装器 -->
+                <PageLayoutWrapper>
+                  <component :is="Component" :key="route.fullPath" />
+                </PageLayoutWrapper>
+              </router-view>
+            </keep-alive>
+          </div>
         </div>
       </div>
     </section>
@@ -187,41 +211,125 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, markRaw, onMounted } from 'vue'
+import { ref, computed, watch, markRaw, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useThemeWaveSwitch } from '../composables/useThemeWaveSwitch'
 import { useMenuStore } from '../stores/menu'
 import { useTabsStore } from '../stores/tabs'
+import { useLayout } from '../composables/useLayout'
+// 移除旧的滚动指示器系统，使用新的 overlay 滚动条系统
+import { globalPageActions } from '../composables/usePageActions'
 import TabBar from '../components/TabBar.vue'
+import PageLayoutWrapper from '../components/PageLayoutWrapper.vue'
 import { 
   Setting, Grid, Monitor, User, Sunny, Moon, 
-  Fold, Expand, Link, Document
+  Fold, Expand, Link, Document, Location, Folder, 
+  DataAnalysis, Picture, Connection, Brush, House,
+  Money, TrendCharts, Box, Tools, List,
+  ShoppingCart, HomeFilled, ArrowLeft, Refresh, Close, 
+  More, FullScreen, Aim, Search, Delete, Download, 
+  CopyDocument, Warning
 } from '@element-plus/icons-vue'
+import AsyncIcon from '../components/AsyncIcon.vue'
+
+
+// 图标映射对象 - 使用 markRaw 优化性能，避免不必要的响应式包装
+const iconMap = {
+  Setting: markRaw(Setting),
+  Grid: markRaw(Grid),
+  Monitor: markRaw(Monitor),
+  User: markRaw(User),
+  Sunny: markRaw(Sunny),
+  Moon: markRaw(Moon),
+  Fold: markRaw(Fold),
+  Expand: markRaw(Expand),
+  Link: markRaw(Link),
+  Document: markRaw(Document),
+  Location: markRaw(Location),
+  Folder: markRaw(Folder),
+  DataAnalysis: markRaw(DataAnalysis),
+  Picture: markRaw(Picture),
+  Connection: markRaw(Connection),
+  Brush: markRaw(Brush),
+  House: markRaw(House),
+  Money: markRaw(Money),
+  TrendCharts: markRaw(TrendCharts),
+  Box: markRaw(Box),
+  Tools: markRaw(Tools),
+  List: markRaw(List),
+  ShoppingCart: markRaw(ShoppingCart),
+  HomeFilled: markRaw(HomeFilled),
+  ArrowLeft: markRaw(ArrowLeft),
+  Refresh: markRaw(Refresh),
+  Close: markRaw(Close),
+  More: markRaw(More),
+  FullScreen: markRaw(FullScreen),
+  Aim: markRaw(Aim),
+  Search: markRaw(Search),
+  Delete: markRaw(Delete),
+  Download: markRaw(Download),
+  CopyDocument: markRaw(CopyDocument),
+  Warning: markRaw(Warning)
+}
 import { getMenuRoutes } from '../router'
 
 // 导入主题切换样式
 import 'element-plus/theme-chalk/dark/css-vars.css'
 
+// 导入完美主题切换系统
+import { useThemeTransition } from '../composables/useThemeTransition'
+
+// 使用优雅响应式布局状态机
+const shell = ref<HTMLElement | null>(null)
+const { 
+  mode, 
+  sidebarOpen, 
+  sidebarCollapsed, 
+  toggleButtonAction, 
+  toggleButtonIcon,
+  toggleButtonLabel,
+  onShellReady 
+} = useLayout()
+
+// 滚动条激活类管理
+function wireActiveClass(el: HTMLElement) {
+  let timer: number | undefined
+
+  const onEnter = () => el.classList.add('is-active')
+  const onLeave = () => el.classList.remove('is-active')
+  const onScroll = () => {
+    el.classList.add('is-active')
+    if (timer) window.clearTimeout(timer)
+    timer = window.setTimeout(() => el.classList.remove('is-active'), 360) // 停止滚动后淡出
+  }
+
+  el.addEventListener('mouseenter', onEnter)
+  el.addEventListener('mouseleave', onLeave)
+  el.addEventListener('scroll', onScroll, { passive: true })
+
+  return () => {
+    el.removeEventListener('mouseenter', onEnter)
+    el.removeEventListener('mouseleave', onLeave)
+    el.removeEventListener('scroll', onScroll)
+  }
+}
+
+// 使用新的 overlay 滚动条系统，不再需要旧的滚动指示器
+
 // 使用 Pinia store
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
-const { openeds, isCollapse } = storeToRefs(menuStore)
+const { openeds } = storeToRefs(menuStore)
 const { contentFullscreen } = storeToRefs(tabsStore)
 
-// 使用新的主题切换 composable
-const { start } = useThemeWaveSwitch((next: 'light' | 'dark') => {
-  document.documentElement.classList.toggle('dark', next === 'dark');
-})
-
-// 使用 ref 而不是 computed 来避免循环依赖
-const isDark = ref(document.documentElement.classList.contains('dark'))
+// 使用完美主题切换系统
+const { isDark, toggle } = useThemeTransition()
 
 // 监听主题变化，但避免循环调用
 watch(() => document.documentElement.classList.contains('dark'), (newValue, oldValue) => {
-  // 只有当值真正改变时才更新
   if (newValue !== oldValue) {
-    isDark.value = newValue
+    // 主题已经通过完美主题切换系统更新，这里只需要同步状态
+    // 不需要手动更新isDark，因为useThemeTransition会自动处理
   }
 }, { immediate: true })
 
@@ -304,7 +412,7 @@ const breadcrumbItems = computed(() => {
     })
   }
   
-  // 添加当前页面
+  // 添加当前页面标题
   if (route.meta?.title) {
     items.push({
       title: route.meta.title as string,
@@ -315,93 +423,105 @@ const breadcrumbItems = computed(() => {
   return items
 })
 
-// 方法
+// 菜单事件处理
 const handleMenuSelect = (index: string) => {
-  // 菜单选择处理
+  // 菜单选择后的处理逻辑
 }
 
 const handleMenuOpen = (index: string) => {
-  // 使用 store 管理菜单展开状态
-  menuStore.addOpened(index)
+  // 菜单展开后的处理逻辑
 }
 
 const handleMenuClose = (index: string) => {
-  // 使用 store 管理菜单关闭状态
-  menuStore.removeOpened(index)
+  // 菜单收起后的处理逻辑
 }
 
-const toggleCollapse = () => {
-  // 使用 store 管理折叠状态
-  menuStore.toggleCollapse()
-}
-
-// 主题切换功能
+// 主题切换
 const toggleTheme = () => {
-  // 直接检查 DOM 状态，而不是依赖响应式变量
-  const currentIsDark = document.documentElement.classList.contains('dark');
-  const next = currentIsDark ? 'light' : 'dark';
-  start(next);
+  toggle()
+}
+
+// 优雅响应式布局切换
+const onToggle = () => {
+  if (toggleButtonAction.value === 'collapse') {
+    // 桌面模式：折叠/展开侧栏
+    sidebarCollapsed.value = !sidebarCollapsed.value
+  } else {
+    // 平板/手机模式：打开/关闭抽屉
+    sidebarOpen.value = !sidebarOpen.value
+    
+    // 抽屉打开时，将焦点移到第一个可聚焦元素
+    if (sidebarOpen.value) {
+      requestAnimationFrame(() => {
+        const firstLink = document.querySelector('.sidebar-menu a') as HTMLElement
+        firstLink?.focus()
+      })
+    }
+  }
+}
+
+// 页面标题和描述管理
+function getPageTitle(): string {
+  return route.meta?.title as string || '页面'
+}
+
+function getPageDescription(): string {
+  return route.meta?.description as string || ''
 }
 
 // 工具函数
-const getCategoryTitle = (category: string): string => {
-  const titleMap: Record<string, string> = {
+function getCategoryTitle(category: string): string {
+  const titles: Record<string, string> = {
     'user': '用户管理',
     'order': '订单管理',
     'product': '产品管理',
-    'report': '报表中心',
-    'quality': '品质管理',
-    'purchase': '采购管理',
-    'engineering': '工程管理',
-    'production': '生产管理',
-    'bi': '商业智能',
-    'devtools': '开发工具',
-    'demo': '功能演示'
+    'finance': '财务管理',
+    'report': '报表统计'
   }
-  return titleMap[category] || category
+  return titles[category] || category
 }
 
-const getCategoryIcon = (category: string): any => {
-  const iconMap: Record<string, any> = {
-    'user': markRaw(User),
-    'order': markRaw(Setting),
-    'product': markRaw(Setting),
-    'report': markRaw(Setting),
-    'quality': markRaw(Setting),
-    'purchase': markRaw(Setting),
-    'engineering': markRaw(Setting),
-    'production': markRaw(Setting),
-    'bi': markRaw(Monitor),
-    'devtools': markRaw(Setting),
-    'demo': markRaw(Monitor)
+function getCategoryIcon(category: string): string {
+  const icons: Record<string, string> = {
+    'user': 'User',
+    'order': 'Document',
+    'product': 'Box',
+    'finance': 'Money',
+    'report': 'TrendCharts'
   }
-  return iconMap[category] || markRaw(Setting)
+  return icons[category] || 'Folder'
 }
 
-// 监听路由变化
-watch(() => route.path, (newPath) => {
-  // 路由变化时，确保当前路由对应的菜单分类是展开的
-  const currentCategory = route.meta?.category as string
-  if (currentCategory) {
-    menuStore.addOpened(currentCategory)
-  }
-}, { immediate: true })
-
-// 组件挂载时初始化菜单状态
+// 生命周期
 onMounted(() => {
-  // 主题已经在main.ts中初始化，这里不需要重复初始化
-  // initTheme()
-  
-  // 确保默认菜单展开（如果没有持久化状态）
-  if (menuStore.openeds.length === 0) {
-    menuStore.setOpeneds(['system', 'plugins', 'apps'])
+    // 初始化优雅响应式布局
+  if (shell.value) {
+    onShellReady(shell.value)
   }
   
-  // 根据当前路由展开对应菜单
-  const currentCategory = route.meta?.category as string
-  if (currentCategory && !menuStore.openeds.includes(currentCategory)) {
-    menuStore.addOpened(currentCategory)
+  // 初始化滚动条激活类
+  const targets = document.querySelectorAll<HTMLElement>('.cool-scrollbar')
+  const cleanups: Array<() => void> = []
+  targets.forEach(n => cleanups.push(wireActiveClass(n)))
+  
+  // 清理滚动条事件监听器
+  onBeforeUnmount(() => {
+    cleanups.forEach(fn => fn())
+  })
+
+  // 监听ESC键关闭抽屉
+  const handleEsc = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && sidebarOpen.value) {
+      sidebarOpen.value = false
+    }
   }
+  
+  document.addEventListener('keydown', handleEsc)
+  
+  // 清理事件监听器
+  onBeforeUnmount(() => {
+    document.removeEventListener('keydown', handleEsc)
+  })
 })
 </script>
 

@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "echo 'Quality system dev server'",
-    "build": "echo 'Quality system build'",
+    "build": "if not exist dist mkdir dist && echo Quality system build > dist/build.txt",
     "lint": "echo 'Quality system lint'",
     "typecheck": "echo 'Quality system typecheck'",
-    "clean": "echo 'Quality system clean'"
+    "clean": "if exist dist rmdir /s /q dist"
   }
 }

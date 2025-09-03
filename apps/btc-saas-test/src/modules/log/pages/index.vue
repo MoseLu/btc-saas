@@ -1,5 +1,5 @@
 <template>
-  <div class="log-viewer">
+  <div class="log-viewer scrollarea scrollarea--main">
     <div class="log-header">
       <div class="log-controls">
         <el-input
@@ -40,6 +40,12 @@
         <el-button @click="exportLogs" type="success">
           <el-icon><Download /></el-icon>
           导出
+        </el-button>
+        
+        <!-- 测试 ElMessage 按钮 -->
+        <el-button @click="simpleTest" type="info">
+          <el-icon><Message /></el-icon>
+          测试消息
         </el-button>
       </div>
     </div>
@@ -153,10 +159,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Refresh, Delete, Download, CopyDocument } from '@element-plus/icons-vue'
-import type { LogRecord } from '@btc/logs'
+import { Search, Refresh, Delete, Download, CopyDocument, Message } from '@element-plus/icons-vue'
+// 本地定义 LogRecord 类型，避免导入问题
+interface LogRecord {
+  id: string
+  level: 'error' | 'debug' | 'info' | 'warn'
+  message: string
+  timestamp: Date
+  data?: any
+  context?: Record<string, any>
+  // 兼容旧版本的字段
+  ts?: number
+  scope?: string
+  msg?: string
+  ctx?: Record<string, any>
+}
 
 // 响应式数据
 const searchQuery = ref('')
@@ -202,6 +221,27 @@ let idbTransport: any = null
 onMounted(async () => {
   await initializeLogViewer()
 })
+
+// 页面卸载时清理所有ElMessage
+onBeforeUnmount(() => {
+  // 清理所有ElMessage实例
+  const messageContainers = document.querySelectorAll('.el-message')
+  messageContainers.forEach(container => {
+    if (container.parentNode) {
+      container.parentNode.removeChild(container)
+    }
+  })
+  
+  // 清理所有ElMessageBox实例
+  const messageBoxContainers = document.querySelectorAll('.el-message-box__wrapper')
+  messageBoxContainers.forEach(container => {
+    if (container.parentNode) {
+      container.parentNode.removeChild(container)
+    }
+  })
+})
+
+
 
 async function initializeLogViewer() {
   try {
@@ -363,15 +403,15 @@ function applyFilters() {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(log => 
       log && (
-        (log.msg && log.msg.toLowerCase().includes(query)) ||
-        (log.scope && log.scope.toLowerCase().includes(query)) ||
-        (log.ctx && JSON.stringify(log.ctx).toLowerCase().includes(query))
+        ((log.msg || log.message) && (log.msg || log.message).toLowerCase().includes(query)) ||
+        ((log.scope || log.context?.scope) && (log.scope || log.context?.scope).toLowerCase().includes(query)) ||
+        ((log.ctx || log.context) && JSON.stringify(log.ctx || log.context).toLowerCase().includes(query))
       )
     )
   }
 
   // 按时间倒序排列
-  filtered.sort((a, b) => (b?.ts || 0) - (a?.ts || 0))
+  filtered.sort((a, b) => (b?.ts || b?.timestamp?.getTime() || 0) - (a?.ts || a?.timestamp?.getTime() || 0))
   
   filteredLogs.value = filtered
 }
@@ -389,9 +429,9 @@ function handleRowClick(row: LogRecord) {
 }
 
 function getRowClassName({ row }: { row: LogRecord }) {
-  if (row.level === 'ERROR') {
+  if (row.level === 'error') {
     return 'error-row'
-  } else if (row.level === 'WARN') {
+  } else if (row.level === 'warn') {
     return 'warn-row'
   }
   return ''
@@ -399,7 +439,7 @@ function getRowClassName({ row }: { row: LogRecord }) {
 
 function copyLog(log: LogRecord) {
   try {
-    const logText = `[${formatTimestamp(log.ts)}] [${log.level}] [${log.scope}] ${log.msg}`
+    const logText = `[${formatTimestamp(log.ts || log.timestamp.getTime())}] [${log.level}] [${log.scope || 'unknown'}] ${log.msg || log.message}`
     navigator.clipboard.writeText(logText).then(() => {
       ElMessage.success('日志已复制到剪贴板')
     })
@@ -421,21 +461,49 @@ function formatTimestamp(timestamp: number): string {
   })
 }
 
-function getLevelType(level: string): string {
-  const types: Record<string, string> = {
-    DEBUG: 'info',
-    INFO: 'success',
-    WARN: 'warning',
-    ERROR: 'danger'
+function getLevelType(level: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' {
+  const types: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
+    debug: 'info',
+    info: 'success',
+    warn: 'warning',
+    error: 'danger'
   }
   return types[level] || 'info'
 }
 
-function getStorageTagType(percentage: number): string {
+function getStorageTagType(percentage: number): 'primary' | 'success' | 'warning' | 'info' | 'danger' {
   if (percentage >= 80) return 'danger'
   if (percentage >= 60) return 'warning'
   return 'success'
 }
+
+function simpleTest() {
+  try {
+    // 简单的测试消息
+    console.log('开始简单测试')
+    
+    // 测试基本显示
+    ElMessage.success('简单测试成功')
+    console.log('简单测试成功消息已发送')
+    
+    // 检查 DOM 中是否有 ElMessage
+    setTimeout(() => {
+      const messages = document.querySelectorAll('.el-message')
+      console.log('DOM 中的 ElMessage 数量:', messages.length)
+      messages.forEach((msg, index) => {
+        console.log(`消息 ${index + 1}:`, msg)
+        console.log('样式:', msg.getAttribute('style'))
+        console.log('类名:', msg.className)
+      })
+    }, 100)
+    
+  } catch (error) {
+    console.error('简单测试失败:', error)
+  }
+}
+
+// 移除可能干扰的动画强制函数，让 ElMessage 使用原生动画
+// 在页面挂载时不再启动动画监听
 </script>
 
 <style scoped lang="scss">

@@ -3,6 +3,7 @@
 
 // CSS变量定义
 :root{
+  view-transition-name: app;
   --vt-duration: 720ms;
   --vt-easing: cubic-bezier(.22,.61,.36,1);
   --vt-cx: 100%; /* 默认右上角，JS 会覆盖 */
@@ -15,32 +16,12 @@
   animation: none;
 }
 
-/* 亮 -> 暗：新主题"展开" */
-html[data-vt-mode="reveal"] ::view-transition-new(root){
-  z-index: 1;
-  clip-path: circle(0 at var(--vt-cx) var(--vt-cy));
-  animation: vt-reveal var(--vt-duration) var(--vt-easing) forwards;
-  will-change: clip-path;
-}
-@keyframes vt-reveal{
-  to { clip-path: circle(141.5% at var(--vt-cx) var(--vt-cy)); }
-}
-
-/* 暗 -> 亮：旧主题"收起" */
-html[data-vt-mode="conceal"] ::view-transition-old(root){
-  z-index: 1;               /* 旧帧在上，逐步收起露出新帧 */
-  clip-path: circle(141.5% at var(--vt-cx) var(--vt-cy));
-  animation: vt-conceal var(--vt-duration) var(--vt-easing) forwards;
-  will-change: clip-path;
-}
-@keyframes vt-conceal{
-  to { clip-path: circle(0 at var(--vt-cx) var(--vt-cy)); }
-}
+/* 注意：View Transitions 规则已移至 theme-transition.css 全局文件 */
 
 /* 可选：在被动画的帧上叠一点"波纹前沿"质感（浏览器不支持也无所谓） */
 @supports (mask-image: radial-gradient(circle, #000 0, #000 0)) {
-  html[data-vt-mode="reveal"] ::view-transition-new(root)::after,
-  html[data-vt-mode="conceal"] ::view-transition-old(root)::after{
+  html[data-vt-mode="reveal"] ::view-transition-new(app)::after,
+  html[data-vt-mode="conceal"] ::view-transition-new(app)::after{
     content:"";
     position: fixed; inset: 0;
     pointer-events: none;
@@ -58,8 +39,8 @@ html[data-vt-mode="conceal"] ::view-transition-old(root){
 
 /* 无动画偏好 */
 @media (prefers-reduced-motion: reduce){
-  ::view-transition-old(root),
-  ::view-transition-new(root){ animation: none !important; }
+  ::view-transition-old(app),
+  ::view-transition-new(app){ animation: none !important; }
 }
 
 // 主题切换按钮的样式增强

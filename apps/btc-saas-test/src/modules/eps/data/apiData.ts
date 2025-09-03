@@ -7,6 +7,8 @@ export interface EpsEndpoint {
   status: 'active' | 'inactive' | 'deprecated'
   responseTime?: number
   errorRate?: number
+  parameters?: ApiParameter[]
+  responses?: ApiResponse[]
 }
 
 export interface EpsService {
@@ -14,6 +16,26 @@ export interface EpsService {
   name: string
   description: string
   children: EpsEndpoint[]
+}
+
+// 为了向后兼容，添加别名类型
+export type ApiEndpoint = EpsEndpoint
+export type ApiService = EpsService
+
+// 添加缺失的类型定义
+export interface ApiParameter {
+  name: string
+  type: string
+  required: boolean
+  description?: string
+  defaultValue?: any
+}
+
+export interface ApiResponse {
+  status: number
+  description: string
+  schema?: any
+  examples?: any[]
 }
 
 export const apiData: EpsService[] = [

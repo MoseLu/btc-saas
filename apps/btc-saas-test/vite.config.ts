@@ -4,12 +4,32 @@ import path from 'path'
 import { fileURLToPath, URL } from 'node:url'
 import btcPlugins from '../../packages/plugins/src/vite-plugin-btc-plugins'
 import { btcAutoDiscover } from '@btc/auto-discover'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   plugins: [
     vue(),
     btcAutoDiscover(),
     // btcPlugins(), // 暂时注释掉，避免类型冲突
+    
+    // Element Plus Auto Import
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+      imports: ['vue', 'vue-router', 'pinia'],
+      dts: 'src/auto-imports.d.ts',
+      eslintrc: {
+        enabled: true,
+        filepath: '.eslintrc-auto-import.json',
+        globalsPropValue: true,
+      },
+    }),
+    
+    Components({
+      resolvers: [ElementPlusResolver()],
+      dts: 'src/components.d.ts',
+    }),
   ],
 
   // 路径别名配置
@@ -71,11 +91,10 @@ export default defineConfig({
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]',
-        // 手动分块：保留你的分组，但别把一切都钉死
+        // 手动分块：Element Plus 现在按需导入，不需要单独分块
         manualChunks: {
           'vue-vendor': ['vue', 'vue-router', 'pinia'],
-          'element-plus': ['element-plus', '@element-plus/icons-vue'],
-          axios: ['axios'],
+          // 移除 axios 强制分块，让 Vite 自动处理
         },
       },
     },

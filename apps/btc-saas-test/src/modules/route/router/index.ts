@@ -9,6 +9,12 @@ export interface RouteInfo {
     category: string
     auth: boolean
     showInMenu: boolean
+    description?: string
+    tags?: string[]
+    order?: number
+    hidden?: boolean
+    requiresAuth?: boolean
+    breadcrumb?: string[]
   }
   children?: RouteInfo[]
 }
@@ -95,30 +101,13 @@ export function getAllRoutes(): RouteInfo[] {
   return mockRoutes
 }
 
-export function getRoutesByCategory(): RouteCategory[] {
-  const categories: Record<string, RouteCategory> = {}
-  
-  const processRoutes = (routes: RouteInfo[]) => {
-    routes.forEach(route => {
-      const categoryId = route.meta.category
-      if (!categories[categoryId]) {
-        categories[categoryId] = {
-          id: categoryId,
-          name: getCategoryName(categoryId),
-          icon: getCategoryIcon(categoryId),
-          routes: []
-        }
-      }
-      categories[categoryId].routes.push(route)
-      
-      if (route.children) {
-        processRoutes(route.children)
-      }
-    })
+export function getRoutesByCategory(category?: string): RouteInfo[] {
+  if (category) {
+    return mockRoutes.filter(route => route.meta.category === category)
   }
   
-  processRoutes(mockRoutes)
-  return Object.values(categories)
+  // 如果没有指定分类，返回所有路由
+  return mockRoutes
 }
 
 function getCategoryName(categoryId: string): string {

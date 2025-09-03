@@ -21,10 +21,11 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "incremental": true,
     "noImplicitAny": false
   },
-  "include": ["src/**/*", "*.ts", "*.tsx", "src/vue-shims.d.ts"],
+  "include": ["src/**/*", "src/vue-shims.d.ts"],
   "exclude": ["node_modules", "dist", "build", ".turbo"]
 }

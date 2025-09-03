@@ -1,5 +1,6 @@
 <template>
-  <div class="plugin-manager">
+  <BasePage>
+    <div class="plugin-manager">
 
 
     <!-- 控制面板 -->
@@ -131,7 +132,7 @@
             
             <el-switch 
               v-model="plugin.enabled" 
-              @change="(enabled: boolean) => togglePlugin(plugin.name, enabled)"
+              @change="(enabled: string | number | boolean) => togglePlugin(plugin.name, enabled === true)"
               size="small"
               :loading="isScanning"
             />
@@ -197,6 +198,7 @@
       </template>
     </el-dialog>
   </div>
+  </BasePage>
 </template>
 
 <script setup lang="ts">
@@ -213,6 +215,7 @@ import {
   Document,
   Cpu
 } from '@element-plus/icons-vue'
+import BasePage from '../../../components/BasePage.vue'
 import { usePluginManager } from '../composables/usePluginManager'
 
 // 使用插件管理逻辑

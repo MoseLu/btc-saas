@@ -1,11 +1,6 @@
 import { ref, reactive } from 'vue'
 
-// 扩展 ImportMeta 接口以支持 Vite 的虚拟模块
-declare global {
-  interface ImportMeta {
-    glob(pattern: string, options?: { eager?: boolean }): Record<string, any>
-  }
-}
+// Vite 已经提供了 glob 类型，无需重复声明
 
 export interface PluginInfo {
   name: string

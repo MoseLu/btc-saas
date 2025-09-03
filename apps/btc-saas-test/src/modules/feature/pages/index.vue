@@ -1,5 +1,5 @@
 <template>
-  <div class="feature-tester">
+  <div class="feature-tester scrollarea scrollarea--main">
 
 
     <!-- 功能卡片网格 -->
@@ -225,14 +225,31 @@ const features = ref([
   }
 ])
 
+// 定义测试结果类型
+interface TestResult {
+  id: number
+  title: string
+  status: 'running' | 'success' | 'error'
+  message: string
+  timestamp: Date
+  details: string | null
+}
+
 // 响应式数据
-const testResults = ref<any[]>([])
+const testResults = ref<TestResult[]>([])
 const detailDialogVisible = ref(false)
 const selectedFeature = ref<any>(null)
 
 // 测试功能
 const testFeature = async (feature: any) => {
-  const result = {
+  const result: {
+    id: number
+    title: string
+    status: 'running' | 'success' | 'error'
+    message: string
+    timestamp: Date
+    details: string | null
+  } = {
     id: Date.now(),
     title: feature.title,
     status: 'running',
@@ -304,7 +321,7 @@ const testPluginSystem = async () => {
   
   // 检查插件状态
   const pluginCount = 8 // 模拟插件数量
-  if (pluginCount === 0) {
+  if (pluginCount <= 0) {
     throw new Error('插件加载失败')
   }
 }

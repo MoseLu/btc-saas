@@ -19,7 +19,7 @@ export interface CacheConfig {
 export class MemoryCache {
   private cache = new Map<string, CacheItem>()
   private config: Required<CacheConfig>
-  private cleanupTimer?: NodeJS.Timeout
+  private cleanupTimer?: ReturnType<typeof setTimeout>
 
   constructor(config: CacheConfig = {}) {
     this.config = {

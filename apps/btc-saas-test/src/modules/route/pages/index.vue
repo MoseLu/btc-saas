@@ -1,5 +1,6 @@
 <template>
-  <div class="route-manager">
+  <BasePage>
+    <div class="route-manager">
     <!-- 操作按钮区域 -->
     <div class="header-actions">
       <el-button @click="refreshRoutes" :loading="loading">
@@ -167,7 +168,7 @@
             {{ activeRoute.meta?.title }}
           </el-descriptions-item>
           <el-descriptions-item label="分类">
-            {{ getCategoryLabel(activeRoute.meta?.category) }}
+            {{ getCategoryLabel(activeRoute.meta?.category || '') }}
           </el-descriptions-item>
           <el-descriptions-item label="描述">
             {{ activeRoute.meta?.description || '-' }}
@@ -198,7 +199,7 @@
         
         <div v-if="activeRoute.meta?.breadcrumb" class="breadcrumb-section">
           <h4>面包屑</h4>
-          <el-breadcrumb separator="/">
+          <el-breadcrumb separator="/" v-if="activeRoute?.meta?.breadcrumb">
             <el-breadcrumb-item 
               v-for="(item, index) in activeRoute.meta.breadcrumb" 
               :key="index"
@@ -219,6 +220,7 @@
       </div>
     </div>
   </div>
+  </BasePage>
 </template>
 
 <script setup lang="ts">
@@ -226,13 +228,14 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Refresh, Download } from '@element-plus/icons-vue'
-import { getAllRoutes, getRoutesByCategory } from '../router'
+import BasePage from '../../../components/BasePage.vue'
+import { getAllRoutes, getRoutesByCategory, type RouteInfo } from '../router'
 import type { RouteRecordRaw } from 'vue-router'
 
 // 响应式数据
 const loading = ref(false)
 const activeCategory = ref('all')
-const activeRoute = ref<RouteRecordRaw | null>(null)
+const activeRoute = ref<RouteInfo | null>(null)
 
 // 路由相关
 const router = useRouter()
@@ -310,29 +313,29 @@ const handleCategoryChange = () => {
   activeRoute.value = null
 }
 
-const selectRoute = (route: RouteRecordRaw) => {
+const selectRoute = (route: RouteInfo) => {
   activeRoute.value = route
 }
 
-const previewRoute = (route: RouteRecordRaw) => {
+const previewRoute = (route: RouteInfo) => {
   if (route.path) {
     window.open(route.path, '_blank')
   }
 }
 
-const copyRoutePath = (route: RouteRecordRaw) => {
+const copyRoutePath = (route: RouteInfo) => {
   navigator.clipboard.writeText(route.path).then(() => {
     ElMessage.success('路由路径已复制')
   })
 }
 
-const navigateToRoute = (route: RouteRecordRaw) => {
+const navigateToRoute = (route: RouteInfo) => {
   if (route.path) {
     router.push(route.path)
   }
 }
 
-const copyRouteConfig = (route: RouteRecordRaw) => {
+const copyRouteConfig = (route: RouteInfo) => {
   const config = {
     name: route.name,
     path: route.path,
@@ -344,8 +347,8 @@ const copyRouteConfig = (route: RouteRecordRaw) => {
   })
 }
 
-const getCategoryTagType = (category: string): string => {
-  const typeMap: Record<string, string> = {
+const getCategoryTagType = (category: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' => {
+  const typeMap: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
     'plugin': 'success',
     'app': 'warning',
     'module': 'info',

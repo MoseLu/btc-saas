@@ -1,0 +1,73 @@
+/* 冻结期止动样式：让菜单、Tabs、滚动容器在过渡期间完全不动 */
+
+/* 冻结期：只作用在你的布局壳，不要挂在 html */
+:where(.layout-shell)[data-vt-active] *,
+:where(.layout-shell)[data-vt-cooldown] * {
+  transition-property: none !important;
+  animation: none !important;
+}
+
+/* 给 Element Plus 浮层白名单豁免（即使你将来又开了更严的全局规则也安全） */
+:where(.layout-shell)[data-vt-active] :is(.el-message, .el-notification, .el-overlay, .el-popper),
+:where(.layout-shell)[data-vt-active] :is(.el-message, .el-notification, .el-overlay, .el-popper) *,
+:where(.layout-shell)[data-vt-cooldown] :is(.el-message, .el-notification, .el-overlay, .el-popper),
+:where(.layout-shell)[data-vt-cooldown] :is(.el-message, .el-notification, .el-overlay, .el-popper) * {
+  transition: initial !important;
+  animation: initial !important;
+}
+
+/* Element Plus 典型抖动源：菜单、Tabs、滚动、抽屉、对话框阴影 */
+:where(.layout-shell)[data-vt-active] :is(
+  .el-menu, .el-sub-menu__title, .el-menu-item,
+  .el-tabs__nav, .el-tabs__item, .el-tabs__active-bar,
+  .el-scrollbar, .el-scrollbar__wrap, .el-scrollbar__bar,
+  .el-drawer, .el-dialog, .el-card, .el-tooltip
+) {
+  transition: none !important;
+  animation: none !important;
+  filter: none !important;              /* 避免动态滤镜引发重绘 */
+}
+
+/* 滚动条稳定：防止 width 抖动占位变更 */
+.app-scroll, .el-scrollbar__wrap {
+  scrollbar-gutter: stable;
+}
+
+/* 降低重绘扩散：把大容器隔离成独立绘制上下文 */
+.layout,
+.sidebar,
+.tabbar,
+.main {
+  contain: paint layout style;          /* 限定重绘范围 */
+  will-change: transform;               /* 促成合成层，不要频繁升降层 */
+  isolation: isolate;                   /* 阻断混合影响 */
+}
+
+/* 禁止局部拍快照（只让根参与视图过渡） */
+:root { view-transition-name: app; }
+.sidebar, .header, .tabbar, .main { view-transition-name: none; }
+
+/* 可选：冻结期把光标和文本选区颜色固定，避免 UA 跟随 color-scheme 抖动 */
+:where(.layout-shell)[data-vt-active] {
+  caret-color: transparent;
+  color-scheme: light dark; /* 保持 UA 控件稳定 */
+}
+
+/* Tabs 活动条在切主题时最容易"跳一下"，冻结期禁用宽度过渡 */
+:where(.layout-shell)[data-vt-active] .el-tabs__active-bar {
+  transition: none !important;
+}
+
+/* 菜单收起/展开的过渡在切主题时会卡顿，冻结期禁用 */
+:where(.layout-shell)[data-vt-active] .el-sub-menu__title,
+:where(.layout-shell)[data-vt-active] .el-menu--collapse,
+:where(.layout-shell)[data-vt-active] .el-sub-menu .el-menu {
+  transition: none !important;
+}
+
+/* 确保你的遮罩层级低于 EP 消息 */
+.backdrop { z-index: 1500; }
+.sidebar  { z-index: 1510; } /* ElMessage ~2000+ */
+
+/* 别让 fixed 失参照 */
+html, body { transform: none !important; filter: none !important; }

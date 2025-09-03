@@ -66,8 +66,8 @@ a {
   color: inherit;
 }
 
-/* 移除按钮默认样式 */
-button {
+/* 移除按钮默认样式 - 只重置你自家的按钮基类，别动全局 button */
+.btc-btn {
   background: none;
   border: none;
   padding: 0;
@@ -86,4 +86,33 @@ textarea {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+/* 确保 Element Plus 浮层不受全局重置影响 - 使用更精确的选择器 */
+/* 只重置必要的属性，保留 Element Plus 的样式 */
+.el-message,
+.el-notification,
+.el-overlay,
+.el-popper {
+  /* 移除 all: revert，避免过度重置 */
+  /* 只确保定位和显示属性正确 */
+  position: relative;
+  z-index: auto;
+}
+
+/* 确保 Element Plus 浮层内部的按钮和输入框保持原有样式 */
+.el-message button,
+.el-notification button,
+.el-overlay button,
+.el-popper button {
+  /* 移除 all: revert，让 Element Plus 自己处理按钮样式 */
+  font-family: inherit;
+}
+
+.el-message input,
+.el-notification input,
+.el-overlay input,
+.el-popper input {
+  /* 移除 all: revert，让 Element Plus 自己处理输入框样式 */
+  font-family: inherit;
 }

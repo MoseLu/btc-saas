@@ -65,7 +65,7 @@
                 v-for="dept in availableDepartments"
                 :key="dept"
                 :label="dept"
-                :value="dept"
+                :value="dept || ''"
               />
             </el-select>
           </el-col>
@@ -278,7 +278,7 @@ const formatDate = (dateString: string) => {
 
 <style lang="scss" scoped>
 .user-list-page {
-  padding: 20px;
+  /* 使用全局的 .page-content 样式，移除自定义 padding */
   
   .page-header {
     display: flex;

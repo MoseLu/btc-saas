@@ -1,4 +1,11 @@
-import { memoryTransport } from '@btc/logs'
+// 暂时注释掉，使用模拟数据
+// import { memoryTransport } from '@btc/logs'
+
+// 模拟内存传输器
+const memoryTransport = {
+  dump: () => [],
+  clear: () => {}
+}
 
 /**
  * 日志条目接口

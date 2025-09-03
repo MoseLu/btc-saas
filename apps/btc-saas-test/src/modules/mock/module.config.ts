@@ -1,7 +1,7 @@
 export default {
   id: 'mock',
   title: 'Mock管理',
-  category: 'devtools',
+  category: 'system',
   icon: 'DataAnalysis',
   apiBase: '/api/mock',
   devPort: 8311,

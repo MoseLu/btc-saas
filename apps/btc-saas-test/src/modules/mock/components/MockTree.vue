@@ -50,7 +50,24 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Plus, Setting, Link } from '@element-plus/icons-vue'
-import type { ApiService, ApiEndpoint } from '../../data/apiData'
+// 本地定义类型，避免导入问题
+interface ApiEndpoint {
+  id: string
+  name: string
+  path: string
+  method: string
+  description?: string
+  status: 'active' | 'inactive' | 'deprecated'
+  responseTime?: number
+  errorRate?: number
+}
+
+interface ApiService {
+  id: string
+  name: string
+  description: string
+  children: ApiEndpoint[]
+}
 
 interface TreeNode {
   id: string
@@ -75,12 +92,10 @@ const emit = defineEmits<Emits>()
 
 const treeData = computed(() => {
   return props.apiData.map(service => ({
-    id: service.id,
     label: service.name,
     type: 'service' as const,
     ...service,
-    children: service.children.map(endpoint => ({
-      id: endpoint.id,
+    children: service.children.map((endpoint: ApiEndpoint) => ({
       label: endpoint.name,
       type: 'endpoint' as const,
       ...endpoint
@@ -101,8 +116,8 @@ const handleNodeClick = (data: TreeNode) => {
   emit('nodeClick', data)
 }
 
-const getMethodType = (method: string) => {
-  const types: Record<string, string> = {
+const getMethodType = (method: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' => {
+  const types: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
     GET: 'success',
     POST: 'primary',
     PUT: 'warning',
@@ -117,11 +132,20 @@ const getMethodType = (method: string) => {
 @use '../../../assets/styles/variables.scss' as *;
 
 .tree-panel {
-  width: 320px;
+  /* 移除固定宽度，使用响应式宽度 */
+  width: 100%;
+  min-width: 280px;
+  max-width: 400px;
+  height: 600px;              /* 固定高度 */
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: hidden;            /* 隐藏外层溢出 */
+  display: flex;
+  flex-direction: column;      /* 垂直布局 */
+  position: relative;          /* 相对定位，确保边框正确显示 */
+  /* 确保组件能够正确收缩 */
+  flex-shrink: 0;
 }
 
 .tree-header {
@@ -131,6 +155,7 @@ const getMethodType = (method: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;              /* 不收缩 */
   
   h3 {
     margin: 0;
@@ -143,6 +168,52 @@ const getMethodType = (method: string) => {
 .mock-tree {
   padding: $spacing-md;
   background: var(--el-bg-color);
+  flex: 1;                     /* 占据剩余空间 */
+  overflow-y: auto;            /* 垂直滚动 */
+  overflow-x: hidden;          /* 隐藏水平滚动 */
+  
+  /* 应用无感滚动条系统 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) transparent; /* 贴边、透明轨道 */
+  
+  &::-webkit-scrollbar {
+    width: var(--sb-w-side);
+    height: var(--sb-w-side);
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;      /* 轨道透明 = 看起来"没有两侧轨道" */
+    border: 0;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 999px;
+    border: 0;                    /* 不留缝，贴边 */
+    opacity: 0;                   /* 默认不可见 */
+    transition: opacity 0.12s ease, background-color 0.12s ease;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--sb-thumb-h);
+  }
+  
+  &::-webkit-scrollbar-thumb:active {
+    background: var(--sb-thumb-a);
+  }
+  
+  /* 悬停/键盘聚焦/正在滚动 时淡入拇指 */
+  &:is(:hover, :focus-within, .is-scrolling)::-webkit-scrollbar-thumb {
+    opacity: 1;
+  }
+  
+  /* 拐角同样透明，保证"无轨道感" */
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  
+  /* 确保内容能够完整显示，包括底部边框 */
+  padding-bottom: $spacing-lg; /* 底部额外内边距，确保边框可见 */
 }
 
 .tree-node {

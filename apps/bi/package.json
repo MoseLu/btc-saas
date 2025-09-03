@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "echo 'BI system dev server'",
-    "build": "echo 'BI system build'",
+    "build": "if not exist dist mkdir dist && echo BI system build > dist/build.txt",
     "lint": "echo 'BI system lint'",
     "typecheck": "echo 'BI system typecheck'",
-    "clean": "echo 'BI system clean'"
+    "clean": "if exist dist rmdir /s /q dist"
   }
 }

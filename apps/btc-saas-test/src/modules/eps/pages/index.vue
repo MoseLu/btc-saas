@@ -1,5 +1,5 @@
 <template>
-  <div class="eps-demo">
+  <div class="eps-demo scrollarea scrollarea--main">
     <el-card class="demo-card">
       <template #header>
         <div class="card-header">
@@ -327,13 +327,11 @@ const apiDataRef = ref<ApiService[]>(apiData)
 
 // 计算属性
 const treeData = computed(() => {
-  return apiDataRef.value.map(service => ({
-    id: service.id,
+  return apiDataRef.value.map((service: ApiService) => ({
     label: service.name,
     type: 'service',
     ...service,
-    children: service.children.map(endpoint => ({
-      id: endpoint.id,
+    children: service.children.map((endpoint: ApiEndpoint) => ({
       label: endpoint.name,
       type: 'endpoint',
       ...endpoint
@@ -347,7 +345,7 @@ const treeProps = {
 }
 
 const expandedKeys = computed(() => {
-  return apiDataRef.value.map(service => service.id)
+  return apiDataRef.value.map((service: ApiService) => service.id)
 })
 
 const currentEndpoints = computed(() => {
@@ -360,7 +358,7 @@ const currentEndpoints = computed(() => {
   // 搜索过滤
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    endpoints = endpoints.filter(endpoint => 
+    endpoints = endpoints.filter((endpoint: ApiEndpoint) => 
       endpoint.name.toLowerCase().includes(query) ||
       endpoint.path.toLowerCase().includes(query) ||
       endpoint.description?.toLowerCase().includes(query)
@@ -369,7 +367,7 @@ const currentEndpoints = computed(() => {
 
   // 方法过滤
   if (selectedMethod.value) {
-    endpoints = endpoints.filter(endpoint => endpoint.method === selectedMethod.value)
+    endpoints = endpoints.filter((endpoint: ApiEndpoint) => endpoint.method === selectedMethod.value)
   }
 
 
@@ -400,7 +398,7 @@ const handleNodeClick = (data: any) => {
 
   } else if (data.type === 'endpoint') {
     // 如果点击的是端点，找到对应的服务并切换
-    const service = apiDataRef.value.find(s => s.children.some(e => e.id === data.id))
+    const service = apiDataRef.value.find((s: ApiService) => s.children.some((e: ApiEndpoint) => e.id === data.id))
     if (service) {
       currentService.value = service
 
@@ -413,10 +411,10 @@ const updateStats = () => {
   let totalEndpoints = 0
   let activeEndpoints = 0
 
-  apiDataRef.value.forEach(service => {
+  apiDataRef.value.forEach((service: ApiService) => {
     totalServices++
     totalEndpoints += service.children.length
-    activeEndpoints += service.children.filter(child => child.status === 'active').length
+    activeEndpoints += service.children.filter((child: ApiEndpoint) => child.status === 'active').length
   })
 
   stats.totalServices = totalServices
@@ -474,8 +472,8 @@ const copyEndpoint = (endpoint: ApiEndpoint) => {
   })
 }
 
-const getMethodType = (method: string) => {
-  const types: Record<string, string> = {
+const getMethodType = (method: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' => {
+  const types: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
     GET: 'success',
     POST: 'primary',
     PUT: 'warning',

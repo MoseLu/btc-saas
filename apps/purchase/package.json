@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "echo 'Purchase system dev server'",
-    "build": "echo 'Purchase system build'",
+    "build": "if not exist dist mkdir dist && echo Purchase system build > dist/build.txt",
     "lint": "echo 'Purchase system lint'",
     "typecheck": "echo 'Purchase system typecheck'",
-    "clean": "echo 'Purchase system clean'"
+    "clean": "if exist dist rmdir /s /q dist"
   }
 }

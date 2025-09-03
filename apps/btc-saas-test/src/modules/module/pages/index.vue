@@ -125,7 +125,7 @@ const moduleList = computed(() => {
     if (typeof moduleName === 'string') {
       name = moduleName
     } else if (moduleName && typeof moduleName === 'object' && 'name' in moduleName) {
-      name = String(moduleName.name)
+      name = String((moduleName as { name: string }).name)
     } else {
       name = 'unknown'
     }
@@ -160,7 +160,7 @@ const initStatus = () => {
       if (typeof moduleName === 'string') {
         name = moduleName
       } else if (moduleName && typeof moduleName === 'object' && 'name' in moduleName) {
-        name = String(moduleName.name)
+        name = String((moduleName as { name: string }).name)
       } else {
         name = 'unknown'
       }

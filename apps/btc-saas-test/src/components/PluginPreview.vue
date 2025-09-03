@@ -90,7 +90,22 @@
 
 <script setup lang="ts">
 import { UploadFilled } from '@element-plus/icons-vue'
-import type { PluginInfo } from '@/services/plugin.api'
+// 本地定义 PluginInfo 类型，避免导入问题
+interface PluginInfo {
+  name: string
+  displayName: string
+  description: string
+  version: string
+  author: string
+  category: string
+  icon: string
+  features: string[]
+  path: string
+  status: 'active' | 'inactive' | 'error'
+  enabled: boolean
+  lastModified: Date
+  dependencies?: string[]
+}
 
 interface Props {
   visible: boolean

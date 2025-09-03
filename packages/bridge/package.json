@@ -8,6 +8,6 @@
     ".": "./index.js"
   },
   "scripts": {
-    "build": "echo 'Bridge package placeholder'"
+    "build": "if not exist dist mkdir dist && echo Bridge package placeholder > dist/build.txt"
   }
 }

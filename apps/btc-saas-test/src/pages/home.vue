@@ -1,5 +1,6 @@
 <template>
-  <div class="home-dashboard">
+  <BasePage>
+    <div class="home-dashboard">
     <!-- 欢迎区域 -->
     <div class="welcome-section">
       <h1>BTC SaaS 管理平台</h1>
@@ -107,13 +108,29 @@
         </el-col>
       </el-row>
     </div>
+
+    <!-- 测试滚动条的长内容区域 -->
+    <div class="scroll-test-section">
+      <h2>滚动条测试区域</h2>
+      <p>这个区域包含足够的内容来测试无感滚动条的效果</p>
+      
+      <div class="test-content">
+        <div v-for="i in 50" :key="i" class="test-item">
+          <h3>测试项目 {{ i }}</h3>
+          <p>这是第 {{ i }} 个测试项目，用来测试滚动条在内容滚动时的显示效果。</p>
+          <p>当您滚动这个区域时，应该能看到滚动条从透明变为可见，然后在一定时间后再次隐藏。</p>
+        </div>
+      </div>
+    </div>
   </div>
+  </BasePage>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Connection, Grid, Folder, User } from '@element-plus/icons-vue'
+import BasePage from '../components/BasePage.vue'
 
 const router = useRouter()
 
@@ -268,6 +285,63 @@ onMounted(async () => {
         margin: 0;
         color: var(--el-text-color-regular);
         font-size: 14px;
+      }
+    }
+  }
+  
+  /* 滚动条测试区域样式 */
+  .scroll-test-section {
+    margin-top: 32px;
+    
+    h2 {
+      margin: 0 0 16px 0;
+      color: var(--el-text-color-primary);
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    > p {
+      margin: 0 0 24px 0;
+      color: var(--el-text-color-regular);
+      font-size: 16px;
+    }
+    
+    .test-content {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid var(--el-border-color-light);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--el-bg-color-page);
+      
+      .test-item {
+        margin-bottom: 20px;
+        padding: 16px;
+        border: 1px solid var(--el-border-color-lighter);
+        border-radius: 6px;
+        background: var(--el-bg-color);
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        h3 {
+          margin: 0 0 8px 0;
+          color: var(--el-text-color-primary);
+          font-size: 16px;
+          font-weight: 600;
+        }
+        
+        p {
+          margin: 0 0 8px 0;
+          color: var(--el-text-color-regular);
+          font-size: 14px;
+          line-height: 1.5;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
       }
     }
   }

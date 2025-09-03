@@ -31,9 +31,11 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@btc/bridge": "workspace:*"
+    "@btc/bridge": "workspace:*",
+    "vue": "^3.4.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@types/node": "^20.19.11"
   }
 }

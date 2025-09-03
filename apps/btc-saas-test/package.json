@@ -12,8 +12,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@btc/logs": "workspace:*",
     "@btc/auto-discover": "workspace:*",
+    "@btc/logs": "workspace:*",
     "@btc/styles": "workspace:*",
     "@element-plus/icons-vue": "^2.3.0",
     "@vue/devtools-api": "^8.0.1",
@@ -31,6 +31,8 @@
     "sass": "^1.69.0",
     "sass-loader": "^16.0.5",
     "typescript": "^5.7.2",
+    "unplugin-auto-import": "^20.1.0",
+    "unplugin-vue-components": "^29.0.0",
     "vite": "^7.1.3",
     "vue-tsc": "^2.0.0"
   }

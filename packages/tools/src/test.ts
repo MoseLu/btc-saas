@@ -104,7 +104,7 @@ async function runAllTests() {
 }
 
 // 如果直接运行此文件，执行测试
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url.startsWith('file://')) {
   runAllTests()
 }
 

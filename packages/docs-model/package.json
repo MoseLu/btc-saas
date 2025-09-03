@@ -7,10 +7,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "echo 'Docs Model dev build'",
-    "build": "echo 'Docs Model build'",
+    "build": "if not exist dist mkdir dist && echo Docs Model build > dist/build.txt",
     "lint": "echo 'Docs Model lint'",
     "typecheck": "echo 'Docs Model typecheck'",
-    "clean": "echo 'Docs Model clean'",
+    "clean": "if exist dist rmdir /s /q dist",
     "generate": "echo 'Docs Model generate sidebar'"
   }
 }

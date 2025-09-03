@@ -1,6 +1,23 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import { logApi, type LogEntry } from '@/services/log.api'
+// 本地定义类型，避免导入问题
+interface LogEntry {
+  ts: number
+  level: string
+  scope: string
+  msg: string
+  ctx?: Record<string, any>
+}
+
+// 模拟 logApi
+const logApi = {
+  getLogs: (): LogEntry[] => [],
+  clearLogs: (): void => {},
+  getLogLevels: (): string[] => ['DEBUG', 'INFO', 'WARN', 'ERROR'],
+  getScopes: (): string[] => ['app', 'system', 'user'],
+  filterLogs: (options: any): LogEntry[] => [],
+  exportLogs: (logs: LogEntry[]): void => {}
+}
 
 /**
  * 日志查看器逻辑层

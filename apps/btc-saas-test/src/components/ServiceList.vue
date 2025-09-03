@@ -95,7 +95,27 @@
 
 <script setup lang="ts">
 import { Setting, VideoPlay, VideoPause, View } from '@element-plus/icons-vue'
-import type { ServiceInfo } from '@/services/service.api'
+// 本地定义 ServiceInfo 类型，避免导入问题
+interface ServiceInfo {
+  name: string
+  displayName: string
+  description: string
+  version: string
+  status: 'active' | 'inactive' | 'error'
+  port?: number
+  path: string
+  endpoint?: string
+  type?: string
+  uptime?: string
+  lastModified?: Date
+  lastStarted?: Date
+  lastStopped?: Date
+  metrics?: {
+    responseTime: number
+    requests: number
+    errorRate: number
+  }
+}
 
 interface Props {
   services: ServiceInfo[]

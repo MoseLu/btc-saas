@@ -94,7 +94,18 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import type { ApiEndpoint } from '../../data/apiData'
+// 本地定义 ApiEndpoint 类型，避免导入问题
+interface ApiEndpoint {
+  id: string
+  name: string
+  path: string
+  method: string
+  description?: string
+  status: 'active' | 'inactive' | 'deprecated'
+  responseTime?: number
+  errorRate?: number
+  mockDelay?: number
+}
 
 interface Props {
   showMockDetail: boolean
@@ -132,8 +143,8 @@ const testForm = reactive({
 const testResult = ref<any>(null)
 const testing = ref(false)
 
-const getMethodType = (method: string) => {
-  const types: Record<string, string> = {
+const getMethodType = (method: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' => {
+  const types: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
     GET: 'success',
     POST: 'primary',
     PUT: 'warning',

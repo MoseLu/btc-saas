@@ -18,19 +18,22 @@
 // 导入主题样式
 @use './theme.scss' as *;
 
+// 导入滚动条稳定性样式 - 解决主题切换时的滚动条问题
+@use './scrollbar-stability.scss' as *;
+
 // ========================================
 // 全局性能优化 - 选择性禁用动画
 // ========================================
 
 // 只禁用可能影响性能的大型动画，保留必要的交互动画
 .router-view {
-  // 禁用路由切换动画以提升性能
-  * {
+  // 禁用路由切换动画以提升性能，但保留 Element Plus 浮层动画
+  *:not(.el-message):not(.el-notification):not(.el-overlay):not(.el-popper):not(.el-loading-mask) {
     transition: none !important;
   }
   
-  // 禁用常规动画，但不影响 View Transitions 伪元素
-  *:not(::view-transition-old):not(::view-transition-new) {
+  // 禁用常规动画，但不影响 View Transitions 伪元素和 Element Plus 浮层
+  *:not(::view-transition-old):not(::view-transition-new):not(.el-message):not(.el-notification):not(.el-overlay):not(.el-popper):not(.el-loading-mask) {
     animation: none !important;
   }
 }
@@ -68,7 +71,14 @@ body {
   background-color: $bg-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* 移除overflow-x: hidden，避免内容被裁剪 */
+  /* overflow-x: hidden; */
+  
+  /* 确保body占满整个视口宽度，但不强制固定宽度 */
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 // ========================================

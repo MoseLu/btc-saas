@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "echo 'Engineering system dev server'",
-    "build": "echo 'Engineering system build'",
+    "build": "if not exist dist mkdir dist && echo Engineering system build > dist/build.txt",
     "lint": "echo 'Engineering system lint'",
     "typecheck": "echo 'Engineering system typecheck'",
-    "clean": "echo 'Engineering system clean'"
+    "clean": "if exist dist rmdir /s /q dist"
   }
 }

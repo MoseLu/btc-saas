@@ -209,6 +209,12 @@ declare module 'virtual:@btc/auto/meta' {
         res.end(JSON.stringify(state.modules, null, 2))
       })
 
+      // 添加路由代码调试端点
+      _server.middlewares.use('/__btc__/routes-code', (_req, res) => {
+        res.setHeader('content-type', 'text/plain')
+        res.end(genRoutesCode())
+      })
+
       // 代理：把 /api/<module> 定向到对应 devPort
       for (const [mid, m] of Object.entries(state.modules)) {
         if (!m.cfg.devPort || !m.cfg.apiBase) continue

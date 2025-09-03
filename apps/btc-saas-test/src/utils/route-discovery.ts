@@ -200,7 +200,7 @@ export class RouteDiscovery {
 
       // 处理子路由
       if (routeConfig.children && routeConfig.children.length > 0) {
-        route.children = routeConfig.children.map(child => 
+        route.children = routeConfig.children.map((child: any) => 
           convertRoute(child, fullPath)
         )
       }
@@ -301,7 +301,9 @@ export class RouteUtils {
     const breadcrumb: string[] = []
     
     if (route.meta?.breadcrumb) {
-      breadcrumb.push(...route.meta.breadcrumb)
+      if (route.meta.breadcrumb && Array.isArray(route.meta.breadcrumb)) {
+        breadcrumb.push(...route.meta.breadcrumb)
+      }
     } else if (route.meta?.title) {
       breadcrumb.push(route.meta.title)
     }

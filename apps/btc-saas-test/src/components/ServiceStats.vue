@@ -60,7 +60,13 @@
 
 <script setup lang="ts">
 import { Setting, Check, Close, Warning } from '@element-plus/icons-vue'
-import type { ServiceStats } from '@/services/service.api'
+// 本地定义 ServiceStats 类型，避免导入问题
+interface ServiceStats {
+  total: number
+  active: number
+  inactive: number
+  error: number
+}
 
 interface Props {
   stats: ServiceStats

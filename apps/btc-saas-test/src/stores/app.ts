@@ -1,32 +1,33 @@
 import { defineStore } from 'pinia'
+import { useThemeTransition } from '../composables/useThemeTransition'
 
 interface AppState {
-  theme: 'light' | 'dark'
   sidebarCollapsed: boolean
   currentPage: string
 }
 
 export const useAppStore = defineStore('app', {
   state: (): AppState => ({
-    theme: 'light',
     sidebarCollapsed: false,
     currentPage: ''
   }),
 
   getters: {
-    isDark: (state) => state.theme === 'dark',
-    isLight: (state) => state.theme === 'light'
+    // 使用完美主题切换系统的状态
+    isDark: () => useThemeTransition().isDark.value,
+    isLight: () => useThemeTransition().isLight.value
   },
 
   actions: {
+    // 主题切换使用完美主题切换系统
     toggleTheme() {
-      this.theme = this.theme === 'light' ? 'dark' : 'light'
-      document.documentElement.classList.toggle('dark', this.isDark)
+      const { toggle } = useThemeTransition()
+      toggle()
     },
 
     setTheme(theme: 'light' | 'dark') {
-      this.theme = theme
-      document.documentElement.classList.toggle('dark', this.isDark)
+      const { setTheme } = useThemeTransition()
+      setTheme(theme)
     },
 
     toggleSidebar() {
@@ -36,15 +37,5 @@ export const useAppStore = defineStore('app', {
     setCurrentPage(page: string) {
       this.currentPage = page
     }
-  },
-
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        key: 'btc-app-store',
-        storage: localStorage
-      }
-    ]
   }
 })

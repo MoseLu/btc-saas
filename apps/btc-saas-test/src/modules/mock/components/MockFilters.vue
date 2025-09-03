@@ -88,6 +88,8 @@ watch([searchQuery, selectedMethod, selectedStatus], handleSearch, { immediate: 
   background: var(--el-fill-color-light);
   border-radius: 8px;
   border: 1px solid var(--el-border-color-light);
+  position: relative;          /* 相对定位，确保边框正确显示 */
+  box-sizing: border-box;     /* 确保边框计算正确 */
 }
 
 .filters-row {

@@ -1,0 +1,142 @@
+/* ========================================
+   BTC 原生滚动条美化系统
+   实现"只有椭圆拇指，其他统统没有"的效果
+   ======================================== */
+
+/* 基础滚动区域样式 */
+.scrollarea {
+  overflow: auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* 原生滚动条美化 - 只显示椭圆拇指 */
+.cool-scrollbar {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: auto transparent;
+}
+
+/* WebKit 系（Chrome/Edge/Safari）- 隐藏所有非thumb结构 */
+.cool-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+.cool-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.cool-scrollbar::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.cool-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.cool-scrollbar::-webkit-resizer {
+  background: transparent;
+}
+
+/* 仅拇指可见：默认无感，交互时淡入 */
+.cool-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color .18s ease, opacity .18s ease;
+  opacity: 0;
+}
+
+/* 悬停滚动区域时，出现椭圆拇指 */
+.cool-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.28);
+  opacity: 1;
+}
+
+/* 真正滚动/拖拽时更清晰 */
+.cool-scrollbar::-webkit-scrollbar-thumb:hover,
+.cool-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0,0,0,.45);
+  opacity: 1;
+}
+
+/* Firefox 兜底策略 */
+@supports (scrollbar-color: auto) {
+  .cool-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,.35) transparent;
+  }
+  
+  .cool-scrollbar.is-active {
+    scrollbar-color: rgba(0,0,0,.5) transparent;
+  }
+}
+
+/* 暗色主题适配 */
+html.dark .cool-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,.22);
+}
+
+html.dark .cool-scrollbar::-webkit-scrollbar-thumb:hover,
+html.dark .cool-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: rgba(255,255,255,.38);
+}
+
+html.dark .cool-scrollbar {
+  scrollbar-color: rgba(255,255,255,.35) transparent;
+}
+
+html.dark .cool-scrollbar.is-active {
+  scrollbar-color: rgba(255,255,255,.5) transparent;
+}
+
+/* 侧栏滚动条更细 */
+.cool-scrollbar--side::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.cool-scrollbar--side {
+  scrollbar-width: thin;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .cool-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .cool-scrollbar--side::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: more) {
+  .cool-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.4);
+  }
+  
+  .cool-scrollbar::-webkit-scrollbar-thumb:hover,
+  .cool-scrollbar::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0,0,0,.6);
+  }
+  
+  html.dark .cool-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,.4);
+  }
+  
+  html.dark .cool-scrollbar::-webkit-scrollbar-thumb:hover,
+  html.dark .cool-scrollbar::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255,255,255,.6);
+  }
+}

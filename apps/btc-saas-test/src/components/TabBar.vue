@@ -22,7 +22,7 @@
     </div>
 
     <!-- 标签列表区域 -->
-    <div class="tabbar__list" ref="listRef" @wheel.prevent="onWheel">
+    <div class="tabbar__list">
       <div v-for="t in tabs.visited" :key="t.path"
            class="tabbar__item"
            :class="{ 'is-active': t.path === tabs.activePath, 'is-affix': t.affix }"
@@ -122,14 +122,15 @@ function goHome() {
   router.push('/')
 }
 
-const listRef = ref<HTMLElement>()
+// 移除滚动相关的引用和函数
+// const listRef = ref<HTMLElement>()
 
-function onWheel(e: WheelEvent) { 
-  listRef.value?.scrollBy({ 
-    left: e.deltaY + e.deltaX, 
-    behavior: 'smooth' 
-  }) 
-}
+// function onWheel(e: WheelEvent) { 
+//   listRef.value?.scrollBy({ 
+//     left: e.deltaY + e.deltaX, 
+//     behavior: 'smooth' 
+//   }) 
+// }
 </script>
 
 <style scoped lang="scss">
@@ -142,22 +143,61 @@ function onWheel(e: WheelEvent) {
   margin: 0;
   padding: 0;
   
+  /* 防止主题切换时的布局变化 */
+  contain: layout style;
+  will-change: auto;
+  
+  /* 固定滚动条宽度，避免主题切换时的宽度变化 */
+  scrollbar-gutter: stable;
+  
+  /* 确保宽度稳定 */
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  
+  /* 使用flexbox垂直居中，避免高度计算问题 */
+  align-items: center;
+  justify-content: flex-start;
+  
   &__nav {
     display: flex;
     align-items: center;
     gap: 6px; /* 统一间距 */
     padding: 0 6px 0 12px; /* 左侧12px，右侧6px */
+    
+    /* 防止主题切换时的布局变化 */
+    flex-shrink: 0;
+    contain: layout style;
   }
 
   &__list {
     flex: 1;
-    overflow: auto hidden;
+    overflow: visible; /* 移除滚动，改为可见 */
     white-space: nowrap;
-    scrollbar-width: none;
     padding: 0 6px; /* 左右各6px内边距 */
     margin: 0;
     
+    /* 防止主题切换时的布局变化 */
+    contain: layout style;
+    min-width: 0; /* 允许flex子项收缩 */
+    
+    /* 确保没有任何滚动条 */
+    scrollbar-width: none;
+    
     &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    &::-webkit-scrollbar-track {
+      display: none;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      display: none;
+    }
+    
+    &::-webkit-scrollbar-corner {
       display: none;
     }
   }
@@ -165,40 +205,42 @@ function onWheel(e: WheelEvent) {
   &__item {
     display: inline-flex;
     align-items: center;
+    justify-content: center; /* 确保内容垂直居中 */
     gap: 4px;
-    height: 32px; /* 减小高度 */
-    padding: 0 8px;
+    height: 28px; /* 固定高度，与容器高度36px配合，上下各留4px空间 */
+    padding: 0 8px; /* 固定左右内边距 */
     cursor: pointer;
     user-select: none;
     border-radius: 6px;
-    margin: 2px 3px; /* 统一间距：上下2px，左右3px */
-    transition: all 0.2s ease;
+    margin: 4px 3px; /* 上下各4px，确保总高度为36px */
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; /* 只过渡必要的属性 */
     font-size: 12px;
+    font-weight: normal; /* 固定字体粗细，避免激活状态变化 */
+    line-height: 1; /* 固定行高 */
     position: relative;
     background: var(--el-bg-color);
-    border: 1px solid var(--el-border-color-light); /* 使用更明显的边框颜色 */
+    border: 1px solid var(--el-border-color-light);
     
-    /* 默认状态下关闭按钮隐藏 */
+    /* 确保内容垂直居中 */
+    vertical-align: middle;
+    
+    /* 固定关闭按钮尺寸，避免布局变化 */
     .tabbar__close {
       opacity: 0;
-      width: 0;
+      width: 16px;
+      height: 16px;
       overflow: hidden;
-      transition: all 0.2s ease;
+      transition: opacity 0.2s ease; /* 只过渡透明度 */
+      flex-shrink: 0; /* 防止收缩 */
     }
     
     &:hover {
       background: var(--el-fill-color-light);
       border-color: var(--el-border-color);
-      padding: 0 12px 0 8px; /* 悬浮时右侧增加内边距为关闭按钮留空间 */
+      /* 保持所有尺寸不变 */
       
       .tabbar__close {
         opacity: 1;
-        width: 16px; /* 显示关闭按钮 */
-      }
-      
-      /* 悬浮时影响其他tab向右移动 */
-      & ~ .tabbar__item {
-        transform: translateX(8px);
       }
     }
     
@@ -206,7 +248,8 @@ function onWheel(e: WheelEvent) {
       background: var(--el-color-primary);
       color: white;
       border-color: var(--el-color-primary);
-      font-weight: 600;
+      /* 移除font-weight变化，避免高度抖动 */
+      /* font-weight: 600; */
       
       .tabbar__icon {
         color: white;
@@ -214,7 +257,7 @@ function onWheel(e: WheelEvent) {
     }
     
     &.is-affix .tabbar__close {
-      display: none; /* 固定标签完全不显示关闭按钮 */
+      display: none;
     }
   }
   
@@ -234,16 +277,17 @@ function onWheel(e: WheelEvent) {
   &__close {
     border: 0;
     background: transparent;
-    padding: 1px; /* 减小内边距 */
+    padding: 0; /* 移除内边距，避免尺寸变化 */
     cursor: pointer;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--el-text-color-regular);
-    transition: all 0.2s ease;
-    width: 16px; /* 固定尺寸 */
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease; /* 只过渡必要的属性 */
+    width: 16px;
     height: 16px;
+    flex-shrink: 0; /* 防止收缩 */
     
     &:hover {
       background: var(--el-fill-color);
@@ -263,7 +307,8 @@ function onWheel(e: WheelEvent) {
     background: var(--el-bg-color);
     cursor: pointer;
     color: var(--el-text-color-regular);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease; /* 只过渡必要的属性 */
+    flex-shrink: 0; /* 防止收缩 */
     
     &:hover {
       background: var(--el-color-primary);
@@ -285,6 +330,10 @@ function onWheel(e: WheelEvent) {
     gap: 6px; /* 统一间距 */
     padding: 0 6px 0 12px; /* 左侧12px，右侧6px */
     margin: 0;
+    
+    /* 防止主题切换时的布局变化 */
+    flex-shrink: 0;
+    contain: layout style;
   }
   
   /* 右侧操作按钮样式 */
@@ -299,7 +348,8 @@ function onWheel(e: WheelEvent) {
     background: var(--el-bg-color);
     cursor: pointer;
     color: var(--el-text-color-regular);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease; /* 只过渡必要的属性 */
+    flex-shrink: 0; /* 防止收缩 */
     
     &:hover {
       background: var(--el-color-primary);

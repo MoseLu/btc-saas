@@ -1,0 +1,64 @@
+/* Element Plus 浮层保护样式 - 最小侵入方案 */
+/* 使用 CSS Layers 让 EP 样式天然赢回优先级，作用域化冻结规则 */
+
+/* 1. 定义层级顺序：reset < element-plus < app */
+@layer reset, element-plus, app;
+
+/* 2. Element Plus 样式应该放在 element-plus 层 */
+@layer element-plus {
+  /* 这里不需要写内容，因为 Element Plus 样式已经在 main.ts 中导入 */
+  /* 但我们可以在这里添加一些必要的覆盖样式 */
+}
+
+/* 3. 作用域化冻结规则 - 只冻结你的壳，不要挂 html/* */
+@layer app {
+  /* 冻结仅限你的布局壳，不要全域禁止动画 */
+  :where(.layout-shell)[data-vt-active] *,
+  :where(.layout-shell)[data-vt-cooldown] * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* 豁免 EP 浮层族（Message/Notification/Dialog/Overlay/Popper/Loading） */
+  :where(.layout-shell)[data-vt-active] :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask),
+  :where(.layout-shell)[data-vt-active] :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask) *,
+  :where(.layout-shell)[data-vt-cooldown] :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask),
+  :where(.layout-shell)[data-vt-cooldown] :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask) * {
+    transition: initial !important;
+    animation: initial !important;
+  }
+
+  /* 确保在布局变化时浮层不受影响 */
+  .layout-shell.is-collapsed :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask),
+  .layout-shell:not(.is-collapsed) :is(.el-message, .el-notification, .el-overlay, .el-popper, .el-loading-mask) {
+    /* 侧边栏状态变化不影响浮层定位和样式 */
+    transition: initial !important;
+    animation: initial !important;
+  }
+}
+
+/* 4. 确保遮罩层级低于 EP（EP 默认 z-index ~ 2000 起步） */
+@layer app {
+  /* 你的遮罩应该低于 EP 浮层 */
+  .backdrop { 
+    z-index: 1500; 
+  }
+  
+  .sidebar { 
+    z-index: 1510; 
+  }
+  
+  /* ElMessage 默认就在 2000+，不用你再 set !important */
+}
+
+/* 5. 品牌色自定义（可选）- 通过 CSS 变量而不是强制覆盖 */
+@layer app {
+  :root {
+    /* 如果需要品牌色，去改 CSS 变量，而不是强制覆盖组件样式 */
+    /* --el-color-success: #67c23a; */
+    /* --el-message-bg-color: var(--el-fill-color-blank); */
+  }
+  
+  /* 深色主题通过变量自动适配，不需要手动覆盖 */
+  /* html.dark { ... } */
+}

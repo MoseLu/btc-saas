@@ -3,20 +3,33 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 
-// 导入 Element Plus
-import ElementPlus from 'element-plus'
+// Element Plus 样式导入 - 按照 CSS Layers 顺序
+// 1. 先导入 Element Plus 完整样式（放在 element-plus 层）
 import 'element-plus/dist/index.css'
-// 一次性引入暗色CSS，避免动态加载
-import 'element-plus/theme-chalk/dark/css-vars.css'
 
-// 导入图标
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+// 2. 再导入暗色主题变量
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 // 导入统一样式系统
 import '@btc/styles/index.scss'
 
-// 导入主题动画样式覆盖
-import './styles/theme-wave-override.css'
+// 导入自定义滚动条样式
+import './styles/scrollbar.scss'
+
+// 导入完美主题切换系统
+import { initTheme } from './utils/perfectTheme'
+
+// 导入滚动条管理工具
+import './utils/scrollbarManager'
+
+// 导入布局自检脚本（开发环境）
+import './utils/layout-debug'
+
+// 导入全局View Transitions CSS（确保选择器能正确命中）
+import './assets/styles/theme-transition.css'
+
+// 导入 Element Plus 浮层保护样式
+import './assets/styles/element-plus-protection.css'
 
 // 导入预水合工具
 import { prefetchOpeneds } from './bootstrap/opened-prefetch'
@@ -25,6 +38,9 @@ import { useTabsStore } from './stores/tabs'
 
 // 初始化应用
 async function bootstrap() {
+  // 初始化完美主题切换系统
+  initTheme()
+  
   // 添加首帧标记，禁用过渡动画
   document.documentElement.setAttribute('data-first-paint', '1')
   
@@ -49,13 +65,7 @@ async function bootstrap() {
   // 可选：给 DOM 标个"已预水合"标记，CSS 用得上
   document.documentElement.setAttribute('data-menu-hydrated', '1')
 
-  // 注册 Element Plus
-  app.use(ElementPlus)
-
-  // 注册所有图标
-  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-  }
+  // Element Plus 组件和图标现在通过 Auto Import 自动注册
 
   // 注册路由
   app.use(router)

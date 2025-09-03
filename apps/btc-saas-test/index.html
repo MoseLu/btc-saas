@@ -25,47 +25,261 @@
       })();
     </script>
     
-    <!-- 1) 主题变量（两套都先声明；JS 只切换 .dark 类） -->
+    <!-- 1) 完美主题切换样式 -->
     <style>
-      /* 亮色变量（默认） */
+      /* 1) 一次成像：只让根视图参与过渡，避免局部双渲染 */
       :root {
+        /* 文档级过渡 + 隔离混合 */
+        view-transition-name: app;
+        isolation: isolate;
+        
+        /* 波浪原点变量（JS 会动态设置） */
+        --wave-origin: 0% 100%;
+        
+        /* 动画时长和曲线（黄金区间：220-280ms） */
+        --vt-duration: 240ms;
+        --vt-easing: cubic-bezier(.2, .8, .2, 1); /* 快进慢出，少油腻 */
+        
         /* 平台级变量 */
         --btc-bg-page: #f0f2f5;
         --btc-text-primary: #303133;
-
-        /* 基础 Element Plus 变量（theme.scss 会覆盖这些） */
+        --btc-border-color: #dcdfe6;
+        
+        /* Element Plus 变量（亮色） */
         --el-bg-color: #ffffff;
         --el-bg-color-page: var(--btc-bg-page);
         --el-text-color-primary: var(--btc-text-primary);
         --el-text-color-regular: #606266;
-        --el-border-color: #dcdfe6;
+        --el-border-color: var(--btc-border-color);
         --el-border-color-light: #e4e7ed;
+        --el-fill-color: #f5f7fa;
+        --el-fill-color-light: #fafafa;
+        
+        /* 主题色 */
+        --el-color-primary: #409eff;
+        --el-color-success: #67c23a;
+        --el-color-warning: #e6a23c;
+        --el-color-danger: #f56c6c;
+        --el-color-info: #909399;
+        
+        /* UA 控件跟随 */
+        color-scheme: light dark;
       }
       
-      /* 暗色变量（仅在 html.dark 时生效） */
+      /* 禁止局部元素各自过渡 */
+      .sidebar,
+      .header,
+      .content,
+      .main-content,
+      .page-container,
+      .content-area {
+        view-transition-name: none;
+      }
+      
+      /* 2) 不交叠：新旧只在圆弧边界"接触"，其他区域绝不同时可见 */
+      ::view-transition-old(app),
+      ::view-transition-new(app) {
+        animation-duration: var(--vt-duration);
+        animation-timing-function: var(--vt-easing);
+      }
+      
+      /* 注意：View Transitions 规则已移至 theme-transition.css 全局文件 */
+      
+      /* 3) 侧栏"冻起来"：切主题时它不重绘、不改布局 */
+      .sidebar {
+        /* 成为合成层，限制重绘波及面 */
+        contain: paint layout style;
+        will-change: transform, filter, clip-path;
+        
+        /* 滚动条固定宽度，避免主题切换时"变粗变细" */
+        scrollbar-gutter: stable;
+        
+        /* 确保侧栏在主题切换时保持稳定 */
+        transition: none;
+        
+        /* 防止主题切换时的重排 */
+        transform: translateZ(0);
+      }
+      
+      /* 侧栏内容也保持稳定 */
+      .sidebar .el-menu,
+      .sidebar .el-menu-item,
+      .sidebar .el-sub-menu {
+        transition: none;
+      }
+      
+      /* 防止主题切换时整个页面布局变化 */
+      body, #app, .layout {
+        /* 固定滚动条宽度，避免主题切换时的宽度变化 */
+        scrollbar-gutter: stable;
+        
+        /* 防止布局重排 */
+        contain: layout style;
+        
+        /* 确保宽度稳定 */
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+      }
+      
+      /* 防止主题切换时滚动条样式变化影响布局 */
+      html {
+        scrollbar-gutter: auto;
+      }
+      
+      /* 4) 暗色变量（仅在 html.dark 时生效） */
       html.dark {
-        --btc-bg-page: #0a0a0a;    /* 比 EP 略深一档，贴近 cool-admin 观感 */
+        /* 平台级变量 */
+        --btc-bg-page: #0a0a0a;
         --btc-text-primary: #e5eaf3;
-
+        --btc-border-color: #4c4d4f;
+        
+        /* Element Plus 变量（暗色） */
         --el-bg-color: #141414;
         --el-bg-color-page: var(--btc-bg-page);
         --el-text-color-primary: var(--btc-text-primary);
         --el-text-color-regular: #cfd3dc;
-        --el-border-color: #4c4d4f;
+        --el-border-color: var(--btc-border-color);
         --el-border-color-light: #414243;
+        --el-fill-color: #303030;
+        --el-fill-color-light: #262727;
+        
+        /* 主题色（暗色下稍微调亮） */
+        --el-color-primary: #409eff;
+        --el-color-success: #67c23a;
+        --el-color-warning: #e6a23c;
+        --el-color-danger: #f56c6c;
+        --el-color-info: #909399;
       }
-
+      
+      /* 5) 同步切换 + 锁滚动：一帧内完成变量翻转 */
+      html[style*="overflow: clip"] {
+        /* 确保滚动条在过渡期间保持稳定 */
+        scrollbar-gutter: auto;
+      }
+      
+      /* 防止主题切换时的闪烁 */
+      html:not([data-theme-ready="1"]) {
+        /* 在主题未决定时，允许 UA 自己选（避免瞬间白闪） */
+        color-scheme: light dark;
+      }
+      
       /* 首帧基础外观（避免白屏/闪烁） */
-      [v-cloak]{ visibility:hidden!important; }
+      [v-cloak] {
+        visibility: hidden !important;
+      }
+      
       html[data-first-paint="1"] .el-menu--collapse,
-      html[data-first-paint="1"] .el-sub-menu__title { transition:none!important; }
-
-      /* 在主题未决定时，允许 UA 自己选（避免瞬间白闪） */
-      html:not([data-theme-ready="1"]) { color-scheme: light dark; }
-
-      /* 默认隐藏侧栏，等 main.ts 打上 data-menu-hydrated=1 再显示 */
-      html:not([data-menu-hydrated="1"]) .sidebar { 
-        visibility: hidden; 
+      html[data-first-paint="1"] .el-sub-menu__title {
+        transition: none !important;
+      }
+      
+      /* 6) 动画"自然感"的三个细节 */
+      /* 1. 时长 240ms 左右：人眼对大面积对比度切换在 200–300ms 最"可信" */
+      /* 2. 曲线要"快进慢出"：cubic-bezier(.2,.8,.2,1) */
+      /* 3. 减少过渡期间的颜色计算：图标别用动态换组件 */
+      
+      /* 图标反色处理 */
+      .theme-toggle-icon {
+        /* 亮色主题下正常显示 */
+        filter: none;
+        
+        /* 暗色主题下轻微调亮 */
+        html.dark & {
+          filter: brightness(1.1);
+        }
+      }
+      
+      /* 主题切换按钮样式 */
+      .theme-toggle-btn {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+        
+        /* 亮色主题 */
+        color: var(--el-text-color-primary);
+        
+        /* 暗色主题 */
+        html.dark & {
+          color: var(--el-text-color-primary);
+        }
+        
+        &:hover {
+          background-color: var(--el-fill-color-light);
+          
+          html.dark & {
+            background-color: var(--el-fill-color);
+          }
+        }
+        
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+      
+      /* 无障碍支持 */
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(app),
+        ::view-transition-new(app) {
+          animation: none !important;
+        }
+        
+        .theme-toggle-btn {
+          transition: none;
+        }
+      }
+      
+      /* 高对比度模式支持 */
+      @media (prefers-contrast: high) {
+        :root {
+          --btc-border-color: #000000;
+          --el-border-color: #000000;
+        }
+        
+        html.dark {
+          --btc-border-color: #ffffff;
+          --el-border-color: #ffffff;
+        }
+      }
+      
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        :root {
+          --vt-duration: 200ms; /* 移动端稍微快一点 */
+        }
+        
+        .sidebar {
+          /* 移动端侧栏优化 */
+          contain: paint layout;
+        }
+      }
+      
+      /* 调试模式（开发环境） */
+      html[data-debug-theme="1"] {
+        /* 显示主题切换边界 */
+        ::view-transition-old(app),
+        ::view-transition-new(app) {
+          outline: 2px solid red;
+        }
+        
+        /* 显示波浪原点 */
+        &::before {
+          content: '';
+          position: fixed;
+          top: var(--wave-origin-y, 100%);
+          left: var(--wave-origin-x, 0%);
+          width: 20px;
+          height: 20px;
+          background: red;
+          border-radius: 50%;
+          z-index: 9999;
+          pointer-events: none;
+        }
       }
 
       body{

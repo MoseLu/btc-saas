@@ -6,6 +6,37 @@
 @use './mixins.scss' as *;
 
 // ========================================
+// 防止主题切换时布局变化
+// ========================================
+
+/* 固定滚动条宽度，避免主题切换时的宽度变化 */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* 防止主题切换时布局重排 */
+.layout, .sidebar, .header, .content {
+  contain: layout style;
+  will-change: auto;
+}
+
+/* 确保主题切换时宽度稳定 */
+.layout {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* 防止主题切换时的闪烁和布局变化 */
+html[data-theme-from] *,
+html[data-theme-to] * {
+  /* 在主题切换过程中保持布局稳定 */
+  contain: layout style;
+  transition: none !important;
+  animation: none !important;
+}
+
+// ========================================
 // 主题切换动画
 // ========================================
 
@@ -93,40 +124,42 @@ html.dark {
   --el-color-white: #ffffff;
   --el-color-black: #000000;
   
-  // 滚动条深色主题
+  // 滚动条深色主题 - 与无感滚动条系统兼容
+  // 注意：这些样式会被 .scrollarea 类覆盖，仅作为后备
+  
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
-    background: var(--el-bg-color-page);
+    background: transparent; /* 透明背景，符合无感设计 */
   }
   
   &::-webkit-scrollbar-track {
-    background: var(--el-fill-color-darker);
+    background: transparent; /* 透明轨道，符合无感设计 */
     border-radius: 5px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--el-border-color);
+    background: rgba(255, 255, 255, 0.2); /* 更透明，符合无感设计 */
     border-radius: 5px;
-    border: 1px solid var(--el-border-color-light);
+    border: 1px solid transparent;
     
     &:hover {
-      background: var(--el-border-color-light);
+      background: rgba(255, 255, 255, 0.4); /* 悬停时稍微明显 */
     }
     
     &:active {
-      background: var(--el-text-color-placeholder);
+      background: rgba(255, 255, 255, 0.6); /* 激活时明显 */
     }
   }
   
   &::-webkit-scrollbar-corner {
-    background: var(--el-fill-color-darker);
+    background: transparent; /* 透明角落，符合无感设计 */
   }
   
-  // Firefox 深色主题滚动条
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: var(--el-border-color) var(--el-fill-color-darker);
+  // Firefox 深色主题滚动条 - 与无感滚动条系统兼容
+  *:not(.scrollarea):not(.scrollarea--main):not(.scrollarea--side) {
+    scrollbar-width: thin; /* 使用细滚动条 */
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent; /* 透明轨道 */
   }
   
   // 选择文本深色主题
