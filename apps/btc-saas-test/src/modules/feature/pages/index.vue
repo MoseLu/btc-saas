@@ -1,5 +1,5 @@
 <template>
-  <div class="feature-tester scrollarea scrollarea--main">
+  <div class="feature-tester">
 
 
     <!-- 功能卡片网格 -->

@@ -247,53 +247,75 @@ const getRowClassName = ({ row }: { row: ApiEndpoint }) => {
   overflow: hidden;            /* 隐藏溢出 */
 }
 
-/* 表格内容区域滚动条 */
+/* 表格内容区域滚动条 - 使用统一的cool-scrollbar系统 */
 :deep(.el-table__body-wrapper) {
   overflow-y: auto !important; /* 强制垂直滚动 */
   overflow-x: auto !important; /* 水平滚动 */
   
-  /* 应用无感滚动条系统 */
+  /* 应用统一的cool-scrollbar样式 */
   scrollbar-width: thin;
-  scrollbar-color: var(--sb-thumb) transparent; /* 贴边、透明轨道 */
+  scrollbar-color: rgba(0,0,0,.35) transparent;
   
   &::-webkit-scrollbar {
-    width: var(--sb-w-main);
-    height: var(--sb-w-main);
+    width: 8px;
+    height: 8px;
+    background: transparent;
   }
   
   &::-webkit-scrollbar-track {
-    background: transparent;      /* 轨道透明 = 看起来"没有两侧轨道" */
-    border: 0;
+    background: transparent;
+    box-shadow: none;
+    border: none;
   }
   
-  &::-webkit-scrollbar-thumb {
-    background: var(--sb-thumb);
-    border-radius: 999px;
-    border: 0;                    /* 不留缝，贴边 */
-    opacity: 0;                   /* 默认不可见 */
-    transition: opacity 0.12s ease, background-color 0.12s ease;
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
   }
   
-  &::-webkit-scrollbar-thumb:hover {
-    background: var(--sb-thumb-h);
-  }
-  
-  &::-webkit-scrollbar-thumb:active {
-    background: var(--sb-thumb-a);
-  }
-  
-  /* 悬停/键盘聚焦/正在滚动 时淡入拇指 */
-  &:is(:hover, :focus-within, .is-scrolling)::-webkit-scrollbar-thumb {
-    opacity: 1;
-  }
-  
-  /* 拐角同样透明，保证"无轨道感" */
   &::-webkit-scrollbar-corner {
     background: transparent;
   }
   
+  &::-webkit-resizer {
+    background: transparent;
+  }
+  
+  /* 仅拇指可见：默认无感，交互时淡入 */
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color .18s ease, opacity .18s ease;
+    opacity: 0;
+  }
+  
+  /* 悬停滚动区域时，出现椭圆拇指 */
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.28);
+    opacity: 1;
+  }
+  
+  /* 真正滚动/拖拽时更清晰 */
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0,0,0,.45);
+    opacity: 1;
+  }
+  
   /* 确保内容能够完整显示，包括底部边框 */
   padding-bottom: $spacing-lg; /* 底部额外内边距，确保边框可见 */
+}
+
+/* 隐藏Element Plus自带的滚动条，让我们的cool-scrollbar生效 */
+:deep(.el-scrollbar__bar) {
+  display: none !important;
+}
+
+:deep(.el-scrollbar__wrap) {
+  overflow: auto !important;
 }
 
 /* 表格行样式 */
@@ -325,6 +347,24 @@ html.dark {
   .endpoint-path {
     background: var(--el-bg-color-overlay);
     color: var(--el-text-color-regular);
+  }
+  
+  /* 暗色主题滚动条 */
+  :deep(.el-table__body-wrapper) {
+    scrollbar-color: rgba(255,255,255,.35) transparent;
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255,0);
+    }
+    
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255,.22);
+    }
+    
+    &::-webkit-scrollbar-thumb:hover,
+    &::-webkit-scrollbar-thumb:active {
+      background-color: rgba(255,255,255,.38);
+    }
   }
 }
 </style>

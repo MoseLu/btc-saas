@@ -3,40 +3,46 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 
-// Element Plus 样式导入 - 按照 CSS Layers 顺序
-// 1. 先导入 Element Plus 完整样式（放在 element-plus 层）
-import 'element-plus/dist/index.css'
+// ========================================
+// 样式导入 - 按照 CSS Layers 顺序
+// ========================================
 
-// 2. 再导入暗色主题变量
-import 'element-plus/theme-chalk/dark/css-vars.css'
+// 1. 先导入入口样式分层（定义 CSS Layers，包含 Element Plus 样式）
+import './assets/styles/entry.css'
 
-// 导入统一样式系统
-import '@btc/styles/index.scss'
+// 2. 导入 BTC 组件皮肤（放在 app 层最后）
+import './styles/skin-btc.css'
 
-// 导入自定义滚动条样式
-import './styles/scrollbar.scss'
+// 3. 导入图标样式
+import './styles/_icons.scss'
 
-// 导入完美主题切换系统
+// 4. 导入完美主题切换系统
 import { initTheme } from './utils/perfectTheme'
 
-// 导入滚动条管理工具
-import './utils/scrollbarManager'
-
-// 导入布局自检脚本（开发环境）
+// 5. 导入布局自检脚本（开发环境）
 import './utils/layout-debug'
 
-// 导入全局View Transitions CSS（确保选择器能正确命中）
+// 6. 导入全局View Transitions CSS（确保选择器能正确命中）
 import './assets/styles/theme-transition.css'
 
-// 导入 Element Plus 浮层保护样式
-import './assets/styles/element-plus-protection.css'
+// 7. 导入主题切换动画 CSS
+import './styles/theme-ripple.css'
 
-// 导入预水合工具
+// 8. 导入选择器稳定性样式（解决主题切换时文字移动问题）
+import './styles/select-stability.css'
+
+// 9. 导入选择器主题切换保护样式（专门解决主题切换时的抖动问题）
+import './styles/select-theme-protection.css'
+
+// 10. 导入预水合工具
 import { prefetchOpeneds } from './bootstrap/opened-prefetch'
 import { useMenuStore } from './stores/menu'
 import { useTabsStore } from './stores/tabs'
 
+// ========================================
 // 初始化应用
+// ========================================
+
 async function bootstrap() {
   // 初始化完美主题切换系统
   initTheme()

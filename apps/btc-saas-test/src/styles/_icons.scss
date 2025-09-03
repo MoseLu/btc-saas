@@ -1,0 +1,28 @@
+/* src/styles/_icons.scss */
+:root {
+  --icon-size-sidebar: 16px;
+  --icon-size-topbar: 16px;
+  --icon-size-tab: 16px;
+  --icon-size-action: 16px;
+}
+
+.btc-icon--sidebar { 
+  font-size: var(--icon-size-sidebar); 
+  opacity: 0.9; 
+}
+
+.btc-icon--topbar { 
+  font-size: var(--icon-size-topbar);  
+}
+
+.btc-icon--tab { 
+  font-size: var(--icon-size-tab);     
+}
+
+.btc-icon--action { 
+  font-size: var(--icon-size-action);  
+}
+
+.dark .btc-icon { 
+  filter: none; /* 若部分库默认浅色，可按需调整 */ 
+}

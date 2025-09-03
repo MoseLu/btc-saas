@@ -1,0 +1,151 @@
+/* =========================================
+   主题桥接文件 - 仅变量！不写任何 .el-* 结构选择器
+   ========================================= */
+
+/* 1) 业务 Token */
+:root {
+  /* 业务色彩系统 */
+  --bg-page: #f6f7f9;
+  --bg-elevated: #ffffff;
+  --bg-overlay: #ffffff;
+  --bg-fill: #f0f2f5;
+  --bg-fill-light: #f5f7fa;
+  --bg-fill-dark: #ebedf0;
+  
+  /* 文字色彩系统 */
+  --text-1: #1f2328;
+  --text-2: #636a73;
+  --text-3: #8c959f;
+  --text-4: #a3a6ad;
+  
+  /* 品牌色彩系统 */
+  --brand-6: #2f88ff;
+  --brand-5: #409eff;
+  --brand-4: #66b1ff;
+  --brand-3: #85c5ff;
+  --brand-2: #a3d8ff;
+  --brand-1: #c2e7ff;
+  
+  /* 功能色彩系统 */
+  --success-6: #52c41a;
+  --warning-6: #faad14;
+  --error-6: #ff4d4f;
+  --info-6: #1890ff;
+  
+  /* 边框色彩系统 */
+  --border-1: color-mix(in oklab, #000 12%, transparent);
+  --border-2: color-mix(in oklab, #000 8%, transparent);
+  --border-3: color-mix(in oklab, #000 4%, transparent);
+  
+  /* 阴影系统 */
+  --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-2: 0 1px 8px 0 rgba(0, 0, 0, 0.06);
+  --shadow-3: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+  
+  /* 建议把 color-scheme 分开设置，更稳定 */
+  color-scheme: light;
+}
+
+/* 暗色主题业务 Token */
+html.dark {
+  --bg-page: #0b0d10;
+  --bg-elevated: #121418;
+  --bg-overlay: #1d1e1f;
+  --bg-fill: #1a1a1a;
+  --bg-fill-light: #262727;
+  --bg-fill-dark: #303030;
+  
+  --text-1: #e5eaf3;
+  --text-2: #a3a6ad;
+  --text-3: #8c959f;
+  --text-4: #636a73;
+  
+  --brand-6: #409eff;
+  --brand-5: #66b1ff;
+  --brand-4: #85c5ff;
+  --brand-3: #a3d8ff;
+  --brand-2: #c2e7ff;
+  --brand-1: #e1f6ff;
+  
+  --success-6: #67c23a;
+  --warning-6: #e6a23c;
+  --error-6: #f56c6c;
+  --info-6: #909399;
+  
+  --border-1: color-mix(in oklab, #fff 18%, transparent);
+  --border-2: color-mix(in oklab, #fff 12%, transparent);
+  --border-3: color-mix(in oklab, #fff 6%, transparent);
+  
+  --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 1px 8px 0 rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 4px 16px 0 rgba(0, 0, 0, 0.5);
+  
+  color-scheme: dark;
+}
+
+/* 2) Element Plus 变量桥接（补齐缺失项） */
+:root {
+  /* 基础色（EP 某些组件直接引用） */
+  --el-color-white: #ffffff;
+  --el-color-black: #000000;
+
+  /* 背景与叠层 */
+  --el-bg-color: var(--bg-elevated);
+  --el-bg-color-page: var(--bg-page);
+  --el-bg-color-overlay: var(--bg-overlay);
+  --el-overlay-color: rgba(0,0,0,.6);           /* overlay 蒙层 */
+  --el-mask-color: rgba(0,0,0,.6);              /* drawer/dialog 蒙层 */
+  --el-mask-color-extra-light: rgba(0,0,0,.3);
+
+  /* 文字 */
+  --el-text-color-primary: var(--text-1);
+  --el-text-color-regular: var(--text-2);
+  --el-text-color-secondary: var(--text-3);
+  --el-text-color-placeholder: var(--text-4);
+  --el-text-color-disabled: var(--text-4);
+
+  /* 边框 */
+  --el-border-color: var(--border-1);
+  --el-border-color-dark: var(--border-2);
+  --el-border-color-darker: var(--border-1);
+  --el-border-color-light: var(--border-2);
+  --el-border-color-lighter: var(--border-3);
+  --el-border-color-extra-light: var(--border-3);
+
+  /* 填充 */
+  --el-fill-color-blank: var(--bg-elevated);
+  --el-fill-color-light: var(--bg-fill-light);
+  --el-fill-color: var(--bg-fill);
+  --el-fill-color-dark: var(--bg-fill-dark);
+  --el-fill-color-darker: var(--bg-fill-dark);
+
+  /* 品牌与状态 */
+  --el-color-primary: var(--brand-6);
+  --el-color-primary-dark-2: var(--brand-5);
+  --el-color-primary-light-3: var(--brand-3);
+  --el-color-primary-light-5: var(--brand-2);
+  --el-color-primary-light-7: var(--brand-1);
+  --el-color-primary-light-8: var(--brand-1);
+  --el-color-primary-light-9: var(--brand-1);
+
+  --el-color-success: var(--success-6);
+  --el-color-warning: var(--warning-6);
+  --el-color-danger: var(--error-6);
+  --el-color-info: var(--info-6);
+
+  /* Disabled（经常被忽略，导致"文字看不见"） */
+  --el-disabled-bg-color: var(--bg-fill);
+  --el-disabled-text-color: var(--text-4);
+  --el-disabled-border-color: var(--border-2);
+
+  /* 阴影（EP 用一组 box-shadow 变量） */
+  --el-box-shadow: var(--shadow-2);
+  --el-box-shadow-light: var(--shadow-1);
+  --el-box-shadow-lighter: var(--shadow-1);
+  --el-box-shadow-dark: var(--shadow-3);
+}
+
+/* 3) 应用级"只过渡颜色" */
+html, body { 
+  transition: background-color 0.18s linear, color 0.18s linear; 
+}

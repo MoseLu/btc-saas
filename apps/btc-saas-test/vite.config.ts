@@ -1,18 +1,25 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
 import { fileURLToPath, URL } from 'node:url'
 import btcPlugins from '../../packages/plugins/src/vite-plugin-btc-plugins'
 import { btcAutoDiscover } from '@btc/auto-discover'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import svgLoader from 'vite-svg-loader'
+import path from 'node:path'
 
 export default defineConfig({
   plugins: [
     vue(),
     btcAutoDiscover(),
     // btcPlugins(), // 暂时注释掉，避免类型冲突
+    
+    // 本地 svg -> 直接作为 Vue 组件（适合复杂交互动效）
+    svgLoader({ svgo: true }),
     
     // Element Plus Auto Import
     AutoImport({
@@ -27,8 +34,30 @@ export default defineConfig({
     }),
     
     Components({
-      resolvers: [ElementPlusResolver()],
-      dts: 'src/components.d.ts',
+      dts: 'src/types/components.d.ts',
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          prefix: 'i', // 你也可以不加，下面我用 <BtcIcon /> 统一
+          // enabledCollections: ['lucide','mdi','material-symbols'], // 可选，限制集合
+        }),
+      ],
+    }),
+    
+    // Iconify：按需把图标编译成组件（零运行时）
+    Icons({
+      autoInstall: true,
+      compiler: 'vue3',
+      // scale: 1, // 默认即可
+    }),
+    
+    // 本地 sprite（把 /src/assets/icons/**/*.svg 合成 1 个符号表）
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+      symbolId: 'btc-[dir]-[name]', // sprite 的 id 规则
+      svgoOptions: true,
+      inject: 'body-last',
+      customDomId: 'btc-svg-sprite', // DOM 容器 id
     }),
   ],
 

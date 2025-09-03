@@ -3,74 +3,8 @@
 @use "@btc/styles/mixins/index.scss" as *;
 
 /* ========================================
-   0) 先清场（把旧的全局样式撤掉）
+   布局基础样式
    ======================================== */
-
-/* 千万别在全局挂滚动条皮肤：撤销之前对 * / html / body 的伪元素样式 */
-html::-webkit-scrollbar,
-html::-webkit-scrollbar-thumb,
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar,
-body::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-track {
-  all: unset;
-}
-
-/* 也别给根层稳定 gutter（会留下"限位器/两侧留白"） */
-html, body { 
-  scrollbar-gutter: auto !important; 
-}
-
-/* ========================================
-   1) 无感滚动条设计变量（亮/暗统一管理）
-   ======================================== */
-:root {
-  /* 滚动条尺寸 */
-  --sb-w-main: 10px;          /* 主区厚度 */
-  --sb-w-side: 8px;           /* 侧栏厚度 */
-  
-  /* 亮色主题滚动条颜色 */
-  --sb-thumb:    rgba(0, 0, 0, 0.28);
-  --sb-thumb-h:  rgba(0, 0, 0, 0.45);
-  --sb-thumb-a:  rgba(0, 0, 0, 0.60);
-}
-
-/* 暗色主题变量 */
-html.dark {
-  --sb-thumb:    rgba(255, 255, 255, 0.28);
-  --sb-thumb-h:  rgba(255, 255, 255, 0.45);
-  --sb-thumb-a:  rgba(255, 255, 255, 0.65);
-}
-
-/* 高对比自动增强 */
-@media (prefers-contrast: more) {
-  :root {
-    --sb-thumb:   rgba(0, 0, 0, 0.45);
-    --sb-thumb-h: rgba(0, 0, 0, 0.60);
-    --sb-thumb-a: rgba(0, 0, 0, 0.75);
-  }
-  
-  html.dark {
-    --sb-thumb:   rgba(255, 255, 255, 0.45);
-    --sb-thumb-h: rgba(255, 255, 255, 0.60);
-    --sb-thumb-a: rgba(255, 255, 255, 0.80);
-  }
-}
-
-/* ========================================
-   2) 原生滚动条版本（Chromium/WebKit + Firefox）
-   ======================================== */
-
-/* 所有内容滚动容器的通用样式 */
-.scrollarea {
-  overflow: auto;
-  /* 关键：不预留滚动条空间，贴边、无轨道感 */
-  scrollbar-gutter: auto;
-  /* 让滚动容器在 grid/flex 下不撬宽父级 */
-  min-width: 0; 
-  min-height: 0;
-  position: relative; /* 给覆盖条定位的基准 */
-}
 
 
 
@@ -108,10 +42,7 @@ html.dark {
   display: flex;
   flex-direction: column;
   
-  /* 使用新的 overlay 滚动条系统 */
-  &.scrollarea.scrollarea--side {
-    /* 滚动条由 overlay 系统管理 */
-  }
+
   
   /* 桌面模式：常驻侧栏 */
   @container (min-width: 1280px) {
@@ -182,34 +113,7 @@ html.dark {
     gap: 0;
     margin: 0;
     
-    .collapse-btn {
-      width: 1.75rem;
-      height: 1.75rem;
-      min-inline-size: 40px; /* 500%缩放仍可点 */
-      min-block-size: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.375rem;
-      border: 1px solid var(--el-border-color-light);
-      background: var(--el-bg-color);
-      cursor: pointer;
-      color: var(--el-text-color-regular);
-      transition: all 0.2s ease;
-      
-      &:hover {
-        background: var(--el-color-primary-light-9);
-        border-color: var(--el-color-primary-light-7);
-        color: var(--el-color-primary);
-        transform: translateY(-1px);
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-      }
-      
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.1);
-      }
-    }
+    /* 使用统一的 IconButton 组件，移除原来的按钮样式 */
   }
   
   .header-right {
@@ -218,34 +122,7 @@ html.dark {
     gap: 0.375rem;
     margin: 0;
     
-    .theme-toggle-btn {
-      width: 1.75rem;
-      height: 1.75rem;
-      min-inline-size: 40px;
-      min-block-size: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.375rem;
-      border: 1px solid var(--el-border-color-light);
-      background: var(--el-bg-color);
-      cursor: pointer;
-      color: var(--el-text-color-regular);
-      transition: all 0.2s ease;
-      
-      &:hover {
-        background: var(--el-color-primary-light-9);
-        border-color: var(--el-color-primary-light-7);
-        color: var(--el-color-primary);
-        transform: translateY(-1px);
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-      }
-      
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.1);
-      }
-    }
+    /* 使用统一的 IconButton 组件，移除原来的按钮样式 */
     
     .user-avatar {
       cursor: pointer;
@@ -256,6 +133,8 @@ html.dark {
       }
     }
   }
+  
+  /* 顶栏按钮样式 - 现在使用统一的IconButton组件 */
 }
 
 /* ========================================
@@ -332,8 +211,8 @@ html.dark {
   /* 关键：避免zoom后撑爆父容器 */
   min-width: 0;
   min-height: 0;
-  /* 真正的滚动条在这里 */
-  overflow: auto;
+  /* 移除原生滚动条，由 el-scrollbar 接管 */
+  overflow: hidden;
   overscroll-behavior: contain; /* 防止父级被带着滚 */
   
   /* 移除固定边距，让内容充分利用可用空间 */
@@ -348,13 +227,8 @@ html.dark {
   display: flex;
   flex-direction: column;
   
-  /* 确保滚动条完全贴边，没有间隙 */
+  /* 基础布局样式 */
   position: relative;
-  
-  /* 使用新的 overlay 滚动条系统 */
-  &.scrollarea.scrollarea--main {
-    /* 滚动条由 overlay 系统管理 */
-  }
   
   /* 确保内容区域不被滚动条挤压 */
   & > * {
@@ -366,10 +240,96 @@ html.dark {
   .page-body-container {
     flex: 1;
     min-height: 0;
-    overflow: hidden; /* 内容区域不滚动，滚动权给父容器 */
+    overflow: visible; /* 允许内容滚动，不阻止滚动条显示 */
     
     /* 页面内容现在由 PageLayoutWrapper 组件统一管理样式 */
     /* 这里只需要确保容器能够正确显示子组件 */
+  }
+  
+  /* el-scrollbar 样式定制 */
+  .page-scrollbar {
+    height: 100%;
+    width: 100%;
+    
+    /* 确保滚动条容器填满父容器 */
+    :deep(.page-scrollbar-wrap) {
+      height: 100% !important;
+      width: 100% !important;
+    }
+    
+    /* 滚动条轨道样式 - 完全透明 */
+    :deep(.page-scrollbar-bar) {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      
+      /* 垂直滚动条 */
+      &.is-vertical {
+        width: 8px !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+      }
+      
+      /* 水平滚动条 */
+      &.is-horizontal {
+        height: 8px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+      }
+    }
+    
+    /* 滚动条拇指样式 - 无感设计 */
+    :deep(.page-scrollbar-thumb) {
+      background: transparent !important;
+      border: none !important;
+      border-radius: 999px !important;
+      transition: all 0.2s ease !important;
+      
+      /* 垂直滚动条拇指 */
+      &.is-vertical {
+        width: 100% !important;
+        min-height: 20px !important;
+      }
+      
+      /* 水平滚动条拇指 */
+      &.is-horizontal {
+        height: 100% !important;
+        min-width: 20px !important;
+      }
+    }
+    
+    /* 悬停时显示滚动条 */
+    &:hover {
+      :deep(.page-scrollbar-thumb) {
+        background: var(--el-border-color) !important;
+        opacity: 0.6 !important;
+      }
+    }
+    
+    /* 滚动时显示滚动条 */
+    &.is-scrolling {
+      :deep(.page-scrollbar-thumb) {
+        background: var(--el-border-color) !important;
+        opacity: 0.8 !important;
+      }
+    }
+    
+    /* 暗色主题支持 */
+    html.dark & {
+      :deep(.page-scrollbar-thumb) {
+        &:hover {
+          background: var(--el-border-color-darker) !important;
+        }
+      }
+      
+      &.is-scrolling {
+        :deep(.page-scrollbar-thumb) {
+          background: var(--el-border-color-darker) !important;
+        }
+      }
+    }
   }
   
   /* 内容区域内的通用样式 */
@@ -403,21 +363,22 @@ html.dark {
   
   /* 移除内部卡片的冗余样式 */
   .el-card {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
+    border: 1px solid var(--el-border-color-light);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     
     .el-card__header {
-      padding: 0 !important;
-      border-bottom: 1px solid var(--el-border-color-lighter);
-      margin-bottom: 1rem;
+      padding: 1rem;
+      border-bottom: 1px solid var(--el-border-color-light);
+      background: var(--el-fill-color-light);
     }
     
     .el-card__body {
-      padding: 0 !important;
+      padding: 1rem;
     }
   }
 }
+
+
 
 /* ========================================
    11) 抽屉遮罩 - 仅在平板/手机模式出现
@@ -454,7 +415,6 @@ html.dark {
   /* 关键：让侧边栏菜单成为滚动宿主 */
   flex: 1 1 auto;
   min-height: 0;      /* 防止 flex 子项撑破，关键 */
-  overflow: auto;     /* 保证它自己滚 */
   
   /* 确保Element Plus菜单样式正确应用 */
   .el-menu {
@@ -575,6 +535,21 @@ html.dark {
   }
 }
 
+/* 侧边栏滚动条样式 */
+.sidebar-scrollbar {
+  height: 100%;
+  
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+  
+  .el-scrollbar__bar {
+    &.is-vertical {
+      width: 6px;
+    }
+  }
+}
+
 /* ========================================
    13) Logo 样式
    ======================================== */
@@ -673,63 +648,10 @@ html.dark {
     margin: 0;
     height: calc(100vh - 2.25rem);
     margin-top: 2.25rem;
-    overflow: auto;
   }
 }
 
-/* ========================================
-   16) Element Plus 的 <el-scrollbar> 支持（自绘版本）
-   ======================================== */
 
-/* 主内容区里的 el-scrollbar */
-.layout__main .el-scrollbar {
-  --sb-w: var(--sb-w-main);
-  --sb-thumb: var(--sb-thumb);
-  --sb-thumb-h: var(--sb-thumb-h);
-  --sb-thumb-a: var(--sb-thumb-a);
-}
-
-/* 侧边栏里的 el-scrollbar */
-.layout__aside .el-scrollbar {
-  --sb-w: var(--sb-w-side);
-  --sb-thumb: var(--sb-thumb);
-  --sb-thumb-h: var(--sb-thumb-h);
-  --sb-thumb-a: var(--sb-thumb-a);
-}
-
-/* 轨道条（垂直/水平） */
-.el-scrollbar__bar.is-vertical {
-  width: var(--sb-w);
-  right: 0;
-  background: transparent !important; /* 轨道透明 */
-}
-
-.el-scrollbar__bar.is-horizontal {
-  height: var(--sb-w);
-  bottom: 0;
-  background: transparent !important; /* 轨道透明 */
-}
-
-/* 拇指：默认透明，悬停时淡入 */
-.el-scrollbar__thumb {
-  background: var(--sb-thumb) !important;
-  border-radius: 999px !important; /* 圆弧 */
-  opacity: 0; /* 默认不可见 */
-  transition: opacity 0.12s ease, background-color 0.12s ease;
-}
-
-.el-scrollbar:hover .el-scrollbar__thumb,
-.el-scrollbar:active .el-scrollbar__thumb { 
-  opacity: 1; /* 悬停/激活时淡入 */
-}
-
-.el-scrollbar__thumb:hover { 
-  background: var(--sb-thumb-h) !important; 
-}
-
-.el-scrollbar__thumb:active { 
-  background: var(--sb-thumb-a) !important; 
-}
 
 /* ========================================
    17) 主题切换时的滚动条稳定性增强
@@ -745,21 +667,7 @@ html[data-vt-cooldown] * {
   animation: none !important;
 }
 
-/* 确保滚动条在主题切换期间保持正确的无感状态 */
-html[data-theme-from] .page-content,
-html[data-theme-to] .page-content,
-html[data-vt-active] .page-content,
-html[data-vt-cooldown] .page-content,
-html[data-theme-from] .layout__aside,
-html[data-theme-to] .layout__aside,
-html[data-vt-active] .layout__aside,
-html[data-vt-cooldown] .layout__aside {
-  /* 保持无感滚动条样式 */
-  scrollbar-width: thin !important;
-  scrollbar-color: var(--sb-thumb) transparent !important;
-  
-  /* 滚动条由 overlay 系统管理 */
-}
+
 
 /* 修复TabBar底部闪烁问题 */
 html[data-theme-from] .tabbar,
@@ -800,8 +708,6 @@ html:not([data-theme-from]):not([data-theme-to]):not([data-vt-active]):not([data
   .layout__aside {
     /* 恢复正常的过渡动画 */
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    
-    /* 滚动条由 overlay 系统管理 */
   }
   
   .tabbar {

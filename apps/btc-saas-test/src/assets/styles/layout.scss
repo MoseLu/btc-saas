@@ -32,7 +32,6 @@
   min-width: $sidebar-width;
   background-color: $bg-color-overlay;
   border-right: 1px solid $border-color-light;
-  @include custom-scrollbar(8px, $gray-100, $gray-400);
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
@@ -323,7 +322,6 @@
   padding: $main-padding;
   overflow-y: auto;
   background-color: $bg-color-page;
-  @include custom-scrollbar(8px, $gray-100, $gray-400);
 }
 
 // ========================================

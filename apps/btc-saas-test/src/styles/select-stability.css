@@ -1,0 +1,387 @@
+/* =========================================
+   选择器稳定性样式 - 增强版
+   解决主题切换时选择器文字向下移动的问题
+   ========================================= */
+
+/* 全局禁用可能影响选择器的动画 */
+* {
+  /* 禁用可能影响选择器的全局动画 */
+  scroll-behavior: auto !important;
+}
+
+/* 禁用所有选择器在主题切换时的动画和过渡 */
+.el-select,
+.el-select-v2,
+.el-select-dropdown,
+.el-select-dropdown__item,
+.el-select-dropdown__list,
+.el-select-dropdown__wrap,
+.el-select__selection,
+.el-select__selected-item,
+.el-select__placeholder,
+.el-select__input,
+.el-select__tags,
+.el-select__caret,
+.el-select__popper {
+  /* 禁用所有可能影响位置的动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 禁用可能影响布局的属性 */
+  transform: none !important;
+  transform-origin: initial !important;
+  
+  /* 确保位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 禁用可能影响文字的属性 */
+  text-rendering: auto !important;
+  font-synthesis: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  
+  /* 新增：防止布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+  
+  /* 新增：确保字体渲染稳定 */
+  font-display: swap !important;
+  font-feature-settings: normal !important;
+  font-variant-ligatures: normal !important;
+  font-variant-numeric: normal !important;
+  font-variant-east-asian: normal !important;
+}
+
+/* 特别保护选择器内的文字元素 */
+.el-select__selection-text,
+.el-select__selected-item,
+.el-select__placeholder,
+.el-select__input,
+.el-select__tags-text {
+  /* 确保文字位置绝对稳定 */
+  position: absolute !important;
+  top: 50% !important;
+  left: 12px !important;
+  right: 12px !important;
+  transform: translateY(-50%) !important;
+  
+  /* 禁用所有可能影响位置的属性 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  transform-origin: initial !important;
+  
+  /* 确保文字可见性 */
+  color: var(--el-text-color-regular, #303133) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-text-fill-color: currentColor !important;
+  
+  /* 文字渲染优化 */
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.5 !important;
+  font-size: 14px !important;
+  
+  /* 防止文字在主题切换时移动 */
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+  
+  /* 确保文字容器稳定 */
+  display: block !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  /* 新增：防止字体重排 */
+  contain: layout style !important;
+  font-display: swap !important;
+  font-feature-settings: normal !important;
+  font-variant-ligatures: normal !important;
+  font-variant-numeric: normal !important;
+  font-variant-east-asian: normal !important;
+}
+
+/* 保护下拉选项的稳定性 */
+.el-select-dropdown__item {
+  /* 确保选项位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 禁用动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保文字位置稳定 */
+  line-height: 34px !important;
+  height: 34px !important;
+  padding: 0 20px !important;
+  
+  /* 文字渲染优化 */
+  text-rendering: auto !important;
+  font-synthesis: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  
+  /* 新增：防止布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+/* 在主题切换期间特别保护选择器 */
+[data-theme-from] .el-select,
+[data-theme-to] .el-select,
+[data-theme-from] .el-select-v2,
+[data-theme-to] .el-select-v2,
+[data-theme-from] .el-select-dropdown,
+[data-theme-to] .el-select-dropdown {
+  /* 完全禁用所有动画和过渡 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保位置绝对稳定 */
+  transform: none !important;
+  transform-origin: initial !important;
+  
+  /* 禁用可能影响布局的属性 */
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+  
+  /* 特别保护：在主题切换期间完全冻结选择器 */
+  pointer-events: none !important;
+  
+  /* 新增：强制稳定布局 */
+  contain: layout style !important;
+  isolation: isolate !important;
+  
+  /* 确保所有子元素也保持稳定 */
+  & * {
+    transition: none !important;
+    animation: none !important;
+    view-transition-name: none !important;
+    transform: none !important;
+    transform-origin: initial !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+    perspective: none !important;
+    contain: layout style !important;
+  }
+}
+
+/* 在 View Transitions 活动期间特别保护 */
+[data-vt-active] .el-select,
+[data-vt-active] .el-select-v2,
+[data-vt-active] .el-select-dropdown,
+[data-vt-cooldown] .el-select,
+[data-vt-cooldown] .el-select-v2,
+[data-vt-cooldown] .el-select-dropdown {
+  /* 完全禁用所有动画和过渡 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保位置绝对稳定 */
+  transform: none !important;
+  transform-origin: initial !important;
+  
+  /* 禁用可能影响布局的属性 */
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+  
+  /* 新增：强制稳定布局 */
+  contain: layout style !important;
+  isolation: isolate !important;
+}
+
+/* 保护选择器在主题切换时的文字颜色变化 */
+[data-theme-from] .el-select *,
+[data-theme-to] .el-select *,
+[data-theme-from] .el-select-v2 *,
+[data-theme-to] .el-select-v2 *,
+[data-theme-from] .el-select-dropdown *,
+[data-theme-to] .el-select-dropdown * {
+  /* 禁用文字相关的动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保文字渲染稳定 */
+  text-rendering: auto !important;
+  font-synthesis: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  
+  /* 新增：防止字体重排 */
+  contain: layout style !important;
+  font-display: swap !important;
+  font-feature-settings: normal !important;
+  font-variant-ligatures: normal !important;
+  font-variant-numeric: normal !important;
+  font-variant-east-asian: normal !important;
+}
+
+/* 特别处理多选标签的稳定性 */
+.el-select__tags {
+  /* 确保标签容器位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 禁用动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 布局优化 */
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  align-items: center !important;
+  
+  /* 新增：防止布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+}
+
+.el-select__tags .el-tag {
+  /* 确保标签位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 禁用动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保标签内容稳定 */
+  line-height: 1.5 !important;
+  height: auto !important;
+  padding: 0 8px !important;
+  
+  /* 新增：防止布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+}
+
+/* 保护选择器在暗色主题下的稳定性 */
+html.dark .el-select,
+html.dark .el-select-v2,
+html.dark .el-select-dropdown {
+  /* 确保暗色主题下位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 禁用动画 */
+  transition: none !important;
+  animation: none !important;
+  view-transition-name: none !important;
+  
+  /* 确保文字渲染稳定 */
+  text-rendering: auto !important;
+  font-synthesis: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  
+  /* 新增：防止布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+}
+
+/* 确保选择器在页面滚动时保持稳定 */
+.el-select,
+.el-select-v2,
+.el-select-dropdown {
+  /* 禁用滚动相关的动画 */
+  scroll-behavior: auto !important;
+  
+  /* 确保在滚动容器中位置稳定 */
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* 新增：防止滚动时的布局抖动 */
+  contain: layout style !important;
+  will-change: auto !important;
+}
+
+/* 新增：特别保护选择器在主题切换期间的字体渲染 */
+[data-theme-from],
+[data-theme-to] {
+  .el-select,
+  .el-select-v2,
+  .el-select-dropdown {
+    /* 强制使用系统字体，避免字体切换时的抖动 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    
+    /* 禁用所有可能的字体相关动画 */
+    font-display: swap !important;
+    font-feature-settings: normal !important;
+    font-variant-ligatures: normal !important;
+    font-variant-numeric: normal !important;
+    font-variant-east-asian: normal !important;
+    
+    /* 确保字体大小稳定 */
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    
+    /* 防止字体重排 */
+    contain: layout style !important;
+    isolation: isolate !important;
+  }
+}
+
+/* 新增：保护选择器在View Transitions期间的字体稳定性 */
+[data-vt-active],
+[data-vt-cooldown] {
+  .el-select,
+  .el-select-v2,
+  .el-select-dropdown {
+    /* 强制使用系统字体 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    
+    /* 禁用字体相关动画 */
+    font-display: swap !important;
+    font-feature-settings: normal !important;
+    font-variant-ligatures: normal !important;
+    font-variant-numeric: normal !important;
+    font-variant-east-asian: normal !important;
+    
+    /* 确保字体大小稳定 */
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    
+    /* 防止字体重排 */
+    contain: layout style !important;
+    isolation: isolate !important;
+  }
+}

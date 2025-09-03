@@ -114,13 +114,15 @@
       <h2>滚动条测试区域</h2>
       <p>这个区域包含足够的内容来测试无感滚动条的效果</p>
       
-      <div class="test-content">
-        <div v-for="i in 50" :key="i" class="test-item">
-          <h3>测试项目 {{ i }}</h3>
-          <p>这是第 {{ i }} 个测试项目，用来测试滚动条在内容滚动时的显示效果。</p>
-          <p>当您滚动这个区域时，应该能看到滚动条从透明变为可见，然后在一定时间后再次隐藏。</p>
+      <ScrollableContainer class="test-scrollbar" height="400px">
+        <div class="test-content">
+          <div v-for="i in 50" :key="i" class="test-item">
+            <h3>测试项目 {{ i }}</h3>
+            <p>这是第 {{ i }} 个测试项目，用来测试滚动条在内容滚动时的显示效果。</p>
+            <p>当您滚动这个区域时，应该能看到滚动条从透明变为可见，然后在一定时间后再次隐藏。</p>
+          </div>
         </div>
-      </div>
+      </ScrollableContainer>
     </div>
   </div>
   </BasePage>
@@ -131,6 +133,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Connection, Grid, Folder, User } from '@element-plus/icons-vue'
 import BasePage from '../components/BasePage.vue'
+import ScrollableContainer from '../components/ScrollableContainer.vue'
 
 const router = useRouter()
 
@@ -306,13 +309,19 @@ onMounted(async () => {
       font-size: 16px;
     }
     
-    .test-content {
-      max-height: 400px;
-      overflow-y: auto;
+    .test-scrollbar {
       border: 1px solid var(--el-border-color-light);
       border-radius: 8px;
-      padding: 16px;
       background: var(--el-bg-color-page);
+      
+      /* 确保滚动容器内容正确显示 */
+      .scrollable-container {
+        height: 100%;
+      }
+    }
+
+    .test-content {
+      padding: 16px;
       
       .test-item {
         margin-bottom: 20px;

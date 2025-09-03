@@ -1,0 +1,111 @@
+/* ========================================
+   全局滚动条重置样式
+   隐藏所有原生滚动条，统一使用 Element Plus 滚动条
+   ======================================== */
+
+/* 全局隐藏原生滚动条 */
+* {
+  /* 隐藏所有原生滚动条 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+  }
+}
+
+/* 确保 Element Plus 滚动条组件正常工作 */
+.el-scrollbar {
+  /* 保持 Element Plus 滚动条可见 */
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+  
+  &::-webkit-scrollbar {
+    display: block;
+  }
+}
+
+/* 特殊情况下需要显示滚动条的容器 */
+.scrollbar-visible {
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+  
+  &::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--el-border-color);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--el-border-color-darker);
+    }
+  }
+}
+
+/* 滚动条过渡动画 */
+.el-scrollbar__bar {
+  transition: opacity 0.3s ease;
+  
+  &.is-horizontal {
+    height: 8px;
+  }
+  
+  &.is-vertical {
+    width: 8px;
+  }
+}
+
+.el-scrollbar__thumb {
+  background: var(--el-border-color);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background: var(--el-border-color-darker);
+  }
+}
+
+/* 确保页面内容区域使用 Element Plus 滚动条 */
+.page-content {
+  .el-scrollbar {
+    height: 100%;
+    
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+  }
+}
+
+/* 侧边栏菜单滚动条 */
+.sidebar-menu {
+  .el-scrollbar {
+    height: 100%;
+    
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+  }
+}
+
+/* 侧边栏滚动条样式 */
+.sidebar-scrollbar {
+  height: 100%;
+  
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+  
+  .el-scrollbar__bar {
+    &.is-vertical {
+      width: 6px;
+    }
+  }
+}

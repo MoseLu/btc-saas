@@ -1,5 +1,5 @@
 <template>
-  <div class="eps-demo scrollarea scrollarea--main">
+  <div class="eps-demo">
     <el-card class="demo-card">
       <template #header>
         <div class="card-header">

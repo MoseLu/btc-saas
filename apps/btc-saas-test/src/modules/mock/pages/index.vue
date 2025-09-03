@@ -366,5 +366,79 @@ onMounted(() => {
   min-width: 0; /* 允许flex项目收缩到内容宽度以下 */
 }
 
+/* 强制生效的滚动条样式 - 使用最高优先级 */
+:deep(.page-layout-wrapper) {
+  /* 强制应用无感滚动条样式 */
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(0,0,0,.35) transparent !important;
+  
+  /* WebKit滚动条样式 - 强制隐藏按钮和轨道 */
+  &::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+    background: transparent !important;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: transparent !important;
+  }
+  
+  &::-webkit-scrollbar-resizer {
+    background: transparent !important;
+  }
+  
+  /* 拇指样式 - 默认无感，交互时淡入 */
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0) !important;
+    border-radius: 999px !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+    transition: background-color .18s ease, opacity .18s ease !important;
+    opacity: 0 !important;
+  }
+  
+  /* 悬停滚动区域时，出现椭圆拇指 */
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.28) !important;
+    opacity: 1 !important;
+  }
+  
+  /* 真正滚动/拖拽时更清晰 */
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0,0,0,.45) !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 暗色主题支持 */
+html.dark :deep(.page-layout-wrapper) {
+  scrollbar-color: rgba(255,255,255,.35) transparent !important;
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0) !important;
+  }
+  
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,.22) !important;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255,255,255,.38) !important;
+  }
+}
 
 </style>

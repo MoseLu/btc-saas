@@ -22,99 +22,102 @@
         :unique-opened="false"
         :default-openeds="openeds"
         router
-        class="sidebar-menu cool-scrollbar cool-scrollbar--side"
+        class="sidebar-menu"
         :collapse-transition="false"
         @select="handleMenuSelect"
         @open="handleMenuOpen"
         @close="handleMenuClose"
       >
-        <!-- 系统功能菜单 -->
-        <el-sub-menu index="system" v-if="systemRoutes.length > 0">
-          <template #title>
-            <el-icon class="menu-icon"><Setting /></el-icon>
-            <span class="menu-title">系统管理</span>
-          </template>
-          <el-menu-item 
-            v-for="route in systemRoutes" 
-            :key="route.path"
-            :index="route.path"
-            class="menu-item"
-          >
-            <el-icon class="menu-icon">
-              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
-            </el-icon>
+        <!-- 使用 el-scrollbar 包装菜单内容 -->
+        <el-scrollbar class="sidebar-scrollbar" height="100%">
+          <!-- 系统功能菜单 -->
+          <el-sub-menu index="system" v-if="systemRoutes.length > 0">
             <template #title>
-              <span class="menu-title">{{ route.meta?.title }}</span>
+              <el-icon class="menu-icon"><Setting /></el-icon>
+              <span class="menu-title">系统管理</span>
             </template>
-          </el-menu-item>
-        </el-sub-menu>
+            <el-menu-item 
+              v-for="route in systemRoutes" 
+              :key="route.path"
+              :index="route.path"
+              class="menu-item"
+            >
+              <el-icon class="menu-icon">
+                <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
+              </el-icon>
+              <template #title>
+                <span class="menu-title">{{ route.meta?.title }}</span>
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
 
-        <!-- 业务模块菜单 -->
-        <el-sub-menu 
-          v-for="category in businessCategories" 
-          :key="category.name"
-          :index="category.name"
-        >
-          <template #title>
-            <el-icon class="menu-icon"><component :is="category.icon" /></el-icon>
-            <span class="menu-title">{{ category.title }}</span>
-          </template>
-          <el-menu-item 
-            v-for="route in category.routes" 
-            :key="route.path"
-            :index="route.path"
-            class="menu-item"
+          <!-- 业务模块菜单 -->
+          <el-sub-menu 
+            v-for="category in businessCategories" 
+            :key="category.name"
+            :index="category.name"
           >
-            <el-icon class="menu-icon">
-              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
-            </el-icon>
             <template #title>
-              <span class="menu-title">{{ route.meta?.title }}</span>
+              <el-icon class="menu-icon"><component :is="category.icon" /></el-icon>
+              <span class="menu-title">{{ category.title }}</span>
             </template>
-          </el-menu-item>
-        </el-sub-menu>
+            <el-menu-item 
+              v-for="route in category.routes" 
+              :key="route.path"
+              :index="route.path"
+              class="menu-item"
+            >
+              <el-icon class="menu-icon">
+                <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
+              </el-icon>
+              <template #title>
+                <span class="menu-title">{{ route.meta?.title }}</span>
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
 
-        <!-- 插件菜单 -->
-        <el-sub-menu index="plugins" v-if="pluginRoutes.length > 0">
-          <template #title>
-            <el-icon class="menu-icon"><Grid /></el-icon>
-            <span class="menu-title">插件中心</span>
-          </template>
-          <el-menu-item 
-            v-for="route in pluginRoutes" 
-            :key="route.path"
-            :index="route.path"
-            class="menu-item"
-          >
-            <el-icon class="menu-icon">
-              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
-            </el-icon>
+          <!-- 插件菜单 -->
+          <el-sub-menu index="plugins" v-if="pluginRoutes.length > 0">
             <template #title>
-              <span class="menu-title">{{ route.meta?.title }}</span>
+              <el-icon class="menu-icon"><Grid /></el-icon>
+              <span class="menu-title">插件中心</span>
             </template>
-          </el-menu-item>
-        </el-sub-menu>
+            <el-menu-item 
+              v-for="route in pluginRoutes" 
+              :key="route.path"
+              :index="route.path"
+              class="menu-item"
+            >
+              <el-icon class="menu-icon">
+                <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
+              </el-icon>
+              <template #title>
+                <span class="menu-title">{{ route.meta?.title }}</span>
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
 
-        <!-- 应用菜单 -->
-        <el-sub-menu index="apps" v-if="appRoutes.length > 0">
-          <template #title>
-            <el-icon class="menu-icon"><Monitor /></el-icon>
-            <span class="menu-title">应用中心</span>
-          </template>
-          <el-menu-item 
-            v-for="route in appRoutes" 
-            :key="route.path"
-            :index="route.path"
-            class="menu-item"
-          >
-            <el-icon class="menu-icon">
-              <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
-            </el-icon>
+          <!-- 应用菜单 -->
+          <el-sub-menu index="apps" v-if="appRoutes.length > 0">
             <template #title>
-              <span class="menu-title">{{ route.meta?.title }}</span>
+              <el-icon class="menu-icon"><Monitor /></el-icon>
+              <span class="menu-title">应用中心</span>
             </template>
-          </el-menu-item>
-        </el-sub-menu>
+            <el-menu-item 
+              v-for="route in appRoutes" 
+              :key="route.path"
+              :index="route.path"
+              class="menu-item"
+            >
+              <el-icon class="menu-icon">
+                <component :is="iconMap[route.meta?.icon as keyof typeof iconMap]" />
+              </el-icon>
+              <template #title>
+                <span class="menu-title">{{ route.meta?.title }}</span>
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
+        </el-scrollbar>
       </el-menu>
     </aside>
 
@@ -132,31 +135,20 @@
       <!-- 顶部导航 -->
       <header class="layout__header" v-if="!contentFullscreen">
         <div class="header-left">
-          <el-tooltip :content="toggleButtonLabel">
-            <button 
-              @click="onToggle"
-              class="collapse-btn"
-              :aria-label="toggleButtonLabel"
-            >
-              <el-icon :size="16">
-                <component :is="toggleButtonIcon" />
-              </el-icon>
-            </button>
-          </el-tooltip>
+          <IconButton
+            :icon="iconMap[toggleButtonIcon as keyof typeof iconMap]"
+            :tooltip="toggleButtonLabel"
+            :aria-label="toggleButtonLabel"
+            @click="onToggle"
+          />
         </div>
         
         <div class="header-right">
-          <el-tooltip content="切换主题">
-            <button 
-              @click="toggleTheme"
-              class="theme-toggle-btn"
-            >
-              <el-icon :size="16">
-                <Sunny v-if="isDark" />
-                <Moon v-else />
-              </el-icon>
-            </button>
-          </el-tooltip>
+          <IconButton
+            :icon="isDark ? iconMap.Sunny : iconMap.Moon"
+            tooltip="切换主题"
+            @click="toggleTheme"
+          />
           
           <el-dropdown>
             <el-avatar :size="32" class="user-avatar">
@@ -192,18 +184,32 @@
         </div>
         
         <!-- 页面内容 - 固定布局容器 -->
-        <div class="page-content cool-scrollbar">
-          <!-- 页面内容区域 - 固定布局 -->
-          <div class="page-body-container">
-            <keep-alive :include="tabsStore.includeKeepAlive">
-              <router-view v-slot="{ Component, route }">
-                <!-- 自动为所有页面内容添加统一的布局包装器 -->
-                <PageLayoutWrapper>
-                  <component :is="Component" :key="route.fullPath" />
-                </PageLayoutWrapper>
-              </router-view>
-            </keep-alive>
-          </div>
+        <div class="page-content">
+          <!-- 使用 el-scrollbar 替代原生滚动条 -->
+          <el-scrollbar 
+            ref="pageScrollbarRef"
+            class="page-scrollbar"
+            :wrap-class="'page-scrollbar-wrap'"
+            :view-class="'page-scrollbar-view'"
+            :bar-class="'page-scrollbar-bar'"
+            :thumb-class="'page-scrollbar-thumb'"
+            :always="false"
+            :noresize="false"
+            :tag="'div'"
+            @scroll="handlePageScroll"
+          >
+            <!-- 页面内容区域 - 固定布局 -->
+            <div class="page-body-container">
+              <keep-alive :include="tabsStore.includeKeepAlive">
+                <router-view v-slot="{ Component, route }">
+                  <!-- 自动为所有页面内容添加统一的布局包装器 -->
+                  <PageLayoutWrapper>
+                    <component :is="Component" :key="route.fullPath" />
+                  </PageLayoutWrapper>
+                </router-view>
+              </keep-alive>
+            </div>
+          </el-scrollbar>
         </div>
       </div>
     </section>
@@ -221,9 +227,10 @@ import { useLayout } from '../composables/useLayout'
 import { globalPageActions } from '../composables/usePageActions'
 import TabBar from '../components/TabBar.vue'
 import PageLayoutWrapper from '../components/PageLayoutWrapper.vue'
+import IconButton from '../components/IconButton.vue'
 import { 
   Setting, Grid, Monitor, User, Sunny, Moon, 
-  Fold, Expand, Link, Document, Location, Folder, 
+  Fold, Expand, Menu, Link, Document, Location, Folder, 
   DataAnalysis, Picture, Connection, Brush, House,
   Money, TrendCharts, Box, Tools, List,
   ShoppingCart, HomeFilled, ArrowLeft, Refresh, Close, 
@@ -243,6 +250,7 @@ const iconMap = {
   Moon: markRaw(Moon),
   Fold: markRaw(Fold),
   Expand: markRaw(Expand),
+  Menu: markRaw(Menu),
   Link: markRaw(Link),
   Document: markRaw(Document),
   Location: markRaw(Location),
@@ -291,30 +299,29 @@ const {
   onShellReady 
 } = useLayout()
 
-// 滚动条激活类管理
-function wireActiveClass(el: HTMLElement) {
-  let timer: number | undefined
+// 页面滚动条引用
+const pageScrollbarRef = ref()
+let pageScrollTimeout: number | undefined
 
-  const onEnter = () => el.classList.add('is-active')
-  const onLeave = () => el.classList.remove('is-active')
-  const onScroll = () => {
-    el.classList.add('is-active')
-    if (timer) window.clearTimeout(timer)
-    timer = window.setTimeout(() => el.classList.remove('is-active'), 360) // 停止滚动后淡出
-  }
-
-  el.addEventListener('mouseenter', onEnter)
-  el.addEventListener('mouseleave', onLeave)
-  el.addEventListener('scroll', onScroll, { passive: true })
-
-  return () => {
-    el.removeEventListener('mouseenter', onEnter)
-    el.removeEventListener('mouseleave', onLeave)
-    el.removeEventListener('scroll', onScroll)
+// 处理页面滚动事件，添加滚动指示器
+const handlePageScroll = () => {
+  const scrollbarElement = pageScrollbarRef.value?.$el
+  if (scrollbarElement) {
+    // 添加滚动状态类
+    scrollbarElement.classList.add('is-scrolling')
+    
+    // 清除之前的定时器
+    if (pageScrollTimeout) {
+      clearTimeout(pageScrollTimeout)
+    }
+    
+    // 800ms 后自动移除滚动状态
+    pageScrollTimeout = window.setTimeout(() => {
+      scrollbarElement.classList.remove('is-scrolling')
+    }, 800)
   }
 }
 
-// 使用新的 overlay 滚动条系统，不再需要旧的滚动指示器
 
 // 使用 Pinia store
 const menuStore = useMenuStore()
@@ -499,15 +506,7 @@ onMounted(() => {
     onShellReady(shell.value)
   }
   
-  // 初始化滚动条激活类
-  const targets = document.querySelectorAll<HTMLElement>('.cool-scrollbar')
-  const cleanups: Array<() => void> = []
-  targets.forEach(n => cleanups.push(wireActiveClass(n)))
-  
-  // 清理滚动条事件监听器
-  onBeforeUnmount(() => {
-    cleanups.forEach(fn => fn())
-  })
+
 
   // 监听ESC键关闭抽屉
   const handleEsc = (e: KeyboardEvent) => {
@@ -521,6 +520,11 @@ onMounted(() => {
   // 清理事件监听器
   onBeforeUnmount(() => {
     document.removeEventListener('keydown', handleEsc)
+    
+    // 清理滚动条定时器
+    if (pageScrollTimeout) {
+      clearTimeout(pageScrollTimeout)
+    }
   })
 })
 </script>

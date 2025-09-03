@@ -224,42 +224,7 @@
 // 滚动条 Mixins
 // ========================================
 
-// 自定义滚动条
-@mixin custom-scrollbar($width: 10px, $track-color: $gray-100, $thumb-color: $gray-500) {
-  &::-webkit-scrollbar {
-    width: $width;
-    height: $width;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: $track-color;
-    border-radius: calc($width / 2);
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: $thumb-color;
-    border-radius: calc($width / 2);
-    border: 1px solid $gray-300;
-    
-    &:hover {
-      background: color.adjust($thumb-color, $lightness: -10%);
-    }
-    
-    &:active {
-      background: color.adjust($thumb-color, $lightness: -20%);
-    }
-  }
-}
 
-// 隐藏滚动条
-@mixin hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
 
 // ========================================
 // 响应式 Mixins

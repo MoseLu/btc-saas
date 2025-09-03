@@ -1,205 +1,214 @@
 @use "sass:color";
 
-// BTC Saas 主题样式 - SASS版本
+// BTC Saas 主题样式 - 重构版
+// 采用 cool-admin 的变量桥接方式，只改变量不动结构
 
-// 颜色变量 - 统一使用Element Plus标准色
-$btc-primary: #409eff;
-$btc-success: #67c23a;
-$btc-warning: #e6a23c;
-$btc-error: #f56c6c;
+// ========================================
+// 业务 Token 层（独立于 Element Plus）
+// ========================================
 
-// 明亮主题变量
-$light-bg: #ffffff;
-$light-bg-page: #f0f2f5;
-$light-bg-overlay: #ffffff;
-$light-text-primary: #303133;
-$light-text-regular: #606266;
-$light-text-secondary: #909399;
-$light-border: #dcdfe6;
-$light-border-light: #e4e7ed;
-$light-fill-blank: #ffffff;
-$light-fill-light: #f5f7fa;
-$light-fill: #f0f2f5;
-$light-fill-dark: #ebedf0;
-$light-fill-darker: #e6e8eb;
-
-// 暗黑主题变量
-$dark-bg: #141414;
-$dark-bg-page: #0a0a0a;
-$dark-bg-overlay: #1d1e1f;
-$dark-text-primary: #e5eaf3;
-$dark-text-regular: #cfd3dc;
-$dark-text-secondary: #a3a6ad;
-$dark-border: #4c4d4f;
-$dark-border-light: #414243;
-$dark-fill-blank: #141414;
-$dark-fill-light: #262727;
-$dark-fill: #303030;
-$dark-fill-dark: #39393a;
-$dark-fill-darker: #424243;
-
-// 全局主题样式
 :root {
-  // Element Plus 变量
-  --el-bg-color: #{$light-bg};
-  --el-bg-color-page: #{$light-bg-page};
-  --el-bg-color-overlay: #{$light-bg-overlay};
-  --el-text-color-primary: #{$light-text-primary};
-  --el-text-color-regular: #{$light-text-regular};
-  --el-text-color-secondary: #{$light-text-secondary};
-  --el-border-color: #{$light-border};
-  --el-border-color-light: #{$light-border-light};
-  --el-border-color-lighter: #ebeef5;
-  --el-border-color-extra-light: #f2f6fc;
-  --el-fill-color-blank: #{$light-fill-blank};
-  --el-fill-color-light: #{$light-fill-light};
-  --el-fill-color: #{$light-fill};
-  --el-fill-color-dark: #{$light-fill-dark};
-  --el-fill-color-darker: #{$light-fill-darker};
-  --el-color-primary: #{$btc-primary};
-  --el-color-success: #{$btc-success};
-  --el-color-warning: #{$btc-warning};
-  --el-color-danger: #{$btc-error};
-  --el-color-info: #{$light-text-secondary};
+  // 业务色彩系统
+  --bg-page: #f6f7f9;
+  --bg-elevated: #ffffff;
+  --bg-overlay: #ffffff;
+  --bg-fill: #f0f2f5;
+  --bg-fill-light: #f5f7fa;
+  --bg-fill-dark: #ebedf0;
   
-  /* 增强对比度的主题色变量 */
-  --btc-primary-contrast: #ffffff;
-  --btc-primary-hover: #66b1ff;
-  --btc-primary-active: #337ecc;
+  // 文字色彩系统
+  --text-1: #1f2328;
+  --text-2: #636a73;
+  --text-3: #8c959f;
+  --text-4: #a3a6ad;
   
-  // 侧边栏主题
-  --sidebar-bg: #{$light-fill-light};
-  --sidebar-text: #{$light-text-primary};
-  --sidebar-text-hover: #{$btc-primary};
-  --sidebar-bg-hover: #{$light-fill-dark};
-  --sidebar-bg-active: #{$btc-primary};
-  --logo-bg: #{$btc-primary};
+  // 品牌色彩系统
+  --brand-6: #2f88ff;
+  --brand-5: #409eff;
+  --brand-4: #66b1ff;
+  --brand-3: #85c5ff;
+  --brand-2: #a3d8ff;
+  --brand-1: #c2e7ff;
   
-  // 头部主题
-  --header-bg: #{$light-bg};
-  --header-border: #{$light-border-light};
-  --header-text: #{$light-text-regular};
+  // 功能色彩系统
+  --success-6: #52c41a;
+  --warning-6: #faad14;
+  --error-6: #ff4d4f;
+  --info-6: #1890ff;
   
-  // 卡片主题
-  --card-bg: #{$light-bg};
-  --card-border: #{$light-border-light};
-  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  // 边框色彩系统
+  --border-1: color-mix(in oklab, #000 12%, transparent);
+  --border-2: color-mix(in oklab, #000 8%, transparent);
+  --border-3: color-mix(in oklab, #000 4%, transparent);
+  
+  // 阴影系统
+  --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-2: 0 1px 8px 0 rgba(0, 0, 0, 0.06);
+  --shadow-3: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+  
+  // 让原生控件跟随主题
+  color-scheme: light dark;
 }
 
-// 暗黑主题
+// 暗色主题业务 Token
 html.dark {
-  // Element Plus 变量
-  --el-bg-color: #{$dark-bg};
-  --el-bg-color-page: #{$dark-bg-page};
-  --el-bg-color-overlay: #{$dark-bg-overlay};
-  --el-text-color-primary: #{$dark-text-primary};
-  --el-text-color-regular: #{$dark-text-regular};
-  --el-text-color-secondary: #{$dark-text-secondary};
-  --el-border-color: #{$dark-border};
-  --el-border-color-light: #{$dark-border-light};
-  --el-border-color-lighter: #363637;
-  --el-border-color-extra-light: #2b2b2c;
-  --el-fill-color-blank: #{$dark-fill-blank};
-  --el-fill-color-light: #{$dark-fill-light};
-  --el-fill-color: #{$dark-fill};
-  --el-fill-color-dark: #{$dark-fill-dark};
-  --el-fill-color-darker: #{$dark-fill-darker};
-  --el-color-primary: #{$btc-primary};
-  --el-color-success: #{$btc-success};
-  --el-color-warning: #{$btc-warning};
-  --el-color-danger: #{$btc-error};
-  --el-color-info: #{$dark-text-secondary};
+  --bg-page: #0b0d10;
+  --bg-elevated: #121418;
+  --bg-overlay: #1d1e1f;
+  --bg-fill: #1a1a1a;
+  --bg-fill-light: #262727;
+  --bg-fill-dark: #303030;
   
-  /* 暗色模式下增强对比度的主题色变量 */
-  --btc-primary-contrast: #ffffff;
-  --btc-primary-hover: #66b1ff;
-  --btc-primary-active: #337ecc;
+  --text-1: #e5eaf3;
+  --text-2: #a3a6ad;
+  --text-3: #8c959f;
+  --text-4: #636a73;
   
-  // 侧边栏暗黑主题
-  --sidebar-bg: #1a1a1a;
-  --sidebar-text: #bfcbd9;
-  --sidebar-text-hover: #409eff;
-  --sidebar-bg-hover: #2b2f3a;
-  --sidebar-bg-active: #{$btc-primary};
-  --logo-bg: #141414;
+  --brand-6: #409eff;
+  --brand-5: #66b1ff;
+  --brand-4: #85c5ff;
+  --brand-3: #a3d8ff;
+  --brand-2: #c2e7ff;
+  --brand-1: #e1f6ff;
   
-  // 头部暗黑主题
-  --header-bg: #{$dark-bg-overlay};
-  --header-border: #{$dark-border};
-  --header-text: #{$dark-text-regular};
+  --success-6: #67c23a;
+  --warning-6: #e6a23c;
+  --error-6: #f56c6c;
+  --info-6: #909399;
   
-  // 卡片暗黑主题
-  --card-bg: #{$dark-bg-overlay};
-  --card-border: #{$dark-border};
-  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  --border-1: color-mix(in oklab, #fff 18%, transparent);
+  --border-2: color-mix(in oklab, #fff 12%, transparent);
+  --border-3: color-mix(in oklab, #fff 6%, transparent);
+  
+  --shadow-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 1px 8px 0 rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 4px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
-// 应用全局样式
-body {
-  background-color: var(--el-bg-color-page);
-  color: var(--el-text-color-primary);
-  transition: background-color 0.3s, color 0.3s;
+// ========================================
+// Element Plus 变量桥接层（关键桥）
+// 只映射变量，不写结构选择器
+// ========================================
+
+:root {
+  // 背景色桥接
+  --el-bg-color: var(--bg-elevated);
+  --el-bg-color-page: var(--bg-page);
+  --el-bg-color-overlay: var(--bg-overlay);
+  
+  // 文字色桥接
+  --el-text-color-primary: var(--text-1);
+  --el-text-color-regular: var(--text-2);
+  --el-text-color-secondary: var(--text-3);
+  --el-text-color-placeholder: var(--text-4);
+  
+  // 边框色桥接
+  --el-border-color: var(--border-1);
+  --el-border-color-light: var(--border-2);
+  --el-border-color-lighter: var(--border-3);
+  --el-border-color-extra-light: var(--border-3);
+  
+  // 填充色桥接
+  --el-fill-color-blank: var(--bg-elevated);
+  --el-fill-color-light: var(--bg-fill-light);
+  --el-fill-color: var(--bg-fill);
+  --el-fill-color-dark: var(--bg-fill-dark);
+  --el-fill-color-darker: var(--bg-fill-dark);
+  
+  // 品牌色桥接
+  --el-color-primary: var(--brand-6);
+  --el-color-primary-light-3: var(--brand-3);
+  --el-color-primary-light-5: var(--brand-2);
+  --el-color-primary-light-7: var(--brand-1);
+  --el-color-primary-light-8: var(--brand-1);
+  --el-color-primary-light-9: var(--brand-1);
+  --el-color-primary-dark-2: var(--brand-5);
+  
+  // 功能色桥接
+  --el-color-success: var(--success-6);
+  --el-color-warning: var(--warning-6);
+  --el-color-danger: var(--error-6);
+  --el-color-info: var(--info-6);
+  
+  // 成功色变体
+  --el-color-success-light-3: color-mix(in oklab, var(--success-6) 70%, white);
+  --el-color-success-light-5: color-mix(in oklab, var(--success-6) 50%, white);
+  --el-color-success-light-7: color-mix(in oklab, var(--success-6) 30%, white);
+  --el-color-success-light-8: color-mix(in oklab, var(--success-6) 20%, white);
+  --el-color-success-light-9: color-mix(in oklab, var(--success-6) 10%, white);
+  
+  // 警告色变体
+  --el-color-warning-light-3: color-mix(in oklab, var(--warning-6) 70%, white);
+  --el-color-warning-light-5: color-mix(in oklab, var(--warning-6) 50%, white);
+  --el-color-warning-light-7: color-mix(in oklab, var(--warning-6) 30%, white);
+  --el-color-warning-light-8: color-mix(in oklab, var(--warning-6) 20%, white);
+  --el-color-warning-light-9: color-mix(in oklab, var(--warning-6) 10%, white);
+  
+  // 错误色变体
+  --el-color-error-light-3: color-mix(in oklab, var(--error-6) 70%, white);
+  --el-color-error-light-5: color-mix(in oklab, var(--error-6) 50%, white);
+  --el-color-error-light-7: color-mix(in oklab, var(--error-6) 30%, white);
+  --el-color-error-light-8: color-mix(in oklab, var(--error-6) 20%, white);
+  --el-color-error-light-9: color-mix(in oklab, var(--error-6) 10%, white);
+  
+  // 信息色变体
+  --el-color-info-light-3: color-mix(in oklab, var(--info-6) 70%, white);
+  --el-color-info-light-5: color-mix(in oklab, var(--info-6) 50%, white);
+  --el-color-info-light-7: color-mix(in oklab, var(--info-6) 30%, white);
+  --el-color-info-light-8: color-mix(in oklab, var(--info-6) 20%, white);
+  --el-color-info-light-9: color-mix(in oklab, var(--info-6) 10%, white);
 }
 
-// 侧边栏样式
+// ========================================
+// 应用层样式（只过渡颜色相关属性）
+// ========================================
+
+// 全局过渡：只过渡颜色，不要 all
+html, body {
+  transition: background-color 0.18s linear, color 0.18s linear;
+}
+
+// 应用容器过渡
+.app, .themed-scope {
+  transition: 
+    background-color 0.18s linear,
+    color 0.18s linear,
+    border-color 0.18s linear;
+}
+
+// 侧边栏样式（只改颜色，不动结构）
 .admin-layout {
   .sidebar,
   .el-aside {
-    background: var(--sidebar-bg) !important;
-    transition: width 0.3s, background-color 0.3s;
-    overflow: hidden;
+    background: var(--bg-fill-light);
+    transition: background-color 0.18s linear;
   }
 
   .logo {
-    background: var(--logo-bg) !important;
-    transition: background-color 0.3s;
-    
-    // 亮色主题下使用 Element Plus 官方样式
-    html:not(.dark) & {
-      background: var(--el-bg-color) !important;
-      color: var(--el-text-color-primary) !important;
-      border-bottom: 1px solid var(--el-border-color-light) !important;
-    }
+    background: var(--brand-6);
+    transition: background-color 0.18s linear;
   }
 
   .sidebar-menu {
-    background: var(--sidebar-bg) !important;
-    border: none !important;
+    background: var(--bg-fill-light);
     
     :deep(.el-menu) {
-      background: var(--sidebar-bg) !important;
-      border: none !important;
+      background: var(--bg-fill-light);
     }
     
     :deep(.el-menu-item) {
-      color: var(--sidebar-text) !important;
-      background: var(--sidebar-bg) !important;
-      transition: all 0.3s;
+      color: var(--text-2);
+      background: transparent;
+      transition: color 0.18s linear, background-color 0.18s linear;
       
       &:hover {
-        color: var(--sidebar-text-hover) !important;
-        background: var(--sidebar-bg-hover) !important;
+        color: var(--brand-6);
+        background: var(--bg-fill);
       }
       
       &.is-active {
-        color: #ffffff !important;
-        background: var(--sidebar-bg-active) !important;
-        
-        .el-icon {
-          color: #ffffff !important;
-        }
-        
-        span {
-          color: #ffffff !important;
-        }
-        
-        * {
-          color: #ffffff !important;
-        }
-      }
-      
-      .el-icon {
-        color: inherit !important;
+        color: #ffffff;
+        background: var(--brand-6);
       }
     }
   }
@@ -207,88 +216,89 @@ body {
 
 // 头部样式
 .admin-layout .header {
-  background: var(--header-bg) !important;
-  border-bottom: 1px solid var(--header-border) !important;
-  transition: background-color 0.3s, border-color 0.3s;
+  background: var(--bg-elevated);
+  border-bottom-color: var(--border-2);
+  transition: background-color 0.18s linear, border-color 0.18s linear;
 }
 
 .admin-layout .collapse-btn {
-  color: var(--header-text) !important;
-  transition: color 0.3s;
+  color: var(--text-2);
+  transition: color 0.18s linear;
   
   &:hover {
-    background: var(--el-fill-color-light) !important;
-    color: var(--btc-primary) !important;
+    background: var(--bg-fill-light);
+    color: var(--brand-6);
   }
 }
 
-// 主内容区域样式
+// 主内容区域
 .admin-layout .main-content {
-  background: var(--el-bg-color-page) !important;
-  transition: background-color 0.3s;
+  background: var(--bg-page);
+  transition: background-color 0.18s linear;
 }
 
 // 卡片样式
 .el-card {
-  background: var(--card-bg) !important;
-  border-color: var(--card-border) !important;
-  box-shadow: var(--card-shadow) !important;
-  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  background: var(--bg-elevated);
+  border-color: var(--border-2);
+  box-shadow: var(--shadow-1);
+  transition: background-color 0.18s linear, border-color 0.18s linear, box-shadow 0.18s linear;
 }
 
 // 表格样式
 .el-table {
-  background: var(--card-bg) !important;
-  color: var(--el-text-color-primary) !important;
+  background: var(--bg-elevated);
+  color: var(--text-1);
   
   :deep(.el-table__header-wrapper) {
-    background: var(--el-fill-color-light) !important;
+    background: var(--bg-fill-light);
   }
   
   :deep(.el-table__body-wrapper) {
-    background: var(--card-bg) !important;
+    background: var(--bg-elevated);
   }
   
   :deep(.el-table__row) {
-    background: var(--card-bg) !important;
+    background: var(--bg-elevated);
     
     &:hover {
-      background: var(--el-fill-color-light) !important;
+      background: var(--bg-fill-light);
     }
   }
 }
 
-// 按钮样式
+// 按钮样式（只过渡颜色）
 .el-button {
-  transition: all 0.3s;
+  transition: color 0.18s linear, background-color 0.18s linear, border-color 0.18s linear;
 }
 
 // 输入框样式
 .el-input {
   :deep(.el-input__wrapper) {
-    background: var(--el-bg-color) !important;
-    border-color: var(--el-border-color) !important;
-    transition: background-color 0.3s, border-color 0.3s;
+    background: var(--bg-elevated);
+    border-color: var(--border-1);
+    transition: background-color 0.18s linear, border-color 0.18s linear;
   }
   
   :deep(.el-input__inner) {
-    color: var(--el-text-color-primary) !important;
-    transition: color 0.3s;
+    color: var(--text-1);
+    transition: color 0.18s linear;
   }
 }
 
 // 下拉菜单样式
 .el-dropdown-menu {
-  background: var(--el-bg-color-overlay) !important;
-  border-color: var(--el-border-color) !important;
-  transition: background-color 0.3s, border-color 0.3s;
+  background: var(--bg-overlay);
+  border-color: var(--border-1);
+  transition: background-color 0.18s linear, border-color 0.18s linear;
   
   :deep(.el-dropdown-menu__item) {
-    color: var(--el-text-color-primary) !important;
-    transition: color 0.3s, background-color 0.3s;
+    color: var(--text-1);
+    transition: color 0.18s linear, background-color 0.18s linear;
     
     &:hover {
-      background: var(--el-fill-color-light) !important;
+      background: var(--bg-fill-light);
+      color: var(--brand-6);
     }
   }
 }
@@ -296,15 +306,15 @@ body {
 // 面包屑样式
 .el-breadcrumb {
   :deep(.el-breadcrumb__item) {
-    color: var(--el-text-color-regular) !important;
+    color: var(--text-2);
   }
   
   :deep(.el-breadcrumb__inner) {
-    color: var(--el-text-color-regular) !important;
-    transition: color 0.3s;
+    color: var(--text-2);
+    transition: color 0.18s linear;
     
     &:hover {
-      color: var(--el-color-primary) !important;
+      color: var(--brand-6);
     }
   }
 }
@@ -312,111 +322,111 @@ body {
 // 标签页样式
 .el-tabs {
   :deep(.el-tabs__header) {
-    background: var(--card-bg) !important;
-    border-bottom-color: var(--el-border-color) !important;
+    background: var(--bg-elevated);
+    border-bottom-color: var(--border-1);
   }
   
   :deep(.el-tabs__item) {
-    color: var(--el-text-color-regular) !important;
-    transition: color 0.3s;
+    color: var(--text-2);
+    transition: color 0.18s linear;
     
     &.is-active {
-      color: var(--el-color-primary) !important;
+      color: var(--brand-6);
     }
   }
 }
 
 // 分页样式
 .el-pagination {
-  background: var(--card-bg) !important;
-  color: var(--el-text-color-primary) !important;
+  background: var(--bg-elevated);
+  color: var(--text-1);
   
   :deep(.el-pager li) {
-    background: var(--el-bg-color) !important;
-    color: var(--el-text-color-primary) !important;
-    border-color: var(--el-border-color) !important;
-    transition: all 0.3s;
+    background: var(--bg-elevated);
+    color: var(--text-1);
+    border-color: var(--border-1);
+    transition: color 0.18s linear, background-color 0.18s linear, border-color 0.18s linear;
     
     &:hover {
-      color: var(--el-color-primary) !important;
+      color: var(--brand-6);
     }
     
     &.is-active {
-      background: var(--el-color-primary) !important;
-      color: #ffffff !important;
+      background: var(--brand-6);
+      color: #ffffff;
     }
   }
 }
 
 // 描述列表样式
 .el-descriptions {
-  background: var(--card-bg) !important;
+  background: var(--bg-elevated);
   
   :deep(.el-descriptions__header) {
-    color: var(--el-text-color-primary) !important;
+    color: var(--text-1);
   }
   
   :deep(.el-descriptions__body) {
-    background: var(--card-bg) !important;
+    background: var(--bg-elevated);
   }
   
   :deep(.el-descriptions__label) {
-    background: var(--el-fill-color-light) !important;
-    color: var(--el-text-color-primary) !important;
+    background: var(--bg-fill-light);
+    color: var(--text-1);
   }
   
   :deep(.el-descriptions__content) {
-    background: var(--card-bg) !important;
-    color: var(--el-text-color-primary) !important;
+    background: var(--bg-elevated);
+    color: var(--text-1);
   }
 }
 
 // 空状态样式
 .el-empty {
-  background: var(--card-bg) !important;
+  background: var(--bg-elevated);
   
   :deep(.el-empty__description) {
-    color: var(--el-text-color-secondary) !important;
+    color: var(--text-3);
   }
 }
 
 // 统计卡片样式
 .stat-card {
-  background: var(--card-bg) !important;
-  transition: background-color 0.3s;
+  background: var(--bg-elevated);
+  transition: background-color 0.18s linear;
 }
 
 .stat-number {
-  color: var(--el-text-color-primary) !important;
-  transition: color 0.3s;
+  color: var(--text-1);
+  transition: color 0.18s linear;
 }
 
 .stat-label {
-  color: var(--el-text-color-secondary) !important;
-  transition: color 0.3s;
+  color: var(--text-2);
+  transition: color 0.18s linear;
 }
 
 // 插件卡片样式
 .plugin-name {
-  color: var(--el-text-color-primary) !important;
-  transition: color 0.3s;
+  color: var(--text-1);
+  transition: color 0.18s linear;
 }
 
 .plugin-description {
-  color: var(--el-text-color-secondary) !important;
-  transition: color 0.3s;
+  color: var(--text-2);
+  transition: color 0.18s linear;
 }
 
 // 页面标题样式
 .page-header {
   h2 {
-    color: var(--el-text-color-primary) !important;
-    transition: color 0.3s;
+    color: var(--text-1);
+    transition: color 0.18s linear;
   }
   
   p {
-    color: var(--el-text-color-secondary) !important;
-    transition: color 0.3s;
+    color: var(--text-2);
+    transition: color 0.18s linear;
   }
 }
 

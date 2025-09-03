@@ -70,7 +70,7 @@ if (range > 0 && scroll > view) {
 
 ### 4. 添加测试页面
 
-**文件：** `src/views/ScrollbarTest.vue`
+**文件：** `src/pages/scrollbar-test.vue`
 
 **功能特性：**
 - ✅ 50个测试项目，确保内容足够长以触发滚动

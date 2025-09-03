@@ -1,0 +1,55 @@
+/* =========================================
+   入口样式分层 - 采用 cool-admin 的稳定方案
+   ========================================= */
+
+/* CSS Layers 分层，确保正确的导入顺序 */
+@layer reset, element-plus, app;
+
+/* Element Plus 层 - 只导入一次，放在前面 */
+@layer element-plus {
+  @import "element-plus/theme-chalk/index.css";
+  /* 关键：开启 EP 的暗色变量映射 */
+  @import "element-plus/theme-chalk/dark/css-vars.css";
+}
+
+/* 应用层 - 业务样式，放在最后 */
+@layer app {
+  @import "@/styles/theme-bridge.css";
+  @import "@/assets/styles/scrollbar-reset.scss";
+}
+
+/* 全局样式重置 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  /* 确保主题类挂在根节点 */
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 主题切换期间的全局保护 */
+[data-theme-from],
+[data-theme-to] {
+  /* 全局禁用可能影响布局的动画 */
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* View Transitions 活动期间的全局保护 */
+[data-vt-active],
+[data-vt-cooldown] {
+  /* 全局禁用可能影响布局的动画 */
+  * {
+    scroll-behavior: auto !important;
+  }
+}

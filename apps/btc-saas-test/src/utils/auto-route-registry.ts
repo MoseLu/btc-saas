@@ -146,17 +146,8 @@ export class AutoRouteRegistry {
       component: () => import('../views/FeatureTest.vue')
     })
 
-    // 添加滚动条测试页面
-    this.registerRoute({
-      name: 'ScrollbarTest',
-      path: '/scrollbar-test',
-      title: '滚动条测试',
-      icon: 'Operation',
-      category: 'demo',
-      order: 3,
-      description: '测试自定义滚动条功能和样式',
-      component: () => import('../views/ScrollbarTest.vue')
-    })
+    // 滚动条测试页面现在通过 @btc/auto-discover 插件自动发现
+    // 位于 src/modules/feature/pages/scrollbar-test.vue
 
     // 主题切换测试
     this.registerRoute({

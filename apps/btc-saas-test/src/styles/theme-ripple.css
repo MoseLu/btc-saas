@@ -1,0 +1,28 @@
+/* =========================================
+   主题切换动画 - 覆盖层 ripple 动画
+   ========================================= */
+
+/* 主题切换覆盖层 */
+.theme-ripple {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: var(--bg-elevated);
+  transition: clip-path 0.18s linear, opacity 0.18s linear;
+}
+
+/* 动画方向：右上角到左下角 */
+.theme-ripple[data-direction="tr"] {
+  clip-path: circle(0% at 100% 0%);
+}
+
+/* 动画方向：左下角到右上角 */
+.theme-ripple[data-direction="bl"] {
+  clip-path: circle(0% at 0% 100%);
+}
+
+/* 动画完成状态 */
+.theme-ripple[data-complete="true"] {
+  clip-path: circle(150% at var(--wave-origin, 100% 0%));
+}

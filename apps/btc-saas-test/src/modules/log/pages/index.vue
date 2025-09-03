@@ -1,5 +1,5 @@
 <template>
-  <div class="log-viewer scrollarea scrollarea--main">
+  <div class="log-viewer">
     <div class="log-header">
       <div class="log-controls">
         <el-input

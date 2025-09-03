@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-manager scrollarea scrollarea--main">
+  <div class="icon-manager">
     <div class="header">
       <h3>图标管理</h3>
       <p>管理系统图标和favicon配置</p>

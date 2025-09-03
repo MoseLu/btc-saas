@@ -262,14 +262,26 @@
 }
 
 // ========================================
-// 下拉菜单组件优化
+// 下拉菜单组件优化 - 采用 cool-admin 风格
 // ========================================
 
 .el-dropdown-menu {
   .el-dropdown-menu__item {
+    transition: all 0.2s ease;
+    
     &:hover {
-      background-color: rgba($primary-color, 0.1);
-      color: $primary-color;
+      background-color: var(--el-fill-color-light);
+      color: var(--el-color-primary);
+    }
+    
+    &:focus {
+      background-color: var(--el-fill-color-light);
+      color: var(--el-color-primary);
+    }
+    
+    &:active {
+      background-color: var(--el-fill-color);
+      color: var(--el-color-primary);
     }
   }
 }
